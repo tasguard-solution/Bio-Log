@@ -40,13 +40,13 @@ export function MonnifyPaymentModal({
   useEffect(() => {
     if (isOpen && isScriptLoaded) {
       // Provide fallback values if env vars are missing
-      const apiKey = import.meta.env.VITE_MONNIFY_API_KEY || 'MK_TEST_XXXXXXXX';
-      const contractCode = import.meta.env.VITE_MONNIFY_CONTRACT_CODE || '1234567890';
+      const apiKey = import.meta.env.VITE_API_Key || 'MK_TEST_XXXXXXXX';
+      const contractCode = import.meta.env.VITE_Contract_Code || '1234567890';
 
       window.MonnifySDK.initialize({
         amount: amount,
         currency: "NGN",
-        reference: new String((new Date()).getTime()),
+        reference: String(new Date().getTime()), // Must be a primitive string
         customerFullName: customerName,
         customerEmail: customerEmail,
         apiKey: apiKey,

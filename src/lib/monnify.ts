@@ -2,10 +2,10 @@
 // In a real application, you MUST NOT expose the Secret Key or make these calls from the frontend.
 // They should be handled by a secure backend server.
 
-const BASE_URL = import.meta.env.VITE_MONNIFY_BASE_URL || 'https://sandbox.monnify.com';
-const API_KEY = import.meta.env.VITE_MONNIFY_API_KEY || '';
-const SECRET_KEY = import.meta.env.VITE_MONNIFY_SECRET_KEY || '';
-const CONTRACT_CODE = import.meta.env.VITE_MONNIFY_CONTRACT_CODE || ''; // Often needed for web SDK
+const BASE_URL = import.meta.env.VITE_Base_URL || 'https://sandbox.monnify.com';
+const API_KEY = import.meta.env.VITE_API_Key || '';
+const SECRET_KEY = import.meta.env.VITE_Secret_Key || '';
+const CONTRACT_CODE = import.meta.env.VITE_Contract_Code || ''; // Often needed for web SDK
 
 export interface MonnifyAuthResponse {
   requestSuccessful: boolean;
