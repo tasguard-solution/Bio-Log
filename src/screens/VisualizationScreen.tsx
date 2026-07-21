@@ -14,12 +14,14 @@ interface VisualizationScreenProps {
 export function VisualizationScreen({ user, organism, onBack }: VisualizationScreenProps) {
   const [loadingAssets, setLoadingAssets] = useState(true);
   const [modelUrl, setModelUrl] = useState<string | null>(null);
+  const [sketchfabId, setSketchfabId] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<'solid' | 'wireframe' | 'xray'>('solid');
 
   useEffect(() => {
     (async () => {
       setLoadingAssets(true);
       setModelUrl(null);
+      setSketchfabId(null);
 
       const schoolId = user?.user_metadata?.school_id;
       if (!schoolId) {
@@ -37,9 +39,14 @@ export function VisualizationScreen({ user, organism, onBack }: VisualizationScr
           .order('school_id', { ascending: false }); // Prioritize school-specific assets over global ones
 
         if (assets && assets.length > 0) {
-          // Find the first 3d asset if any
-          const modelAsset = assets.find(a => a.asset_type === '3d');
-          if (modelAsset) setModelUrl(modelAsset.public_url);
+          // Find sketchfab first, fallback to 3d asset
+          const sketchfabAsset = assets.find(a => a.asset_type === 'sketchfab');
+          if (sketchfabAsset) {
+            setSketchfabId(sketchfabAsset.public_url);
+          } else {
+            const modelAsset = assets.find(a => a.asset_type === '3d');
+            if (modelAsset) setModelUrl(modelAsset.public_url);
+          }
         }
       } catch (err) {
         console.error('Error fetching custom assets:', err);
@@ -73,11 +80,16 @@ export function VisualizationScreen({ user, organism, onBack }: VisualizationScr
                 <Box className="w-3.5 h-3.5" /> Custom 3D Model Loaded
               </div>
             )}
+            {sketchfabId && (
+              <div className="mt-4 px-3 py-1.5 bg-blue-500/20 text-blue-200 border border-blue-500/30 rounded-lg text-xs font-medium flex items-center gap-2 w-max">
+                <Box className="w-3.5 h-3.5" /> Sketchfab Live View
+              </div>
+            )}
           </div>
         </div>
 
         <div className="flex flex-col gap-3 pointer-events-auto">
-          {modelUrl && (
+          {(modelUrl || sketchfabId) && (
             <>
               <button className="w-12 h-12 rounded-full bg-primary/60 hover:bg-primary/80 backdrop-blur-md border border-on-primary/10 flex items-center justify-center transition-colors text-on-primary">
                 <Settings className="w-5 h-5" />
@@ -88,12 +100,14 @@ export function VisualizationScreen({ user, organism, onBack }: VisualizationScr
               <button className="w-12 h-12 rounded-full bg-primary/60 hover:bg-primary/80 backdrop-blur-md border border-on-primary/10 flex items-center justify-center transition-colors text-on-primary">
                 <Share2 className="w-5 h-5" />
               </button>
-              <button 
-                onClick={() => window.open(modelUrl, '_blank')}
-                className="w-12 h-12 rounded-full bg-secondary hover:bg-secondary-container shadow-lg flex items-center justify-center transition-colors mt-4 text-on-secondary"
-              >
-                <Download className="w-5 h-5" />
-              </button>
+              {modelUrl && (
+                <button 
+                  onClick={() => window.open(modelUrl, '_blank')}
+                  className="w-12 h-12 rounded-full bg-secondary hover:bg-secondary-container shadow-lg flex items-center justify-center transition-colors mt-4 text-on-secondary"
+                >
+                  <Download className="w-5 h-5" />
+                </button>
+              )}
             </>
           )}
         </div>
@@ -107,6 +121,16 @@ export function VisualizationScreen({ user, organism, onBack }: VisualizationScr
           <div className="flex flex-col items-center gap-4 text-on-primary/50">
             <Loader2 className="w-8 h-8 animate-spin" />
             <p className="font-mono text-sm tracking-widest uppercase">Loading Assets...</p>
+          </div>
+        ) : sketchfabId ? (
+          <div className="w-full h-full cursor-move pointer-events-auto z-0">
+            <iframe
+              title="Sketchfab Model"
+              src={`https://sketchfab.com/models/${sketchfabId}/embed?autostart=1&ui_infos=0&ui_inspector=1&ui_watermark_link=0&ui_watermark=0&ui_theme=dark`}
+              className="w-full h-full border-0"
+              allow="autoplay; fullscreen; xr-spatial-tracking"
+              allowFullScreen
+            />
           </div>
         ) : modelUrl ? (
           /* Render Google model-viewer for .glb files */

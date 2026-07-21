@@ -29,8 +29,9 @@ export function SuperAdminPortal() {
   // Asset upload state
   const [uploading, setUploading] = useState(false);
   const [selectedOrgId, setSelectedOrgId] = useState(ORGANISMS[0].id);
-  const [assetType, setAssetType] = useState<'3d' | '2d'>('3d');
+  const [assetType, setAssetType] = useState<'3d' | '2d' | 'sketchfab'>('3d');
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [sketchfabInput, setSketchfabInput] = useState('');
   const [uploadError, setUploadError] = useState('');
 
   const baseUrl = window.location.origin;
@@ -68,15 +69,34 @@ export function SuperAdminPortal() {
   }, []);
 
   const handleUpload = async () => {
-    if (!selectedFile) return;
+    if (assetType !== 'sketchfab' && !selectedFile) return;
+    if (assetType === 'sketchfab' && !sketchfabInput) return;
+    
     setUploading(true);
     setUploadError('');
 
     try {
-      const fileExt = selectedFile.name.split('.').pop();
-      const fileName = `global/${selectedOrgId}/${Date.now()}.${fileExt}`;
+      if (assetType === 'sketchfab') {
+        const match = sketchfabInput.match(/([a-f0-9]{32})/i);
+        const uid = match ? match[1] : sketchfabInput;
 
-      // Upload to Storage
+        const { error: dbError } = await supabase
+          .from('school_assets')
+          .insert([{
+            school_id: null,
+            organism_id: selectedOrgId,
+            asset_type: 'sketchfab',
+            file_path: '',
+            public_url: uid
+          }]);
+
+        if (dbError) throw dbError;
+        setSketchfabInput('');
+      } else {
+        const fileExt = selectedFile!.name.split('.').pop();
+        const fileName = `global/${selectedOrgId}/${Date.now()}.${fileExt}`;
+
+        // Upload to Storage
       const { error: storageError } = await supabase.storage
         .from('school-assets')
         .upload(fileName, selectedFile);
@@ -88,18 +108,20 @@ export function SuperAdminPortal() {
         .from('school-assets')
         .getPublicUrl(fileName);
 
-      // Save to database
-      const { error: dbError } = await supabase
-        .from('school_assets')
-        .insert([{
-          school_id: null,
-          organism_id: selectedOrgId,
-          asset_type: assetType,
-          file_path: fileName,
-          public_url: publicUrl
-        }]);
+        const { error: dbError } = await supabase
+          .from('school_assets')
+          .insert([{
+            school_id: null,
+            organism_id: selectedOrgId,
+            asset_type: assetType,
+            file_path: fileName,
+            public_url: publicUrl
+          }]);
 
-      if (dbError) throw dbError;
+        if (dbError) throw dbError;
+        setSelectedFile(null);
+        (document.getElementById('file-upload') as HTMLInputElement).value = '';
+      }
 
       // Refresh assets
       const { data: assetRows } = await supabase
@@ -109,8 +131,6 @@ export function SuperAdminPortal() {
         .order('created_at', { ascending: false });
       setAssets(assetRows || []);
       
-      setSelectedFile(null);
-      (document.getElementById('file-upload') as HTMLInputElement).value = '';
     } catch (err: any) {
       console.error('Upload failed:', err);
       setUploadError(err.message || 'Failed to upload asset');
@@ -123,7 +143,9 @@ export function SuperAdminPortal() {
     if (!confirm('Are you sure you want to delete this global asset?')) return;
     
     try {
-      await supabase.storage.from('school-assets').remove([filePath]);
+      if (filePath) {
+        await supabase.storage.from('school-assets').remove([filePath]);
+      }
       await supabase.from('school_assets').delete().eq('id', assetId);
       
       setAssets(assets.filter(a => a.id !== assetId));
@@ -284,31 +306,45 @@ export function SuperAdminPortal() {
                 <label className="block text-sm font-medium text-on-surface mb-1.5">Asset Type</label>
                 <select
                   value={assetType}
-                  onChange={e => setAssetType(e.target.value as '3d' | '2d')}
+                  onChange={e => setAssetType(e.target.value as '3d' | '2d' | 'sketchfab')}
                   className="w-full bg-surface border border-surface-container-highest rounded-lg py-2.5 px-3 text-sm focus:outline-none focus:border-primary"
                 >
                   <option value="3d">3D Model (.glb)</option>
                   <option value="2d">2D Image (.png, .jpg)</option>
+                  <option value="sketchfab">Sketchfab URL</option>
                 </select>
               </div>
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-on-surface mb-1.5">File</label>
-              <input
-                id="file-upload"
-                type="file"
-                accept={assetType === '3d' ? '.glb' : 'image/png, image/jpeg'}
-                onChange={e => setSelectedFile(e.target.files?.[0] || null)}
-                className="w-full bg-surface border border-surface-container-highest rounded-lg py-2 px-3 text-sm"
-              />
-            </div>
+            {assetType === 'sketchfab' ? (
+              <div>
+                <label className="block text-sm font-medium text-on-surface mb-1.5">Sketchfab URL or ID</label>
+                <input
+                  type="text"
+                  value={sketchfabInput}
+                  onChange={e => setSketchfabInput(e.target.value)}
+                  placeholder="https://sketchfab.com/3d-models/..."
+                  className="w-full bg-surface border border-surface-container-highest rounded-lg py-2 px-3 text-sm"
+                />
+              </div>
+            ) : (
+              <div>
+                <label className="block text-sm font-medium text-on-surface mb-1.5">File</label>
+                <input
+                  id="file-upload"
+                  type="file"
+                  accept={assetType === '3d' ? '.glb' : 'image/png, image/jpeg'}
+                  onChange={e => setSelectedFile(e.target.files?.[0] || null)}
+                  className="w-full bg-surface border border-surface-container-highest rounded-lg py-2 px-3 text-sm"
+                />
+              </div>
+            )}
 
             {uploadError && <p className="text-sm text-red-600">{uploadError}</p>}
 
             <button
               onClick={handleUpload}
-              disabled={!selectedFile || uploading}
+              disabled={uploading || (assetType === 'sketchfab' ? !sketchfabInput : !selectedFile)}
               className="w-full py-2.5 bg-secondary text-on-secondary rounded-lg font-medium text-sm hover:opacity-90 disabled:opacity-50 transition-colors flex items-center justify-center gap-2"
             >
               {uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <UploadCloud className="w-4 h-4" />}
