@@ -28,12 +28,13 @@ export function VisualizationScreen({ user, organism, onBack }: VisualizationScr
       }
 
       try {
-        // Fetch custom assets for this school and organism
+        // Fetch custom assets for this school OR global assets (school_id is null)
         const { data: assets } = await supabase
           .from('school_assets')
           .select('*')
-          .eq('school_id', schoolId)
-          .eq('organism_id', organism.id);
+          .or(`school_id.eq.${schoolId},school_id.is.null`)
+          .eq('organism_id', organism.id)
+          .order('school_id', { ascending: false }); // Prioritize school-specific assets over global ones
 
         if (assets && assets.length > 0) {
           // Find the first 3d asset if any
