@@ -37,16 +37,7 @@ export function Header({ currentScreen, onNavigate, currentUser, userRole }: Hea
         </div>
       </button>
 
-      <div className="flex-1 max-w-xl mx-12">
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-outline" />
-          <input
-            type="text"
-            placeholder="Search bacteria, organelles..."
-            className="w-full bg-surface-container-low border border-surface-container-highest rounded-lg py-2.5 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-sans"
-          />
-        </div>
-      </div>
+      <div className="flex-1 max-w-xl mx-12" />
 
       <nav className="flex items-center gap-6">
         {/* Learning resources tabs — only visible to logged-in students */}
