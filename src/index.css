@@ -1,0 +1,48 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Source+Serif+4:opsz,wght@8..60,400;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-surface: #f8f9fa;
+  --color-surface-dim: #d9dadb;
+  --color-surface-bright: #f8f9fa;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-low: #f3f4f5;
+  --color-surface-container: #edeeef;
+  --color-surface-container-high: #e7e8e9;
+  --color-surface-container-highest: #e1e3e4;
+  --color-on-surface: #191c1d;
+  --color-on-surface-variant: #414844;
+  --color-outline: #717973;
+  --color-outline-variant: #c1c8c2;
+  
+  --color-primary: #012d1d;
+  --color-on-primary: #ffffff;
+  --color-primary-container: #1b4332;
+  --color-on-primary-container: #86af99;
+  
+  --color-secondary: #2c694e;
+  --color-on-secondary: #ffffff;
+  --color-secondary-container: #aeeecb;
+  --color-on-secondary-container: #316e52;
+
+  --color-background: #f8f9fa;
+  --color-on-background: #191c1d;
+
+  --font-serif: "Source Serif 4", serif;
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+
+  --radius-sm: 0.25rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
+}
+
+@layer base {
+  body {
+    @apply bg-background text-on-background font-sans antialiased;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-serif;
+  }
+}
