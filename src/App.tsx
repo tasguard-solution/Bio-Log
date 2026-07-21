@@ -16,6 +16,17 @@ export default function App() {
 
   const selectedOrganism = ORGANISMS.find(o => o.id === selectedOrganismId) || ORGANISMS[0];
 
+  // Check if user is accessing via /admin path or admin. subdomain
+  const isAdminRoute = window.location.pathname.startsWith('/admin') || window.location.hostname.startsWith('admin.');
+
+  if (isAdminRoute) {
+    return (
+      <div className="min-h-screen bg-background flex flex-col font-sans">
+        <SuperAdminPortal />
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-background flex flex-col font-sans">
       <Header 
@@ -49,9 +60,6 @@ export default function App() {
           <SchoolRegistrationScreen />
         )}
 
-        {currentScreen === 'superadmin' && (
-          <SuperAdminPortal />
-        )}
       </div>
     </div>
   );

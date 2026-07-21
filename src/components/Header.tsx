@@ -87,17 +87,6 @@ export function Header({ currentScreen, onNavigate }: HeaderProps) {
         >
           Register School
         </button>
-        <button
-          onClick={() => onNavigate('superadmin')}
-          className={`flex items-center gap-2 text-sm font-medium pb-1 border-b-2 transition-colors ${
-            currentScreen === 'superadmin'
-              ? 'border-primary text-primary'
-              : 'border-transparent text-on-surface-variant hover:text-on-surface'
-          }`}
-        >
-          <Settings className="w-5 h-5" />
-          Portal
-        </button>
         <div className="w-px h-6 bg-surface-container-high mx-2" />
         <button className="w-9 h-9 rounded-full bg-surface-container-highest flex items-center justify-center text-on-surface-variant hover:bg-surface-container-high transition-colors">
           <User className="w-5 h-5" />
