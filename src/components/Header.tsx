@@ -12,9 +12,10 @@ interface HeaderProps {
   currentScreen: ScreenType;
   onNavigate: (screen: ScreenType) => void;
   currentUser: any | null;
+  userRole: 'student' | 'school_admin' | null;
 }
 
-export function Header({ currentScreen, onNavigate, currentUser }: HeaderProps) {
+export function Header({ currentScreen, onNavigate, currentUser, userRole }: HeaderProps) {
   return (
     <header className="flex items-center justify-between px-6 py-4 bg-surface border-b border-surface-container-high sticky top-0 z-10">
       <button
@@ -49,7 +50,7 @@ export function Header({ currentScreen, onNavigate, currentUser }: HeaderProps) 
 
       <nav className="flex items-center gap-6">
         {/* Learning resources tabs — only visible to logged-in students */}
-        {currentUser && (
+        {currentUser && userRole === 'student' && (
           <>
             <button
               onClick={() => onNavigate('encyclopedia')}
@@ -92,8 +93,10 @@ export function Header({ currentScreen, onNavigate, currentUser }: HeaderProps) 
         <div className="w-px h-6 bg-surface-container-high mx-1" />
 
         {/* User avatar / login indicator */}
-        <button
-          onClick={() => onNavigate(currentUser ? 'student-dashboard' : 'auth')}
+          <button
+          onClick={() => onNavigate(currentUser
+            ? userRole === 'school_admin' ? 'school-dashboard' : 'student-dashboard'
+            : 'auth')}
           className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
             currentUser
               ? 'bg-primary-container text-on-primary-container hover:bg-primary/20'
@@ -101,11 +104,11 @@ export function Header({ currentScreen, onNavigate, currentUser }: HeaderProps) 
           }`}
         >
           {currentUser ? (
-            <GraduationCap className="w-4 h-4" />
+            userRole === 'school_admin' ? <School className="w-4 h-4" /> : <GraduationCap className="w-4 h-4" />
           ) : (
             <User className="w-4 h-4" />
           )}
-          {currentUser ? 'My Dashboard' : 'Log In'}
+          {currentUser ? (userRole === 'school_admin' ? 'My School' : 'My Dashboard') : 'Log In'}
         </button>
       </nav>
     </header>

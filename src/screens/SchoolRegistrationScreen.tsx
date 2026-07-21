@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { NIGERIAN_STATES } from '../data/states';
 import { supabase } from '../lib/supabase';
 import { MonnifyPaymentModal } from '../components/MonnifyPaymentModal';
-import { CheckCircle2, ShieldCheck, School } from 'lucide-react';
+import { CheckCircle2, ShieldCheck, School, Eye, EyeOff } from 'lucide-react';
 
 export function SchoolRegistrationScreen() {
   const [formData, setFormData] = useState({
@@ -10,8 +10,10 @@ export function SchoolRegistrationScreen() {
     email: '',
     phone: '',
     address: '',
-    stateId: ''
+    stateId: '',
+    password: '',
   });
+  const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
   const [showPayment, setShowPayment] = useState(false);
@@ -39,7 +41,18 @@ export function SchoolRegistrationScreen() {
     try {
       let schoolId = null;
 
-      // 1. Insert into Supabase
+      // 1. Create Supabase Auth account for school admin
+      const { data: authData, error: authError } = await supabase.auth.signUp({
+        email: formData.email,
+        password: formData.password,
+        options: { data: { role: 'school_admin', school_name: formData.name } },
+      });
+      // Ignore "already registered" — school may be re-paying
+      if (authError && !authError.message.includes('already registered')) {
+        throw authError;
+      }
+
+      // 2. Insert school record into Supabase
       const { data: schoolData, error: schoolError } = await supabase
         .from('schools')
         .insert([{
@@ -53,7 +66,7 @@ export function SchoolRegistrationScreen() {
         .single();
 
       if (schoolError) {
-        // If duplicate email, fetch existing school ID so payment testing can proceed seamlessly
+        // If duplicate email, fetch existing school ID so payment can proceed
         if (schoolError.code === '23505' || schoolError.message?.includes('unique constraint')) {
           const { data: existingSchool } = await supabase
             .from('schools')
@@ -75,7 +88,7 @@ export function SchoolRegistrationScreen() {
 
       setRegisteredSchoolId(schoolId);
       
-      // 2. Trigger Payment Modal
+      // 3. Trigger Payment Modal
       setShowPayment(true);
     } catch (err: any) {
       console.error('Registration Error:', err);
@@ -227,6 +240,27 @@ export function SchoolRegistrationScreen() {
                 <p className="text-xs text-on-surface-variant mt-1.5">
                   Pricing is automatically adjusted based on economic zones to ensure affordability across Nigeria.
                 </p>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-on-surface mb-1.5">Admin Password</label>
+                <div className="relative">
+                  <input
+                    required
+                    type={showPassword ? 'text' : 'password'}
+                    name="password"
+                    minLength={6}
+                    value={formData.password}
+                    onChange={handleChange}
+                    className="w-full bg-surface-container border border-surface-container-highest rounded-lg py-2.5 px-3 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+                    placeholder="Min. 6 characters"
+                  />
+                  <button type="button" onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-outline hover:text-on-surface transition-colors">
+                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
+                <p className="text-xs text-on-surface-variant mt-1.5">You'll use this to log in to your school admin dashboard.</p>
               </div>
 
               <button

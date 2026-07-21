@@ -9,45 +9,71 @@ import { SuperAdminPortal } from './screens/SuperAdminPortal';
 import { AuthScreen } from './screens/AuthScreen';
 import { JoinScreen } from './screens/JoinScreen';
 import { StudentDashboard } from './screens/StudentDashboard';
+import { SchoolAdminDashboard } from './screens/SchoolAdminDashboard';
 import { ScreenType } from './types';
 import { ORGANISMS } from './data';
 import { supabase } from './lib/supabase';
+
+type UserRole = 'student' | 'school_admin' | null;
 
 export default function App() {
   const [currentScreen, setCurrentScreen] = useState<ScreenType>('auth');
   const [selectedOrganismId, setSelectedOrganismId] = useState<string>(ORGANISMS[0].id);
   const [currentUser, setCurrentUser] = useState<any>(null);
+  const [userRole, setUserRole] = useState<UserRole>(null);
   const [authLoading, setAuthLoading] = useState(true);
 
   const selectedOrganism = ORGANISMS.find(o => o.id === selectedOrganismId) || ORGANISMS[0];
 
-  // ── Admin / Join route detection ────────────────────────────────────────────
+  // ── Special route detection ──────────────────────────────────────────────────
   const isAdminRoute = window.location.pathname.startsWith('/admin') || window.location.hostname.startsWith('admin.');
   const isJoinRoute = window.location.pathname.startsWith('/join');
 
-  // ── Session check on mount ──────────────────────────────────────────────────
+  // ── Session restore on load ──────────────────────────────────────────────────
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session?.user) {
+        const role = session.user.user_metadata?.role === 'school_admin' ? 'school_admin' : 'student';
         setCurrentUser(session.user);
-        setCurrentScreen('student-dashboard');
+        setUserRole(role);
+        setCurrentScreen(role === 'school_admin' ? 'school-dashboard' : 'student-dashboard');
       }
       setAuthLoading(false);
     });
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       if (session?.user) {
+        const role = session.user.user_metadata?.role === 'school_admin' ? 'school_admin' : 'student';
         setCurrentUser(session.user);
-        setCurrentScreen('student-dashboard');
+        setUserRole(role);
       } else {
         setCurrentUser(null);
+        setUserRole(null);
         setCurrentScreen('auth');
       }
     });
     return () => subscription.unsubscribe();
   }, []);
 
-  // ── Render: Admin portal ────────────────────────────────────────────────────
+  const handleLogout = () => {
+    setCurrentUser(null);
+    setUserRole(null);
+    setCurrentScreen('auth');
+  };
+
+  const handleStudentLogin = (user: any) => {
+    setCurrentUser(user);
+    setUserRole('student');
+    setCurrentScreen('student-dashboard');
+  };
+
+  const handleSchoolLogin = (user: any) => {
+    setCurrentUser(user);
+    setUserRole('school_admin');
+    setCurrentScreen('school-dashboard');
+  };
+
+  // ── Render: Super Admin portal ───────────────────────────────────────────────
   if (isAdminRoute) {
     return (
       <div className="min-h-screen bg-background flex flex-col font-sans">
@@ -56,20 +82,20 @@ export default function App() {
     );
   }
 
-  // ── Render: Student join link ───────────────────────────────────────────────
+  // ── Render: Student join link ────────────────────────────────────────────────
   if (isJoinRoute) {
     return (
       <div className="min-h-screen bg-background flex flex-col font-sans">
-        <Header currentScreen="auth" onNavigate={setCurrentScreen} currentUser={null} />
+        <Header currentScreen="auth" onNavigate={setCurrentScreen} currentUser={null} userRole={null} />
         <JoinScreen
-          onStudentLogin={(user) => { setCurrentUser(user); setCurrentScreen('student-dashboard'); }}
+          onStudentLogin={handleStudentLogin}
           onNavigate={setCurrentScreen}
         />
       </div>
     );
   }
 
-  // ── Auth loading state ──────────────────────────────────────────────────────
+  // ── Auth loading spinner ─────────────────────────────────────────────────────
   if (authLoading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center font-sans">
@@ -78,13 +104,14 @@ export default function App() {
     );
   }
 
-  // ── Render: Main app ────────────────────────────────────────────────────────
+  // ── Main app ─────────────────────────────────────────────────────────────────
   return (
     <div className="min-h-screen bg-background flex flex-col font-sans">
       <Header
         currentScreen={currentScreen}
         onNavigate={setCurrentScreen}
         currentUser={currentUser}
+        userRole={userRole}
       />
 
       <div className="flex-1 flex overflow-hidden">
@@ -92,52 +119,50 @@ export default function App() {
         {currentScreen === 'auth' && (
           <AuthScreen
             onNavigate={setCurrentScreen}
-            onStudentLogin={(user) => { setCurrentUser(user); setCurrentScreen('student-dashboard'); }}
+            onStudentLogin={handleStudentLogin}
+            onSchoolLogin={handleSchoolLogin}
           />
         )}
 
         {/* Student Dashboard */}
-        {currentScreen === 'student-dashboard' && currentUser && (
-          <StudentDashboard
-            user={currentUser}
-            onNavigate={setCurrentScreen}
-            onLogout={() => { setCurrentUser(null); setCurrentScreen('auth'); }}
-          />
+        {currentScreen === 'student-dashboard' && currentUser && userRole === 'student' && (
+          <StudentDashboard user={currentUser} onNavigate={setCurrentScreen} onLogout={handleLogout} />
         )}
 
-        {/* Learning resources — only for logged-in students */}
-        {currentScreen === 'encyclopedia' && currentUser && (
+        {/* School Admin Dashboard */}
+        {currentScreen === 'school-dashboard' && currentUser && userRole === 'school_admin' && (
+          <SchoolAdminDashboard user={currentUser} onNavigate={setCurrentScreen} onLogout={handleLogout} />
+        )}
+
+        {/* Encyclopedia — students only */}
+        {currentScreen === 'encyclopedia' && currentUser && userRole === 'student' && (
           <>
-            <Sidebar
-              selectedId={selectedOrganismId}
-              onSelect={setSelectedOrganismId}
-            />
+            <Sidebar selectedId={selectedOrganismId} onSelect={setSelectedOrganismId} />
             <EncyclopediaScreen organism={selectedOrganism} />
           </>
         )}
 
-        {currentScreen === 'visualization' && currentUser && (
-          <VisualizationScreen
-            organism={selectedOrganism}
-            onBack={() => setCurrentScreen('encyclopedia')}
-          />
+        {/* Visualization — students only */}
+        {currentScreen === 'visualization' && currentUser && userRole === 'student' && (
+          <VisualizationScreen organism={selectedOrganism} onBack={() => setCurrentScreen('encyclopedia')} />
         )}
 
-        {/* School registration — public */}
+        {/* School Registration — public */}
         {currentScreen === 'registration' && (
           <SchoolRegistrationScreen />
         )}
 
-        {/* Internal admin */}
+        {/* Internal admin tool */}
         {currentScreen === 'admin' && (
           <AdminScreen />
         )}
 
-        {/* Redirect to auth if trying to access protected resource without login */}
-        {(currentScreen === 'encyclopedia' || currentScreen === 'visualization' || currentScreen === 'student-dashboard') && !currentUser && (
+        {/* Catch-all: redirect to auth if accessing protected screen while logged out */}
+        {(currentScreen === 'encyclopedia' || currentScreen === 'visualization' || currentScreen === 'student-dashboard' || currentScreen === 'school-dashboard') && !currentUser && (
           <AuthScreen
             onNavigate={setCurrentScreen}
-            onStudentLogin={(user) => { setCurrentUser(user); setCurrentScreen('student-dashboard'); }}
+            onStudentLogin={handleStudentLogin}
+            onSchoolLogin={handleSchoolLogin}
           />
         )}
       </div>
