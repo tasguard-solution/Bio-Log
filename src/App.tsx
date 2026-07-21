@@ -4,11 +4,14 @@ import { Sidebar } from './components/Sidebar';
 import { EncyclopediaScreen } from './screens/EncyclopediaScreen';
 import { VisualizationScreen } from './screens/VisualizationScreen';
 import { AdminScreen } from './screens/AdminScreen';
+import { SchoolRegistrationScreen } from './screens/SchoolRegistrationScreen';
+import { SuperAdminPortal } from './screens/SuperAdminPortal';
 import { ScreenType } from './types';
 import { ORGANISMS } from './data';
 
 export default function App() {
-  const [currentScreen, setCurrentScreen] = useState<ScreenType>('encyclopedia');
+  // Setting default to registration for easy testing of the new flow
+  const [currentScreen, setCurrentScreen] = useState<ScreenType>('registration');
   const [selectedOrganismId, setSelectedOrganismId] = useState<string>(ORGANISMS[0].id);
 
   const selectedOrganism = ORGANISMS.find(o => o.id === selectedOrganismId) || ORGANISMS[0];
@@ -40,6 +43,14 @@ export default function App() {
         
         {currentScreen === 'admin' && (
           <AdminScreen />
+        )}
+
+        {currentScreen === 'registration' && (
+          <SchoolRegistrationScreen />
+        )}
+
+        {currentScreen === 'superadmin' && (
+          <SuperAdminPortal />
         )}
       </div>
     </div>
