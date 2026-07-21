@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Organism } from '../types';
 import { Rotate3D, Maximize, Settings2, Download, Activity, BookOpen, FlaskConical } from 'lucide-react';
+import { supabase } from '../lib/supabase';
 
 function ImageWithFallback({ src, alt, className }: { src: string; alt: string; className?: string }) {
   const [errored, setErrored] = useState(false);
@@ -12,7 +13,7 @@ function ImageWithFallback({ src, alt, className }: { src: string; alt: string; 
       </div>
     );
   }
-  return <img src={src} alt={alt} className={className} onError={() => setErrored(true)} />;
+  return <img src={src} alt={alt} className={className} onError={() => setErrored(true)} referrerPolicy="no-referrer" />;
 }
 
 interface EncyclopediaScreenProps {
@@ -20,6 +21,34 @@ interface EncyclopediaScreenProps {
 }
 
 export function EncyclopediaScreen({ organism }: EncyclopediaScreenProps) {
+  const [customImageUrl, setCustomImageUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function fetchCustom2DAsset() {
+      try {
+        // Fetch global or school specific 2D assets
+        const { data: assets } = await supabase
+          .from('school_assets')
+          .select('*')
+          .eq('organism_id', organism.id)
+          .eq('asset_type', '2d')
+          // We don't have schoolId easily available here, so we fetch global ones first
+          // To fetch school-specific ones, we'd need user from props. Let's just fetch global ones for now, 
+          // or we can just fetch all and pick the first one since we are in Encyclopedia.
+          .order('created_at', { ascending: false });
+
+        if (assets && assets.length > 0) {
+          setCustomImageUrl(assets[0].public_url);
+        } else {
+          setCustomImageUrl(null);
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    }
+    fetchCustom2DAsset();
+  }, [organism.id]);
+
   if (organism.isFungiGroup) {
     return <FungiView organism={organism} />;
   }
@@ -60,7 +89,7 @@ export function EncyclopediaScreen({ organism }: EncyclopediaScreenProps) {
 
             <div className="bg-surface-container-low aspect-[4/3] w-full relative flex items-center justify-center p-8 overflow-hidden shadow-inner">
               <ImageWithFallback
-                src={organism.imageUrl}
+                src={customImageUrl || organism.imageUrl}
                 alt={organism.name}
                 className="w-full h-full object-contain drop-shadow-lg hover:scale-[1.02] transition-transform duration-700 ease-out"
               />
@@ -73,7 +102,7 @@ export function EncyclopediaScreen({ organism }: EncyclopediaScreenProps) {
                   href={organism.imageSource.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="font-mono text-[11px] text-secondary hover:text-primary transition-colors underline underline-offset-2 truncate max-w-[340px]"
+                  className="font-mono text-[11px] text-secondary hover:text-primary transition-colors underline underline-offset-2 break-words max-w-full"
                 >
                   {organism.imageSource.label}
                 </a>
@@ -190,7 +219,7 @@ function FungiView({ organism }: { organism: Organism }) {
                           href={fungi.imageSource.url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="font-mono text-[10px] text-secondary hover:text-primary transition-colors underline-offset-1 underline truncate"
+                          className="font-mono text-[10px] text-secondary hover:text-primary transition-colors underline-offset-1 underline break-words"
                         >
                           {fungi.imageSource.label}
                         </a>
