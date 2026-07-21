@@ -1,16 +1,66 @@
-import { ArrowLeft, Box, Download, Settings, Share2 } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { ArrowLeft, Box, Download, Settings, Share2, Loader2, AlertTriangle, Layers } from 'lucide-react';
 import { Organism } from '../types';
+import { supabase } from '../lib/supabase';
+
+const ModelViewer = 'model-viewer' as any;
 
 interface VisualizationScreenProps {
+  user: any;
   organism: Organism;
   onBack: () => void;
 }
 
-export function VisualizationScreen({ organism, onBack }: VisualizationScreenProps) {
+export function VisualizationScreen({ user, organism, onBack }: VisualizationScreenProps) {
+  const [loadingAssets, setLoadingAssets] = useState(true);
+  const [modelUrl, setModelUrl] = useState<string | null>(null);
+  const [customImageUrl, setCustomImageUrl] = useState<string | null>(null);
+  const [viewMode, setViewMode] = useState<'solid' | 'wireframe' | 'xray'>('solid');
+
+  useEffect(() => {
+    (async () => {
+      setLoadingAssets(true);
+      setModelUrl(null);
+      setCustomImageUrl(null);
+
+      const schoolId = user?.user_metadata?.school_id;
+      if (!schoolId) {
+        setLoadingAssets(false);
+        return;
+      }
+
+      try {
+        // Fetch custom assets for this school and organism
+        const { data: assets } = await supabase
+          .from('school_assets')
+          .select('*')
+          .eq('school_id', schoolId)
+          .eq('organism_id', organism.id);
+
+        if (assets && assets.length > 0) {
+          // Find the first 3d asset if any
+          const modelAsset = assets.find(a => a.asset_type === '3d');
+          if (modelAsset) setModelUrl(modelAsset.public_url);
+
+          // Find the first 2d asset if any
+          const imageAsset = assets.find(a => a.asset_type === '2d');
+          if (imageAsset) setCustomImageUrl(imageAsset.public_url);
+        }
+      } catch (err) {
+        console.error('Error fetching custom assets:', err);
+      } finally {
+        setLoadingAssets(false);
+      }
+    })();
+  }, [user, organism.id]);
+
+  // Use custom image if available, otherwise fallback to default Wikipedia image
+  const displayImage = customImageUrl || organism.imageUrl;
+
   return (
-    <div className="flex-1 flex flex-col h-[calc(100vh-89px)] bg-on-surface text-on-primary">
+    <div className="flex-1 flex flex-col h-[calc(100vh-89px)] bg-on-surface text-on-primary overflow-hidden relative">
       {/* Top Bar overlay */}
-      <div className="absolute top-[89px] left-0 right-0 p-6 flex justify-between items-start z-10 pointer-events-none">
+      <div className="absolute top-0 left-0 right-0 p-6 flex justify-between items-start z-10 pointer-events-none">
         <div className="pointer-events-auto">
           <button
             onClick={onBack}
@@ -23,8 +73,13 @@ export function VisualizationScreen({ organism, onBack }: VisualizationScreenPro
             <h2 className="font-serif text-2xl font-bold mb-1 text-on-primary">{organism.name}</h2>
             <p className="font-mono text-xs text-on-primary/60 mb-4">{organism.subtitle}</p>
             <p className="text-sm text-on-primary/80 leading-relaxed">
-              Interactive 3D visualization. Use mouse or touch to rotate and zoom. Select specific organelles to view isolated structures.
+              Interactive 3D visualization. Use mouse or touch to rotate and zoom.
             </p>
+            {modelUrl && (
+              <div className="mt-4 px-3 py-1.5 bg-secondary/20 text-secondary-container border border-secondary/30 rounded-lg text-xs font-medium flex items-center gap-2 w-max">
+                <Box className="w-3.5 h-3.5" /> Custom 3D Model Loaded
+              </div>
+            )}
           </div>
         </div>
 
@@ -33,52 +88,94 @@ export function VisualizationScreen({ organism, onBack }: VisualizationScreenPro
             <Settings className="w-5 h-5" />
           </button>
           <button className="w-12 h-12 rounded-full bg-primary/60 hover:bg-primary/80 backdrop-blur-md border border-on-primary/10 flex items-center justify-center transition-colors text-on-primary">
-            <Box className="w-5 h-5" />
+            <Layers className="w-5 h-5" />
           </button>
           <button className="w-12 h-12 rounded-full bg-primary/60 hover:bg-primary/80 backdrop-blur-md border border-on-primary/10 flex items-center justify-center transition-colors text-on-primary">
             <Share2 className="w-5 h-5" />
           </button>
-          <button className="w-12 h-12 rounded-full bg-secondary hover:bg-secondary-container shadow-lg flex items-center justify-center transition-colors mt-4 text-on-secondary">
-            <Download className="w-5 h-5" />
-          </button>
+          {modelUrl && (
+            <button 
+              onClick={() => window.open(modelUrl, '_blank')}
+              className="w-12 h-12 rounded-full bg-secondary hover:bg-secondary-container shadow-lg flex items-center justify-center transition-colors mt-4 text-on-secondary"
+            >
+              <Download className="w-5 h-5" />
+            </button>
+          )}
         </div>
       </div>
 
-      {/* 3D Canvas Placeholder */}
-      <div className="flex-1 relative flex items-center justify-center overflow-hidden">
+      {/* 3D Canvas / Image Viewer */}
+      <div className="flex-1 relative flex items-center justify-center">
         <div className="absolute inset-0 bg-gradient-to-b from-primary-container/30 to-on-surface pointer-events-none" />
-        {organism.imageUrl ? (
+        
+        {loadingAssets ? (
+          <div className="flex flex-col items-center gap-4 text-on-primary/50">
+            <Loader2 className="w-8 h-8 animate-spin" />
+            <p className="font-mono text-sm tracking-widest uppercase">Loading Assets...</p>
+          </div>
+        ) : modelUrl ? (
+          /* Render Google model-viewer for .glb files */
+          <div className="w-full h-full cursor-move">
+            <ModelViewer
+              src={modelUrl}
+              camera-controls
+              auto-rotate
+              ar
+              shadow-intensity="1"
+              style={{ width: '100%', height: '100%', outline: 'none' }}
+              environment-image="neutral"
+              exposure="1.2"
+            >
+              <div slot="progress-bar" className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-4 text-on-primary/50">
+                <Loader2 className="w-8 h-8 animate-spin" />
+                <p className="font-mono text-sm tracking-widest uppercase text-white">Loading 3D Engine...</p>
+              </div>
+            </ModelViewer>
+          </div>
+        ) : displayImage ? (
+          /* Fallback to 2D image */
           <img
-            src={organism.imageUrl}
+            src={displayImage}
             alt={organism.name}
-            className="max-w-[80%] max-h-[80%] object-contain drop-shadow-[0_20px_50px_rgba(0,0,0,0.5)] scale-110 cursor-move"
+            className="max-w-[80%] max-h-[80%] object-contain drop-shadow-[0_20px_50px_rgba(0,0,0,0.5)] scale-110"
           />
         ) : (
           <div className="text-on-primary/40 font-mono flex flex-col items-center">
-            <Box className="w-16 h-16 mb-4 opacity-50" />
-            <p>3D Model Context Not Available for {organism.name}</p>
+            <AlertTriangle className="w-16 h-16 mb-4 opacity-50" />
+            <p>No 3D Model or Image available for {organism.name}</p>
           </div>
         )}
 
-        {/* Bottom controls */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 bg-primary/60 backdrop-blur-md border border-on-primary/10 rounded-full px-6 py-3 flex items-center gap-8 pointer-events-auto text-on-primary">
-          <div className="flex flex-col items-center gap-1 cursor-pointer hover:text-secondary-container transition-colors">
-            <div className="w-6 h-6 rounded border-2 border-current" />
-            <span className="text-[10px] font-mono uppercase tracking-wider">Wireframe</span>
+        {/* Bottom controls (Only show if we have a model) */}
+        {modelUrl && (
+          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 bg-primary/60 backdrop-blur-md border border-on-primary/10 rounded-full px-6 py-3 flex items-center gap-8 pointer-events-auto text-on-primary z-10">
+            <div 
+              onClick={() => setViewMode('wireframe')}
+              className={`flex flex-col items-center gap-1 cursor-pointer transition-colors ${viewMode === 'wireframe' ? 'text-secondary-container' : 'hover:text-secondary-container'}`}
+            >
+              <div className={`w-6 h-6 rounded border-2 ${viewMode === 'wireframe' ? 'border-secondary-container' : 'border-current'}`} />
+              <span className="text-[10px] font-mono uppercase tracking-wider">Wireframe</span>
+            </div>
+            <div className="w-px h-8 bg-on-primary/20" />
+            <div 
+              onClick={() => setViewMode('solid')}
+              className={`flex flex-col items-center gap-1 cursor-pointer transition-colors ${viewMode === 'solid' ? 'text-secondary-container' : 'hover:text-secondary-container'}`}
+            >
+              <div className={`w-6 h-6 rounded ${viewMode === 'solid' ? 'bg-secondary-container' : 'bg-current'}`} />
+              <span className="text-[10px] font-mono uppercase tracking-wider">Solid</span>
+            </div>
+            <div className="w-px h-8 bg-on-primary/20" />
+            <div 
+              onClick={() => setViewMode('xray')}
+              className={`flex flex-col items-center gap-1 cursor-pointer transition-colors ${viewMode === 'xray' ? 'text-secondary-container' : 'hover:text-secondary-container'}`}
+            >
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+              </svg>
+              <span className="text-[10px] font-mono uppercase tracking-wider">X-Ray</span>
+            </div>
           </div>
-          <div className="w-px h-8 bg-on-primary/20" />
-          <div className="flex flex-col items-center gap-1 cursor-pointer text-secondary-container transition-colors">
-            <div className="w-6 h-6 rounded bg-current" />
-            <span className="text-[10px] font-mono uppercase tracking-wider">Solid</span>
-          </div>
-          <div className="w-px h-8 bg-on-primary/20" />
-          <div className="flex flex-col items-center gap-1 cursor-pointer hover:text-secondary-container transition-colors">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
-            </svg>
-            <span className="text-[10px] font-mono uppercase tracking-wider">X-Ray</span>
-          </div>
-        </div>
+        )}
       </div>
     </div>
   );

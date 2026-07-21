@@ -153,7 +153,7 @@ export default function App() {
 
         {/* Visualization — students only */}
         {currentScreen === 'visualization' && currentUser && userRole === 'student' && (
-          <VisualizationScreen organism={selectedOrganism} onBack={() => navigateTo('encyclopedia')} />
+          <VisualizationScreen user={currentUser} organism={selectedOrganism} onBack={() => navigateTo('encyclopedia')} />
         )}
 
         {/* School Registration — public */}
