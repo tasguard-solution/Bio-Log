@@ -43,4 +43,4 @@ export const NIGERIAN_STATES: NigerianState[] = [
   { id: 'TA', name: 'Taraba', tier: 'Low', monthlyPrice: 5000 },
   { id: 'YO', name: 'Yobe', tier: 'Low', monthlyPrice: 5000 },
   { id: 'ZA', name: 'Zamfara', tier: 'Low', monthlyPrice: 5000 },
-].sort((a, b) => a.name.localeCompare(b.name));
+].sort((a, b) => a.name.localeCompare(b.name)) as NigerianState[];

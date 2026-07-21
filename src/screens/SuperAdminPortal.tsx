@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
-import { Building2, CreditCard, CalendarClock, Activity } from 'lucide-react';
+import { Building2, CreditCard, CalendarClock, Activity, Link2, Check } from 'lucide-react';
 
 interface SchoolData {
   id: string;
@@ -23,6 +23,16 @@ export function SuperAdminPortal() {
   const [schools, setSchools] = useState<SchoolData[]>([]);
   const [subscriptions, setSubscriptions] = useState<SubscriptionData[]>([]);
   const [loading, setLoading] = useState(true);
+  const [copiedId, setCopiedId] = useState<string | null>(null);
+
+  const baseUrl = window.location.origin;
+
+  const copyJoinLink = (schoolId: string) => {
+    const link = `${baseUrl}/join?school=${schoolId}`;
+    navigator.clipboard.writeText(link);
+    setCopiedId(schoolId);
+    setTimeout(() => setCopiedId(null), 2000);
+  };
 
   useEffect(() => {
     async function fetchData() {
@@ -109,6 +119,7 @@ export function SuperAdminPortal() {
                   <th className="py-4 px-6 text-xs font-semibold text-outline uppercase tracking-wider">State</th>
                   <th className="py-4 px-6 text-xs font-semibold text-outline uppercase tracking-wider">Subscription</th>
                   <th className="py-4 px-6 text-xs font-semibold text-outline uppercase tracking-wider">Expires</th>
+                  <th className="py-4 px-6 text-xs font-semibold text-outline uppercase tracking-wider">Student Join Link</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-surface-container-high">
@@ -136,13 +147,26 @@ export function SuperAdminPortal() {
                           <span className="text-sm text-outline">No Subscription</span>
                         )}
                       </td>
-                      <td className="py-4 px-6 text-sm text-on-surface-variant flex items-center gap-2">
+                      <td className="py-4 px-6 text-sm text-on-surface-variant">
                         {sub?.current_period_end ? (
-                          <>
+                          <div className="flex items-center gap-2">
                             <CalendarClock className="w-4 h-4 text-outline" />
                             {new Date(sub.current_period_end).toLocaleDateString()}
-                          </>
+                          </div>
                         ) : '-'}
+                      </td>
+                      <td className="py-4 px-6">
+                        <button
+                          onClick={() => copyJoinLink(school.id)}
+                          className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                            copiedId === school.id
+                              ? 'bg-green-100 text-green-700'
+                              : 'bg-primary/10 text-primary hover:bg-primary/20'
+                          }`}
+                        >
+                          {copiedId === school.id ? <Check className="w-3.5 h-3.5" /> : <Link2 className="w-3.5 h-3.5" />}
+                          {copiedId === school.id ? 'Copied!' : 'Copy Join Link'}
+                        </button>
                       </td>
                     </tr>
                   );

@@ -1,22 +1,26 @@
 import {
-  BookOpen,
   LayoutGrid,
   Library,
-  Settings,
+  School,
   User,
   Search,
+  GraduationCap,
 } from 'lucide-react';
 import { ScreenType } from '../types';
 
 interface HeaderProps {
   currentScreen: ScreenType;
   onNavigate: (screen: ScreenType) => void;
+  currentUser: any | null;
 }
 
-export function Header({ currentScreen, onNavigate }: HeaderProps) {
+export function Header({ currentScreen, onNavigate, currentUser }: HeaderProps) {
   return (
     <header className="flex items-center justify-between px-6 py-4 bg-surface border-b border-surface-container-high sticky top-0 z-10">
-      <div className="flex items-center gap-3">
+      <button
+        onClick={() => onNavigate(currentUser ? 'student-dashboard' : 'auth')}
+        className="flex items-center gap-3"
+      >
         <div className="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container">
           <div className="w-6 h-6 border-2 border-current rounded-full grid grid-cols-2 grid-rows-2 gap-[2px] p-[2px]">
             <div className="bg-current rounded-full" />
@@ -30,7 +34,7 @@ export function Header({ currentScreen, onNavigate }: HeaderProps) {
             Bio Log
           </h1>
         </div>
-      </div>
+      </button>
 
       <div className="flex-1 max-w-xl mx-12">
         <div className="relative">
@@ -44,39 +48,35 @@ export function Header({ currentScreen, onNavigate }: HeaderProps) {
       </div>
 
       <nav className="flex items-center gap-6">
-        <button
-          onClick={() => onNavigate('encyclopedia')}
-          className={`flex items-center gap-2 text-sm font-medium pb-1 border-b-2 transition-colors ${
-            currentScreen === 'encyclopedia'
-              ? 'border-primary text-primary'
-              : 'border-transparent text-on-surface-variant hover:text-on-surface'
-          }`}
-        >
-          <LayoutGrid className="w-5 h-5" />
-          Gallery
-        </button>
-        <button
-          onClick={() => onNavigate('visualization')}
-          className={`flex items-center gap-2 text-sm font-medium pb-1 border-b-2 transition-colors ${
-            currentScreen === 'visualization'
-              ? 'border-primary text-primary'
-              : 'border-transparent text-on-surface-variant hover:text-on-surface'
-          }`}
-        >
-          <Library className="w-5 h-5" />
-          Library
-        </button>
-        <button
-          onClick={() => onNavigate('admin')}
-          className={`flex items-center gap-2 text-sm font-medium pb-1 border-b-2 transition-colors ${
-            currentScreen === 'admin'
-              ? 'border-primary text-primary'
-              : 'border-transparent text-on-surface-variant hover:text-on-surface'
-          }`}
-        >
-          <BookOpen className="w-5 h-5" />
-          Editor
-        </button>
+        {/* Learning resources tabs — only visible to logged-in students */}
+        {currentUser && (
+          <>
+            <button
+              onClick={() => onNavigate('encyclopedia')}
+              className={`flex items-center gap-2 text-sm font-medium pb-1 border-b-2 transition-colors ${
+                currentScreen === 'encyclopedia'
+                  ? 'border-primary text-primary'
+                  : 'border-transparent text-on-surface-variant hover:text-on-surface'
+              }`}
+            >
+              <LayoutGrid className="w-4 h-4" />
+              Encyclopedia
+            </button>
+            <button
+              onClick={() => onNavigate('visualization')}
+              className={`flex items-center gap-2 text-sm font-medium pb-1 border-b-2 transition-colors ${
+                currentScreen === 'visualization'
+                  ? 'border-primary text-primary'
+                  : 'border-transparent text-on-surface-variant hover:text-on-surface'
+              }`}
+            >
+              <Library className="w-4 h-4" />
+              3D Models
+            </button>
+          </>
+        )}
+
+        {/* For Schools tab — always visible */}
         <button
           onClick={() => onNavigate('registration')}
           className={`flex items-center gap-2 text-sm font-medium pb-1 border-b-2 transition-colors ${
@@ -85,11 +85,27 @@ export function Header({ currentScreen, onNavigate }: HeaderProps) {
               : 'border-transparent text-on-surface-variant hover:text-on-surface'
           }`}
         >
-          Register School
+          <School className="w-4 h-4" />
+          For Schools
         </button>
-        <div className="w-px h-6 bg-surface-container-high mx-2" />
-        <button className="w-9 h-9 rounded-full bg-surface-container-highest flex items-center justify-center text-on-surface-variant hover:bg-surface-container-high transition-colors">
-          <User className="w-5 h-5" />
+
+        <div className="w-px h-6 bg-surface-container-high mx-1" />
+
+        {/* User avatar / login indicator */}
+        <button
+          onClick={() => onNavigate(currentUser ? 'student-dashboard' : 'auth')}
+          className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
+            currentUser
+              ? 'bg-primary-container text-on-primary-container hover:bg-primary/20'
+              : 'bg-surface-container-highest text-on-surface-variant hover:bg-surface-container-high'
+          }`}
+        >
+          {currentUser ? (
+            <GraduationCap className="w-4 h-4" />
+          ) : (
+            <User className="w-4 h-4" />
+          )}
+          {currentUser ? 'My Dashboard' : 'Log In'}
         </button>
       </nav>
     </header>

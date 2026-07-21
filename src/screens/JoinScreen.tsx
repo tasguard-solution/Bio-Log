@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import { ScreenType } from '../types';
 import { GraduationCap, Eye, EyeOff, Loader2, CheckCircle2, AlertTriangle } from 'lucide-react';
