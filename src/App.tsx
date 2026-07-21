@@ -55,22 +55,31 @@ export default function App() {
     return () => subscription.unsubscribe();
   }, []);
 
+  // ── Navigation Wrapper ───────────────────────────────────────────────────────
+  // Clears special URLs (like /join) when navigating to standard screens
+  const navigateTo = (screen: ScreenType) => {
+    if (window.location.pathname !== '/') {
+      window.history.pushState({}, '', '/');
+    }
+    setCurrentScreen(screen);
+  };
+
   const handleLogout = () => {
     setCurrentUser(null);
     setUserRole(null);
-    setCurrentScreen('auth');
+    navigateTo('auth');
   };
 
   const handleStudentLogin = (user: any) => {
     setCurrentUser(user);
     setUserRole('student');
-    setCurrentScreen('student-dashboard');
+    navigateTo('student-dashboard');
   };
 
   const handleSchoolLogin = (user: any) => {
     setCurrentUser(user);
     setUserRole('school_admin');
-    setCurrentScreen('school-dashboard');
+    navigateTo('school-dashboard');
   };
 
   // ── Render: Super Admin portal ───────────────────────────────────────────────
@@ -86,10 +95,10 @@ export default function App() {
   if (isJoinRoute) {
     return (
       <div className="min-h-screen bg-background flex flex-col font-sans">
-        <Header currentScreen="auth" onNavigate={setCurrentScreen} currentUser={null} userRole={null} />
+        <Header currentScreen="auth" onNavigate={navigateTo} currentUser={null} userRole={null} />
         <JoinScreen
           onStudentLogin={handleStudentLogin}
-          onNavigate={setCurrentScreen}
+          onNavigate={navigateTo}
         />
       </div>
     );
@@ -109,7 +118,7 @@ export default function App() {
     <div className="min-h-screen bg-background flex flex-col font-sans">
       <Header
         currentScreen={currentScreen}
-        onNavigate={setCurrentScreen}
+        onNavigate={navigateTo}
         currentUser={currentUser}
         userRole={userRole}
       />
@@ -118,7 +127,7 @@ export default function App() {
         {/* Auth / Landing */}
         {currentScreen === 'auth' && (
           <AuthScreen
-            onNavigate={setCurrentScreen}
+            onNavigate={navigateTo}
             onStudentLogin={handleStudentLogin}
             onSchoolLogin={handleSchoolLogin}
           />
@@ -126,12 +135,12 @@ export default function App() {
 
         {/* Student Dashboard */}
         {currentScreen === 'student-dashboard' && currentUser && userRole === 'student' && (
-          <StudentDashboard user={currentUser} onNavigate={setCurrentScreen} onLogout={handleLogout} />
+          <StudentDashboard user={currentUser} onNavigate={navigateTo} onLogout={handleLogout} />
         )}
 
         {/* School Admin Dashboard */}
         {currentScreen === 'school-dashboard' && currentUser && userRole === 'school_admin' && (
-          <SchoolAdminDashboard user={currentUser} onNavigate={setCurrentScreen} onLogout={handleLogout} />
+          <SchoolAdminDashboard user={currentUser} onNavigate={navigateTo} onLogout={handleLogout} />
         )}
 
         {/* Encyclopedia — students only */}
@@ -144,7 +153,7 @@ export default function App() {
 
         {/* Visualization — students only */}
         {currentScreen === 'visualization' && currentUser && userRole === 'student' && (
-          <VisualizationScreen organism={selectedOrganism} onBack={() => setCurrentScreen('encyclopedia')} />
+          <VisualizationScreen organism={selectedOrganism} onBack={() => navigateTo('encyclopedia')} />
         )}
 
         {/* School Registration — public */}
@@ -160,7 +169,7 @@ export default function App() {
         {/* Catch-all: redirect to auth if accessing protected screen while logged out */}
         {(currentScreen === 'encyclopedia' || currentScreen === 'visualization' || currentScreen === 'student-dashboard' || currentScreen === 'school-dashboard') && !currentUser && (
           <AuthScreen
-            onNavigate={setCurrentScreen}
+            onNavigate={navigateTo}
             onStudentLogin={handleStudentLogin}
             onSchoolLogin={handleSchoolLogin}
           />
