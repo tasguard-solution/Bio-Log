@@ -3,27 +3,23 @@ import { supabase } from '../lib/supabase';
 import { ScreenType } from '../types';
 import { School, GraduationCap, Eye, EyeOff, ArrowLeft, Loader2 } from 'lucide-react';
 
-interface AuthScreenProps {
+// ─── LoginForm lives OUTSIDE AuthScreen so it never remounts on parent re-renders ───
+interface LoginFormProps {
+  role: 'student' | 'school';
+  onBack: () => void;
   onNavigate: (screen: ScreenType) => void;
   onStudentLogin: (user: any) => void;
   onSchoolLogin: (user: any) => void;
 }
 
-type AuthMode = 'landing' | 'student-login' | 'school-login';
-
-export function AuthScreen({ onNavigate, onStudentLogin, onSchoolLogin }: AuthScreenProps) {
-  const [mode, setMode] = useState<AuthMode>('landing');
+function LoginForm({ role, onBack, onNavigate, onStudentLogin, onSchoolLogin }: LoginFormProps) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  const resetForm = (nextMode: AuthMode) => {
-    setEmail(''); setPassword(''); setError(''); setMode(nextMode);
-  };
-
-  const handleLogin = async (e: React.FormEvent, role: 'student' | 'school') => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     setLoading(true);
@@ -43,7 +39,7 @@ export function AuthScreen({ onNavigate, onStudentLogin, onSchoolLogin }: AuthSc
       } else {
         if (userRole === 'school_admin') {
           await supabase.auth.signOut();
-          throw new Error('This is a school admin account. Please use "I\'m a School" to log in.');
+          throw new Error("This is a school admin account. Please use 'I'm a School' to log in.");
         }
         onStudentLogin(data.user);
       }
@@ -54,11 +50,11 @@ export function AuthScreen({ onNavigate, onStudentLogin, onSchoolLogin }: AuthSc
     }
   };
 
-  const LoginForm = ({ role }: { role: 'student' | 'school' }) => (
+  return (
     <div className="flex-1 flex items-center justify-center bg-surface-container-low p-6">
       <div className="w-full max-w-md">
         <button
-          onClick={() => resetForm('landing')}
+          onClick={onBack}
           className="flex items-center gap-2 text-sm text-on-surface-variant hover:text-on-surface mb-8 transition-colors"
         >
           <ArrowLeft className="w-4 h-4" /> Back
@@ -75,7 +71,7 @@ export function AuthScreen({ onNavigate, onStudentLogin, onSchoolLogin }: AuthSc
               {role === 'school' ? 'School Admin Login' : 'Student Login'}
             </h2>
             <p className="text-sm text-on-surface-variant">
-              {role === 'school' ? 'Manage your school\'s subscription & join links' : 'Access your school\'s biology resources'}
+              {role === 'school' ? "Manage your school's subscription & join links" : "Access your school's biology resources"}
             </p>
           </div>
         </div>
@@ -86,11 +82,14 @@ export function AuthScreen({ onNavigate, onStudentLogin, onSchoolLogin }: AuthSc
           </div>
         )}
 
-        <form onSubmit={e => handleLogin(e, role)} className="space-y-5">
+        <form onSubmit={handleLogin} className="space-y-5">
           <div>
             <label className="block text-sm font-medium text-on-surface mb-1.5">Email Address</label>
             <input
-              required type="email" value={email}
+              required
+              type="email"
+              autoComplete="email"
+              value={email}
               onChange={e => setEmail(e.target.value)}
               placeholder={role === 'school' ? 'admin@school.edu.ng' : 'your@email.com'}
               className="w-full bg-surface border border-surface-container-highest rounded-xl py-3 px-4 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
@@ -100,20 +99,29 @@ export function AuthScreen({ onNavigate, onStudentLogin, onSchoolLogin }: AuthSc
             <label className="block text-sm font-medium text-on-surface mb-1.5">Password</label>
             <div className="relative">
               <input
-                required type={showPassword ? 'text' : 'password'} value={password}
+                required
+                type={showPassword ? 'text' : 'password'}
+                autoComplete="current-password"
+                value={password}
                 onChange={e => setPassword(e.target.value)}
                 placeholder="••••••••"
                 className="w-full bg-surface border border-surface-container-highest rounded-xl py-3 px-4 pr-12 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
               />
-              <button type="button" onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-outline hover:text-on-surface transition-colors">
+              <button
+                type="button"
+                onClick={() => setShowPassword(p => !p)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-outline hover:text-on-surface transition-colors"
+              >
                 {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
               </button>
             </div>
           </div>
 
-          <button type="submit" disabled={loading}
-            className="w-full py-3.5 bg-primary text-on-primary rounded-xl font-semibold text-sm hover:opacity-90 disabled:opacity-60 transition-all flex items-center justify-center gap-2 shadow-sm">
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full py-3.5 bg-primary text-on-primary rounded-xl font-semibold text-sm hover:opacity-90 disabled:opacity-60 transition-all flex items-center justify-center gap-2 shadow-sm"
+          >
             {loading ? <><Loader2 className="w-4 h-4 animate-spin" /> Signing in…</> : 'Sign In'}
           </button>
         </form>
@@ -135,9 +143,43 @@ export function AuthScreen({ onNavigate, onStudentLogin, onSchoolLogin }: AuthSc
       </div>
     </div>
   );
+}
 
-  if (mode === 'student-login') return <LoginForm role="student" />;
-  if (mode === 'school-login') return <LoginForm role="school" />;
+// ─── AuthScreen manages which view to show ──────────────────────────────────
+interface AuthScreenProps {
+  onNavigate: (screen: ScreenType) => void;
+  onStudentLogin: (user: any) => void;
+  onSchoolLogin: (user: any) => void;
+}
+
+type AuthMode = 'landing' | 'student-login' | 'school-login';
+
+export function AuthScreen({ onNavigate, onStudentLogin, onSchoolLogin }: AuthScreenProps) {
+  const [mode, setMode] = useState<AuthMode>('landing');
+
+  if (mode === 'student-login') {
+    return (
+      <LoginForm
+        role="student"
+        onBack={() => setMode('landing')}
+        onNavigate={onNavigate}
+        onStudentLogin={onStudentLogin}
+        onSchoolLogin={onSchoolLogin}
+      />
+    );
+  }
+
+  if (mode === 'school-login') {
+    return (
+      <LoginForm
+        role="school"
+        onBack={() => setMode('landing')}
+        onNavigate={onNavigate}
+        onStudentLogin={onStudentLogin}
+        onSchoolLogin={onSchoolLogin}
+      />
+    );
+  }
 
   // ─── Landing ───────────────────────────────────────────────────────────────
   return (
@@ -161,9 +203,10 @@ export function AuthScreen({ onNavigate, onStudentLogin, onSchoolLogin }: AuthSc
       </div>
 
       <div className="grid sm:grid-cols-2 gap-5 w-full max-w-2xl">
-        {/* Student Card */}
-        <button onClick={() => resetForm('student-login')}
-          className="group flex flex-col items-start p-8 bg-surface rounded-3xl border border-surface-container-high hover:border-primary/40 hover:shadow-lg transition-all duration-300 text-left hover:-translate-y-1">
+        <button
+          onClick={() => setMode('student-login')}
+          className="group flex flex-col items-start p-8 bg-surface rounded-3xl border border-surface-container-high hover:border-primary/40 hover:shadow-lg transition-all duration-300 text-left hover:-translate-y-1"
+        >
           <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-5 group-hover:bg-primary/20 transition-colors">
             <GraduationCap className="w-7 h-7 text-primary" />
           </div>
@@ -174,9 +217,10 @@ export function AuthScreen({ onNavigate, onStudentLogin, onSchoolLogin }: AuthSc
           <span className="text-sm font-semibold text-primary">Sign In →</span>
         </button>
 
-        {/* School Card */}
-        <button onClick={() => resetForm('school-login')}
-          className="group flex flex-col items-start p-8 bg-surface rounded-3xl border border-surface-container-high hover:border-secondary/40 hover:shadow-lg transition-all duration-300 text-left hover:-translate-y-1">
+        <button
+          onClick={() => setMode('school-login')}
+          className="group flex flex-col items-start p-8 bg-surface rounded-3xl border border-surface-container-high hover:border-secondary/40 hover:shadow-lg transition-all duration-300 text-left hover:-translate-y-1"
+        >
           <div className="w-14 h-14 rounded-2xl bg-secondary/10 flex items-center justify-center mb-5 group-hover:bg-secondary/20 transition-colors">
             <School className="w-7 h-7 text-secondary" />
           </div>
