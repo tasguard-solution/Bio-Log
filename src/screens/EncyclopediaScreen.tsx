@@ -1,6 +1,19 @@
 import { useState } from 'react';
 import { Organism } from '../types';
-import { Rotate3D, Maximize, Settings2, Download, Activity, BookOpen } from 'lucide-react';
+import { Rotate3D, Maximize, Settings2, Download, Activity, BookOpen, FlaskConical } from 'lucide-react';
+
+function ImageWithFallback({ src, alt, className }: { src: string; alt: string; className?: string }) {
+  const [errored, setErrored] = useState(false);
+  if (!src || errored) {
+    return (
+      <div className={`flex flex-col items-center justify-center gap-3 text-outline-variant ${className ?? ''}`}>
+        <FlaskConical className="w-16 h-16 opacity-30" />
+        <span className="text-sm font-mono opacity-50">Image unavailable</span>
+      </div>
+    );
+  }
+  return <img src={src} alt={alt} className={className} onError={() => setErrored(true)} />;
+}
 
 interface EncyclopediaScreenProps {
   organism: Organism;
@@ -46,10 +59,10 @@ export function EncyclopediaScreen({ organism }: EncyclopediaScreenProps) {
             </div>
 
             <div className="bg-surface-container-low aspect-[4/3] w-full relative flex items-center justify-center p-8 overflow-hidden shadow-inner">
-              <img 
-                src={organism.imageUrl} 
-                alt={organism.name} 
-                className="w-full h-full object-contain drop-shadow-lg hover:scale-[1.02] transition-transform duration-700 ease-out" 
+              <ImageWithFallback
+                src={organism.imageUrl}
+                alt={organism.name}
+                className="w-full h-full object-contain drop-shadow-lg hover:scale-[1.02] transition-transform duration-700 ease-out"
               />
             </div>
 
@@ -169,7 +182,7 @@ function FungiView({ organism }: { organism: Organism }) {
                     <div className="absolute top-4 right-4 z-10 bg-surface/90 backdrop-blur-sm px-3 py-1 rounded-full font-mono text-xs text-on-surface font-medium shadow-sm">
                       {fungi.type}
                     </div>
-                    <img src={fungi.imageUrl} alt={fungi.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out flex-1" />
+                    <ImageWithFallback src={fungi.imageUrl} alt={fungi.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out flex-1" />
                     {fungi.imageSource && (
                       <div className="px-3 py-1.5 bg-surface-container-lowest/90 backdrop-blur-sm flex items-center gap-1.5 flex-wrap shrink-0">
                         <span className="font-mono text-[9px] text-outline uppercase tracking-wider">©</span>

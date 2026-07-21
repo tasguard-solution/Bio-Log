@@ -14,7 +14,7 @@ export const ORGANISMS: Organism[] = [
     description:
       'The fundamental building block of all animals. It is a eukaryotic cell — meaning it has a membrane-bound nucleus housing its DNA — surrounded only by a flexible plasma membrane, unlike plant cells which have an additional rigid cell wall.',
     imageUrl:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/4/48/Animal_cell_structure_en.svg/1280px-Animal_cell_structure_en.svg.png',
+      'https://upload.wikimedia.org/wikipedia/commons/4/48/Animal_cell_structure_en.svg',
     imageSource: {
       label: 'Animal cell structure – LadyofHats (Mariana Ruiz Villarreal)',
       url: 'https://commons.wikimedia.org/wiki/File:Animal_cell_structure_en.svg',
@@ -50,7 +50,7 @@ export const ORGANISMS: Organism[] = [
     description:
       'A eukaryotic cell type found in all plants. Unlike animal cells, plant cells have a rigid cellulose cell wall for structural support, chloroplasts that capture sunlight for photosynthesis, and a large central vacuole that maintains turgor pressure.',
     imageUrl:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Plant_cell_structure_svg.svg/1280px-Plant_cell_structure_svg.svg.png',
+      'https://upload.wikimedia.org/wikipedia/commons/3/30/Plant_cell_structure_svg.svg',
     imageSource: {
       label: 'Plant cell structure – LadyofHats (Mariana Ruiz Villarreal)',
       url: 'https://commons.wikimedia.org/wiki/File:Plant_cell_structure_svg_labels.svg',
@@ -86,7 +86,7 @@ export const ORGANISMS: Organism[] = [
     description:
       'Neutrophils are the most abundant type of white blood cell and are the immune system\'s first responders to infection. They engulf and destroy bacteria and fungi through a process called phagocytosis, and can also release a web of DNA called a Neutrophil Extracellular Trap (NET) to catch pathogens.',
     imageUrl:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/Blausen_0676_NeutrophilEngulfingAnthrax.png/1280px-Blausen_0676_NeutrophilEngulfingAnthrax.png',
+      'https://upload.wikimedia.org/wikipedia/commons/8/86/Blausen_0676_NeutrophilEngulfingAnthrax.png',
     imageSource: {
       label: 'Neutrophil engulfing anthrax – BruceBlaus (Blausen Medical)',
       url: 'https://commons.wikimedia.org/wiki/File:Blausen_0676_NeutrophilEngulfingAnthrax.png',
@@ -122,7 +122,7 @@ export const ORGANISMS: Organism[] = [
     description:
       'Neurons are the electrically excitable cells that form the nervous system. They receive signals through branching dendrites, process them in the cell body (soma), and transmit electrical impulses along a long axon to the next neuron or muscle via a synapse. The human brain contains approximately 86 billion neurons.',
     imageUrl:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Neuron_Hand-tuned.svg/1280px-Neuron_Hand-tuned.svg.png',
+      'https://upload.wikimedia.org/wikipedia/commons/b/bc/Neuron_Hand-tuned.svg',
     imageSource: {
       label: 'Complete neuron cell diagram – Quasar Jarosz',
       url: 'https://commons.wikimedia.org/wiki/File:Neuron_Hand-tuned.svg',
@@ -158,7 +158,7 @@ export const ORGANISMS: Organism[] = [
     description:
       'Epithelial cells form the lining of surfaces throughout the body — skin, gut, lungs, blood vessels, and organs. They act as selective barriers, controlling what passes between compartments, and are the most common site of origin for cancers (carcinomas) due to their high turnover rate.',
     imageUrl:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Blausen_0352_EpithelialTissueTypes.png/1280px-Blausen_0352_EpithelialTissueTypes.png',
+      'https://upload.wikimedia.org/wikipedia/commons/1/15/Blausen_0352_EpithelialTissueTypes.png',
     imageSource: {
       label: 'Epithelial tissue types – BruceBlaus (Blausen Medical)',
       url: 'https://commons.wikimedia.org/wiki/File:Blausen_0352_EpithelialTissueTypes.png',
@@ -194,7 +194,7 @@ export const ORGANISMS: Organism[] = [
     description:
       'A gram-positive, rod-shaped bacterium that causes anthrax. Unlike all other organisms in this collection, it is prokaryotic — meaning it has no membrane-bound nucleus. Its DNA floats freely in a region called the nucleoid. It is uniquely dangerous due to its ability to form tough, resilient endospores that survive for decades.',
     imageUrl:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Bacillus_anthracis_Gram.jpg/1280px-Bacillus_anthracis_Gram.jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/e/e0/Bacillus_anthracis_Gram.jpg',
     imageSource: {
       label: 'Bacillus anthracis Gram stain – CDC / Public Health Image Library',
       url: 'https://commons.wikimedia.org/wiki/File:Bacillus_anthracis_Gram.jpg',
@@ -230,7 +230,7 @@ export const ORGANISMS: Organism[] = [
     description:
       'Skeletal muscle cells (myocytes or muscle fibres) are extraordinarily long multinucleate cells that generate voluntary movement. They are packed with myofibrils — bundles of alternating actin (thin) and myosin (thick) filaments whose sliding interaction produces contraction, consuming ATP in the process.',
     imageUrl:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Blausen_0801_SkeletalMuscle.png/1280px-Blausen_0801_SkeletalMuscle.png',
+      'https://upload.wikimedia.org/wikipedia/commons/0/00/Blausen_0801_SkeletalMuscle.png',
     imageSource: {
       label: 'Skeletal muscle anatomy – BruceBlaus (Blausen Medical)',
       url: 'https://commons.wikimedia.org/wiki/File:Blausen_0801_SkeletalMuscle.png',
@@ -284,7 +284,7 @@ export const ORGANISMS: Organism[] = [
           'A basidiomycete mushroom native to grasslands in Europe and North America. It is the world\'s most cultivated mushroom, available as both the white button mushroom and the brown crimini / portobello depending on harvesting stage.',
         type: 'Macroscopic',
         imageUrl:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/Agaricus_bisporus_3.jpg/1280px-Agaricus_bisporus_3.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/4/43/Agaricus_bisporus_3.jpg',
         imageSource: {
           label: 'Agaricus bisporus – Ak ccm',
           url: 'https://commons.wikimedia.org/wiki/File:Agaricus_bisporus_3.jpg',
@@ -299,7 +299,7 @@ export const ORGANISMS: Organism[] = [
           'A blue-green mold common in soil and on decaying food. It is the original source of penicillin — Alexander Fleming noticed in 1928 that it killed surrounding bacteria on his petri dishes, leading to the antibiotic revolution that has saved hundreds of millions of lives.',
         type: 'Microscopic',
         imageUrl:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Penicillium_labeled.jpg/1280px-Penicillium_labeled.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/6/65/Penicillium_labeled.jpg',
         imageSource: {
           label: 'Penicillium microscopy – Y tambe',
           url: 'https://commons.wikimedia.org/wiki/File:Penicillium_labeled.jpg',
@@ -314,7 +314,7 @@ export const ORGANISMS: Organism[] = [
           "A single-celled ascomycete fungus that reproduces by budding. It ferments sugars to produce ethanol and CO₂, underpinning bread-making, brewing, and winemaking for millennia. It is also one of the most important model organisms in biological research.",
         type: 'Single-celled',
         imageUrl:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/S_cerevisiae_under_DIC_microscopy.jpg/1280px-S_cerevisiae_under_DIC_microscopy.jpg',
+          'https://upload.wikimedia.org/wikipedia/commons/4/4a/S_cerevisiae_under_DIC_microscopy.jpg',
         imageSource: {
           label: "Saccharomyces cerevisiae under DIC microscopy – Masur",
           url: 'https://commons.wikimedia.org/wiki/File:S_cerevisiae_under_DIC_microscopy.jpg',
