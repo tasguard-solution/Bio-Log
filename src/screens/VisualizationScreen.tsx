@@ -14,14 +14,12 @@ interface VisualizationScreenProps {
 export function VisualizationScreen({ user, organism, onBack }: VisualizationScreenProps) {
   const [loadingAssets, setLoadingAssets] = useState(true);
   const [modelUrl, setModelUrl] = useState<string | null>(null);
-  const [customImageUrl, setCustomImageUrl] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<'solid' | 'wireframe' | 'xray'>('solid');
 
   useEffect(() => {
     (async () => {
       setLoadingAssets(true);
       setModelUrl(null);
-      setCustomImageUrl(null);
 
       const schoolId = user?.user_metadata?.school_id;
       if (!schoolId) {
@@ -41,10 +39,6 @@ export function VisualizationScreen({ user, organism, onBack }: VisualizationScr
           // Find the first 3d asset if any
           const modelAsset = assets.find(a => a.asset_type === '3d');
           if (modelAsset) setModelUrl(modelAsset.public_url);
-
-          // Find the first 2d asset if any
-          const imageAsset = assets.find(a => a.asset_type === '2d');
-          if (imageAsset) setCustomImageUrl(imageAsset.public_url);
         }
       } catch (err) {
         console.error('Error fetching custom assets:', err);
@@ -54,8 +48,6 @@ export function VisualizationScreen({ user, organism, onBack }: VisualizationScr
     })();
   }, [user, organism.id]);
 
-  // Use custom image if available, otherwise fallback to default Wikipedia image
-  const displayImage = customImageUrl || organism.imageUrl;
 
   return (
     <div className="flex-1 flex flex-col h-[calc(100vh-89px)] bg-on-surface text-on-primary overflow-hidden relative">
@@ -84,27 +76,29 @@ export function VisualizationScreen({ user, organism, onBack }: VisualizationScr
         </div>
 
         <div className="flex flex-col gap-3 pointer-events-auto">
-          <button className="w-12 h-12 rounded-full bg-primary/60 hover:bg-primary/80 backdrop-blur-md border border-on-primary/10 flex items-center justify-center transition-colors text-on-primary">
-            <Settings className="w-5 h-5" />
-          </button>
-          <button className="w-12 h-12 rounded-full bg-primary/60 hover:bg-primary/80 backdrop-blur-md border border-on-primary/10 flex items-center justify-center transition-colors text-on-primary">
-            <Layers className="w-5 h-5" />
-          </button>
-          <button className="w-12 h-12 rounded-full bg-primary/60 hover:bg-primary/80 backdrop-blur-md border border-on-primary/10 flex items-center justify-center transition-colors text-on-primary">
-            <Share2 className="w-5 h-5" />
-          </button>
           {modelUrl && (
-            <button 
-              onClick={() => window.open(modelUrl, '_blank')}
-              className="w-12 h-12 rounded-full bg-secondary hover:bg-secondary-container shadow-lg flex items-center justify-center transition-colors mt-4 text-on-secondary"
-            >
-              <Download className="w-5 h-5" />
-            </button>
+            <>
+              <button className="w-12 h-12 rounded-full bg-primary/60 hover:bg-primary/80 backdrop-blur-md border border-on-primary/10 flex items-center justify-center transition-colors text-on-primary">
+                <Settings className="w-5 h-5" />
+              </button>
+              <button className="w-12 h-12 rounded-full bg-primary/60 hover:bg-primary/80 backdrop-blur-md border border-on-primary/10 flex items-center justify-center transition-colors text-on-primary">
+                <Layers className="w-5 h-5" />
+              </button>
+              <button className="w-12 h-12 rounded-full bg-primary/60 hover:bg-primary/80 backdrop-blur-md border border-on-primary/10 flex items-center justify-center transition-colors text-on-primary">
+                <Share2 className="w-5 h-5" />
+              </button>
+              <button 
+                onClick={() => window.open(modelUrl, '_blank')}
+                className="w-12 h-12 rounded-full bg-secondary hover:bg-secondary-container shadow-lg flex items-center justify-center transition-colors mt-4 text-on-secondary"
+              >
+                <Download className="w-5 h-5" />
+              </button>
+            </>
           )}
         </div>
       </div>
 
-      {/* 3D Canvas / Image Viewer */}
+      {/* 3D Canvas */}
       <div className="flex-1 relative flex items-center justify-center">
         <div className="absolute inset-0 bg-gradient-to-b from-primary-container/30 to-on-surface pointer-events-none" />
         
@@ -132,17 +126,10 @@ export function VisualizationScreen({ user, organism, onBack }: VisualizationScr
               </div>
             </ModelViewer>
           </div>
-        ) : displayImage ? (
-          /* Fallback to 2D image */
-          <img
-            src={displayImage}
-            alt={organism.name}
-            className="max-w-[80%] max-h-[80%] object-contain drop-shadow-[0_20px_50px_rgba(0,0,0,0.5)] scale-110"
-          />
         ) : (
           <div className="text-on-primary/40 font-mono flex flex-col items-center">
-            <AlertTriangle className="w-16 h-16 mb-4 opacity-50" />
-            <p>No 3D Model or Image available for {organism.name}</p>
+            <Box className="w-16 h-16 mb-4 opacity-50" />
+            <p>3D Model not available for {organism.name}</p>
           </div>
         )}
 
