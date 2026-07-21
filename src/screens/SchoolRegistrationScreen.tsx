@@ -37,6 +37,8 @@ export function SchoolRegistrationScreen() {
     }
 
     try {
+      let schoolId = null;
+
       // 1. Insert into Supabase
       const { data: schoolData, error: schoolError } = await supabase
         .from('schools')
@@ -50,15 +52,34 @@ export function SchoolRegistrationScreen() {
         .select()
         .single();
 
-      if (schoolError) throw schoolError;
+      if (schoolError) {
+        // If duplicate email, fetch existing school ID so payment testing can proceed seamlessly
+        if (schoolError.code === '23505' || schoolError.message?.includes('unique constraint')) {
+          const { data: existingSchool } = await supabase
+            .from('schools')
+            .select('id')
+            .eq('email', formData.email)
+            .single();
 
-      setRegisteredSchoolId(schoolData.id);
+          if (existingSchool) {
+            schoolId = existingSchool.id;
+          } else {
+            throw schoolError;
+          }
+        } else {
+          throw schoolError;
+        }
+      } else {
+        schoolId = schoolData.id;
+      }
+
+      setRegisteredSchoolId(schoolId);
       
       // 2. Trigger Payment Modal
       setShowPayment(true);
     } catch (err: any) {
       console.error('Registration Error:', err);
-      setError(err.message || 'Failed to register school. Email might already exist.');
+      setError(err.message || 'Failed to register school.');
     } finally {
       setIsSubmitting(false);
     }
