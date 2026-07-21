@@ -15,33 +15,61 @@ export function StudentDashboard({ user, onNavigate, onLogout }: StudentDashboar
 
   useEffect(() => {
     (async () => {
-      // Get student record + school name + subscription status
-      const { data: student } = await supabase
-        .from('students')
-        .select('full_name, school_id, schools(name)')
-        .eq('id', user.id)
-        .single();
+      try {
+        // ── 1. Get school_id and full_name ─────────────────────────────────────
+        // Prefer user_metadata (set at registration) — avoids needing a students table row
+        let schoolId: string | null = user.user_metadata?.school_id ?? null;
+        let fullName: string = user.user_metadata?.full_name ?? user.email ?? 'Student';
 
-      if (!student) {
+        // Fall back to students table if metadata is missing
+        if (!schoolId) {
+          const { data: studentRow } = await supabase
+            .from('students')
+            .select('full_name, school_id')
+            .eq('id', user.id)
+            .maybeSingle();
+
+          if (studentRow) {
+            schoolId = studentRow.school_id;
+            fullName = studentRow.full_name ?? fullName;
+          }
+        }
+
+        if (!schoolId) {
+          // No school linked at all
+          setAccessStatus('expired');
+          return;
+        }
+
+        // ── 2. Get school name ─────────────────────────────────────────────────
+        const { data: school } = await supabase
+          .from('schools')
+          .select('name')
+          .eq('id', schoolId)
+          .maybeSingle();
+
+        setStudentInfo({
+          full_name: fullName,
+          school_name: school?.name ?? 'Your School',
+        });
+
+        // ── 3. Check active subscription ───────────────────────────────────────
+        const { data: sub } = await supabase
+          .from('subscriptions')
+          .select('status, current_period_end')
+          .eq('school_id', schoolId)
+          .eq('status', 'active')
+          .gte('current_period_end', new Date().toISOString())
+          .maybeSingle();
+
+        setAccessStatus(sub ? 'active' : 'expired');
+      } catch (err) {
+        console.error('StudentDashboard load error:', err);
         setAccessStatus('expired');
-        return;
       }
-
-      const schoolName = (student.schools as any)?.name ?? 'Your School';
-      setStudentInfo({ full_name: student.full_name, school_name: schoolName });
-
-      // Check subscription
-      const { data: sub } = await supabase
-        .from('subscriptions')
-        .select('status, current_period_end')
-        .eq('school_id', student.school_id)
-        .eq('status', 'active')
-        .gte('current_period_end', new Date().toISOString())
-        .maybeSingle();
-
-      setAccessStatus(sub ? 'active' : 'expired');
     })();
   }, [user.id]);
+
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
