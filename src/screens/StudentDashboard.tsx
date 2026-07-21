@@ -54,13 +54,16 @@ export function StudentDashboard({ user, onNavigate, onLogout }: StudentDashboar
         });
 
         // ── 3. Check active subscription ───────────────────────────────────────
-        const { data: sub } = await supabase
+        const { data: subRows } = await supabase
           .from('subscriptions')
           .select('status, current_period_end')
           .eq('school_id', schoolId)
           .eq('status', 'active')
           .gte('current_period_end', new Date().toISOString())
-          .maybeSingle();
+          .order('created_at', { ascending: false })
+          .limit(1);
+
+        const sub = subRows?.[0] ?? null;
 
         setAccessStatus(sub ? 'active' : 'expired');
       } catch (err) {

@@ -43,14 +43,17 @@ export function JoinScreen({ onStudentLogin, onNavigate }: JoinScreenProps) {
         return;
       }
 
-      // Check active subscription
-      const { data: subData } = await supabase
+      // Check active subscription — order by newest, take first (avoids maybeSingle error on duplicate rows)
+      const { data: subRows } = await supabase
         .from('subscriptions')
         .select('id, status, current_period_end')
         .eq('school_id', schoolId)
         .eq('status', 'active')
         .gte('current_period_end', new Date().toISOString())
-        .maybeSingle();
+        .order('created_at', { ascending: false })
+        .limit(1);
+
+      const subData = subRows?.[0] ?? null;
 
       if (!subData) {
         setSchool(schoolData);

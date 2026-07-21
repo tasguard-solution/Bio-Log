@@ -33,15 +33,14 @@ export function SchoolAdminDashboard({ user, onNavigate, onLogout }: SchoolAdmin
       setSchoolInfo(school);
 
       // Get subscription
-      const { data: sub } = await supabase
+      const { data: subRows } = await supabase
         .from('subscriptions')
         .select('*')
         .eq('school_id', school.id)
         .order('created_at', { ascending: false })
-        .limit(1)
-        .maybeSingle();
+        .limit(1);
 
-      setSubscription(sub);
+      setSubscription(subRows?.[0] ?? null);
 
       // Get student count
       const { count } = await supabase
