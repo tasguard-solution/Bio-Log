@@ -3,6 +3,7 @@ import { supabase } from '../lib/supabase';
 import { ScreenType } from '../types';
 import { School, GraduationCap, Eye, EyeOff, ArrowLeft, Loader2 } from 'lucide-react';
 import logoUrl from '../assets/images/biolog_logo.png';
+import { DnaHelix } from '../components/DnaHelix';
 
 // ─── LoginForm lives OUTSIDE AuthScreen so it never remounts on parent re-renders ───
 interface LoginFormProps {
@@ -52,8 +53,9 @@ function LoginForm({ role, onBack, onNavigate, onStudentLogin, onSchoolLogin }: 
   };
 
   return (
-    <div className="flex-1 flex items-center justify-center bg-surface-container-low p-6">
-      <div className="w-full max-w-md">
+    <div className="relative flex-1 flex items-center justify-center bg-surface-container-low p-6 overflow-hidden">
+      <DnaHelix />
+      <div className="relative z-10 w-full max-w-md">
         <button
           onClick={onBack}
           className="flex items-center gap-2 text-sm text-on-surface-variant hover:text-on-surface mb-8 transition-colors"
@@ -184,8 +186,9 @@ export function AuthScreen({ onNavigate, onStudentLogin, onSchoolLogin }: AuthSc
 
   // ─── Landing ───────────────────────────────────────────────────────────────
   return (
-    <div className="flex-1 flex flex-col items-center justify-center bg-surface-container-low p-6">
-      <div className="text-center mb-14 max-w-xl">
+    <div className="relative flex-1 flex flex-col items-center justify-center bg-surface-container-low p-6 overflow-hidden">
+      <DnaHelix />
+      <div className="relative z-10 text-center mb-14 max-w-xl">
         <img src={logoUrl} alt="Bio Log Logo" className="w-24 h-24 object-contain mx-auto mb-6 drop-shadow-md" />
         <h1 className="font-serif text-5xl font-bold text-primary mb-4 leading-tight">
           Welcome to Bio Log
@@ -196,10 +199,10 @@ export function AuthScreen({ onNavigate, onStudentLogin, onSchoolLogin }: AuthSc
         </p>
       </div>
 
-      <div className="grid sm:grid-cols-2 gap-5 w-full max-w-2xl">
+      <div className="relative z-10 grid sm:grid-cols-2 gap-5 w-full max-w-2xl">
         <button
           onClick={() => setMode('student-login')}
-          className="group flex flex-col items-start p-8 bg-surface rounded-3xl border border-surface-container-high hover:border-primary/40 hover:shadow-lg transition-all duration-300 text-left hover:-translate-y-1"
+          className="group flex flex-col items-start p-8 bg-surface/90 backdrop-blur-sm rounded-3xl border border-surface-container-high hover:border-primary/40 hover:shadow-lg transition-all duration-300 text-left hover:-translate-y-1"
         >
           <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-5 group-hover:bg-primary/20 transition-colors">
             <GraduationCap className="w-7 h-7 text-primary" />
@@ -213,7 +216,7 @@ export function AuthScreen({ onNavigate, onStudentLogin, onSchoolLogin }: AuthSc
 
         <button
           onClick={() => setMode('school-login')}
-          className="group flex flex-col items-start p-8 bg-surface rounded-3xl border border-surface-container-high hover:border-secondary/40 hover:shadow-lg transition-all duration-300 text-left hover:-translate-y-1"
+          className="group flex flex-col items-start p-8 bg-surface/90 backdrop-blur-sm rounded-3xl border border-surface-container-high hover:border-secondary/40 hover:shadow-lg transition-all duration-300 text-left hover:-translate-y-1"
         >
           <div className="w-14 h-14 rounded-2xl bg-secondary/10 flex items-center justify-center mb-5 group-hover:bg-secondary/20 transition-colors">
             <School className="w-7 h-7 text-secondary" />
@@ -226,7 +229,7 @@ export function AuthScreen({ onNavigate, onStudentLogin, onSchoolLogin }: AuthSc
         </button>
       </div>
 
-      <p className="text-xs text-on-surface-variant mt-10 opacity-60">
+      <p className="relative z-10 text-xs text-on-surface-variant mt-10 opacity-60">
         Student? Ask your school administrator for your personal join link.
       </p>
     </div>

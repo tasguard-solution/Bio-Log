@@ -6,3 +6,6 @@ coverage/
 *.log
 .env*
 !.env.example
+tempo/.tempo/
+tempo/node_modules/
+tempo/dist/
