@@ -1,4 +1,4 @@
-import { Organism } from './types';
+import { Organism, CurriculumLevel } from './types';
 
 /**
  * All images are sourced from Wikimedia Commons and are used under their respective
@@ -321,6 +321,326 @@ export const ORGANISMS: Organism[] = [
           license: 'Public Domain',
         },
       },
-    ],
+    ]
   },
+  // ─── NEW WAEC SYLLABUS ADDITIONS ───────────────────────────────────────────
+  
+  // ── AMOEBA ─────────────────────────────────────────────────────────────────
+  {
+    id: 'amoeba',
+    name: 'Amoeba Proteus',
+    subtitle: 'Unicellular Eukaryote',
+    category: 'Protist',
+    description: 'A unicellular organism known for its ability to alter its shape, primarily by extending and retracting pseudopods. Found in freshwater environments, it is a classic example of protozoan movement and phagocytosis (eating by engulfing).',
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/4/4b/Amoeba_%28PSF%29.png',
+    sketchfabId: 'a385750059c445eeaf057e3f8d3d9203', // Placeholder
+    imageSource: {
+      label: 'Amoeba diagram – Pearson Scott Foresman',
+      url: 'https://commons.wikimedia.org/wiki/File:Amoeba_(PSF).png',
+      license: 'Public Domain',
+    },
+    stats: [
+      { label: 'Size', value: '250 – 750 µm' },
+      { label: 'Movement', value: 'Amoeboid (Pseudopodia)' },
+      { label: 'Nutrition', value: 'Holozoic (Phagocytosis)' },
+      { label: 'Reproduction', value: 'Binary Fission' },
+      { label: 'Habitat', value: 'Freshwater ponds/lakes' },
+    ],
+    details: [
+      {
+        title: 'Pseudopodia (False Feet)',
+        content: 'Amoebas move by extending temporary, arm-like projections called pseudopodia. Cytoplasm streams into the extending pseudopod, pulling the rest of the cell along. These are also used to engulf prey like bacteria and smaller protists in a process called phagocytosis.'
+      },
+      {
+        title: 'KEY TAKEAWAYS FOR WAEC',
+        content: '• Contractile Vacuole: Essential for osmoregulation (pumping out excess water) because it lives in a hypotonic freshwater environment.\n• Food Vacuole: Forms around engulfed food for digestion.\n• Ectoplasm (clear, outer layer) vs Endoplasm (granular, inner region).'
+      }
+    ]
+  },
+
+  // ── LEAF CROSS SECTION ──────────────────────────────────────────────────────
+  {
+    id: 'leaf-cross-section',
+    name: 'Leaf Cross-Section',
+    subtitle: 'Plant Anatomy',
+    category: 'Plant Anatomy',
+    description: 'The internal structure of a typical dicotyledonous leaf, adapted perfectly for photosynthesis. It shows the distinct layers: epidermis, palisade mesophyll, spongy mesophyll, and the vascular bundle (veins).',
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/7/77/Leaf_anatomy.svg',
+    sketchfabId: '2b733b8a4f6f4b6287c2f6d0f9a2db12', // Placeholder
+    imageSource: {
+      label: 'Leaf anatomy diagram – Zephyris',
+      url: 'https://commons.wikimedia.org/wiki/File:Leaf_anatomy.svg',
+      license: 'CC BY-SA 3.0',
+    },
+    stats: [
+      { label: 'Primary Function', value: 'Photosynthesis & Transpiration' },
+      { label: 'Upper Layer', value: 'Cuticle (waxy, waterproof)' },
+      { label: 'Photosynthetic Tissue', value: 'Palisade Mesophyll' },
+      { label: 'Gas Exchange', value: 'Stomata (pores)' },
+      { label: 'Transport', value: 'Xylem & Phloem (Veins)' },
+    ],
+    details: [
+      {
+        title: 'Palisade vs Spongy Mesophyll',
+        content: 'The palisade mesophyll consists of tightly packed, column-shaped cells rich in chloroplasts, positioned near the top to catch maximum sunlight. The spongy mesophyll below has loosely packed cells with air spaces to allow CO2 to diffuse easily to the photosynthetic cells.'
+      },
+      {
+        title: 'KEY TAKEAWAYS FOR WAEC',
+        content: '• Stomata (guarded by Guard Cells) are mostly on the lower epidermis to reduce water loss.\n• Xylem transports water and dissolved minerals from roots to leaf.\n• Phloem transports manufactured food (glucose/sucrose) from the leaf to other plant parts.'
+      }
+    ]
+  },
+
+  // ── HUMAN HEART ────────────────────────────────────────────────────────────
+  {
+    id: 'human-heart',
+    name: 'Human Heart',
+    subtitle: 'Circulatory System Organ',
+    category: 'Organ',
+    description: 'A muscular organ about the size of a fist, located just behind and slightly left of the breastbone. The heart pumps blood through the network of arteries and veins called the cardiovascular system.',
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/e/e5/Diagram_of_the_human_heart_%28cropped%29.svg',
+    sketchfabId: '13f412c1b9f7431e8088ed8cb2142e88', // Actual Sketchfab models can be embedded here
+    imageSource: {
+      label: 'Diagram of the human heart – Wapcaplet',
+      url: 'https://commons.wikimedia.org/wiki/File:Diagram_of_the_human_heart_(cropped).svg',
+      license: 'CC BY-SA 3.0',
+    },
+    stats: [
+      { label: 'Chambers', value: '4 (2 Atria, 2 Ventricles)' },
+      { label: 'Weight', value: '250 – 350 grams' },
+      { label: 'Beats per Minute', value: '60 – 100 (Resting)' },
+      { label: 'Tissue Type', value: 'Cardiac Muscle (Myocardium)' },
+      { label: 'Circulation', value: 'Double (Systemic & Pulmonary)' },
+    ],
+    details: [
+      {
+        title: 'Double Circulation',
+        content: 'Mammals have a double circulatory system. The right side of the heart pumps deoxygenated blood to the lungs (pulmonary circulation). The left side receives oxygenated blood from the lungs and pumps it to the rest of the body (systemic circulation).'
+      },
+      {
+        title: 'KEY TAKEAWAYS FOR WAEC',
+        content: '• Left ventricle has a thicker muscular wall than the right because it pumps blood around the entire body at higher pressure.\n• Valves (Tricuspid, Bicuspid, Semilunar) prevent backflow of blood.\n• The aorta is the largest artery; the vena cava is the largest vein.'
+      }
+    ]
+  },
+
+  // ── HUMAN DIGESTIVE SYSTEM ─────────────────────────────────────────────────
+  {
+    id: 'digestive-system',
+    name: 'Human Digestive System',
+    subtitle: 'Alimentary Canal',
+    category: 'System',
+    description: 'The human digestive system consists of the gastrointestinal tract plus the accessory organs of digestion (the tongue, salivary glands, pancreas, liver, and gallbladder). Digestion involves the breakdown of food into smaller and smaller components, until they can be absorbed and assimilated into the body.',
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/c/c5/Digestive_system_diagram_en.svg',
+    sketchfabId: 'c126839ff9154a4f89d38c1c4f620bd3', 
+    imageSource: {
+      label: 'Digestive system diagram – Mariana Ruiz Villarreal',
+      url: 'https://commons.wikimedia.org/wiki/File:Digestive_system_diagram_en.svg',
+      license: 'Public Domain',
+    },
+    stats: [
+      { label: 'Length', value: 'Approx. 9 metres (in adults)' },
+      { label: 'Major Organs', value: 'Stomach, Small Intestine, Large Intestine' },
+      { label: 'Accessory Organs', value: 'Liver, Pancreas, Gallbladder' },
+      { label: 'Main Function', value: 'Digestion and Absorption' },
+      { label: 'Stomach pH', value: '1.5 – 3.5 (Highly Acidic)' },
+    ],
+    details: [
+      {
+        title: 'Chemical Digestion',
+        content: 'Enzymes break down complex macromolecules. Amylase in saliva breaks down starch. Pepsin in the stomach breaks down proteins. The pancreas secretes lipase, protease, and more amylase into the small intestine to complete digestion.'
+      },
+      {
+        title: 'KEY TAKEAWAYS FOR WAEC',
+        content: '• Small intestine has villi and microvilli to massively increase surface area for absorption.\n• Liver produces bile (stored in gallbladder) which emulsifies fats.\n• The stomach secretes HCl to kill bacteria and provide optimal pH for pepsin.\n• Large intestine primarily absorbs water and forms faeces.'
+      }
+    ]
+  },
+
+  // ── HUMAN SKELETON ─────────────────────────────────────────────────────────
+  {
+    id: 'human-skeleton',
+    name: 'Human Skeleton',
+    subtitle: 'Supporting Tissue System',
+    category: 'System',
+    description: 'The internal framework of the human body. It is composed of around 270 bones at birth – this total decreases to around 206 bones by adulthood after some bones get fused together.',
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/1/14/Human-Skeleton.jpg',
+    sketchfabId: 'ddf0a3ec378c4a169b12853de8e7b926',
+    imageSource: {
+      label: 'Human Skeleton – LadyofHats',
+      url: 'https://commons.wikimedia.org/wiki/File:Human-Skeleton.jpg',
+      license: 'Public Domain',
+    },
+    stats: [
+      { label: 'Adult Bone Count', value: '206' },
+      { label: 'Axial Skeleton', value: 'Skull, Vertebral Column, Ribcage (80 bones)' },
+      { label: 'Appendicular Skeleton', value: 'Limbs & Girdles (126 bones)' },
+      { label: 'Longest Bone', value: 'Femur (Thigh bone)' },
+      { label: 'Smallest Bone', value: 'Stapes (in the middle ear)' },
+    ],
+    details: [
+      {
+        title: 'Functions of the Skeleton',
+        content: 'The skeleton provides shape and support, protects vital internal organs (like the brain, heart, and lungs), allows for movement (acting as levers for muscles), stores minerals (calcium and phosphorus), and produces blood cells in the bone marrow.'
+      },
+      {
+        title: 'KEY TAKEAWAYS FOR WAEC',
+        content: '• Joints: Hinge joints (elbow, knee) allow movement in one plane. Ball and socket joints (shoulder, hip) allow multi-directional movement.\n• Ligaments connect bone to bone; Tendons connect muscle to bone.\n• Cartilage provides cushioning at joints and structural support in the nose/ears.'
+      }
+    ]
+  },
+
+  // ── HUMAN BRAIN ────────────────────────────────────────────────────────────
+  {
+    id: 'human-brain',
+    name: 'Human Brain',
+    subtitle: 'Central Nervous System',
+    category: 'Organ',
+    description: 'The central organ of the human nervous system. It controls most of the activities of the body, processing, integrating, and coordinating the information it receives from the sense organs, and making decisions as to the instructions sent to the rest of the body.',
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/1/1a/Blausen_0102_Brain_Motor%26Sensory.png',
+    sketchfabId: 'b7bcfd81b9514757b10c660be4f3fc3c',
+    imageSource: {
+      label: 'Brain Motor and Sensory – BruceBlaus',
+      url: 'https://commons.wikimedia.org/wiki/File:Blausen_0102_Brain_Motor%26Sensory.png',
+      license: 'CC BY 3.0',
+    },
+    stats: [
+      { label: 'Weight', value: 'Approx. 1.3 - 1.4 kg' },
+      { label: 'Cerebrum', value: 'Largest part (conscious thought)' },
+      { label: 'Cerebellum', value: 'Balance and coordination' },
+      { label: 'Medulla Oblongata', value: 'Autonomic functions (breathing, heart rate)' },
+      { label: 'Protection', value: 'Skull & Meninges' },
+    ],
+    details: [
+      {
+        title: 'Parts of the Brain',
+        content: 'The cerebrum (divided into two hemispheres) is responsible for voluntary actions, memory, and intelligence. The cerebellum coordinates muscle movement. The brainstem (including the medulla) connects to the spinal cord and controls involuntary, life-sustaining functions.'
+      },
+      {
+        title: 'KEY TAKEAWAYS FOR WAEC',
+        content: '• Reflex Action vs Voluntary Action: Brain is primarily involved in voluntary actions and complex processing, while simple reflexes are often handled by the spinal cord.\n• Hypothalamus controls body temperature, thirst, and hunger (Homeostasis).'
+      }
+    ]
+  },
+
+  // ── HUMAN EYE ──────────────────────────────────────────────────────────────
+  {
+    id: 'human-eye',
+    name: 'Human Eye',
+    subtitle: 'Sensory Organ (Vision)',
+    category: 'Organ',
+    description: 'The sensory organ of the visual system. It reacts to light and allows vision. Rod and cone cells in the retina are conscious light perceptive cells in vision including color differentiation and the perception of depth.',
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/1/1e/Schematic_diagram_of_the_human_eye_en.svg',
+    sketchfabId: '3c0a5d4e12344efaa0a581413a1024bd',
+    imageSource: {
+      label: 'Schematic diagram of the human eye – Rhcastilhos',
+      url: 'https://commons.wikimedia.org/wiki/File:Schematic_diagram_of_the_human_eye_en.svg',
+      license: 'Public Domain',
+    },
+    stats: [
+      { label: 'Shape', value: 'Spherical (approx. 24mm diameter)' },
+      { label: 'Retina', value: 'Contains photoreceptors (Rods & Cones)' },
+      { label: 'Lens', value: 'Biconvex, flexible' },
+      { label: 'Optic Nerve', value: 'Transmits signals to the brain' },
+      { label: 'Blind Spot', value: 'Where optic nerve exits (no photoreceptors)' },
+    ],
+    details: [
+      {
+        title: 'Image Formation',
+        content: 'Light enters through the cornea, passes through the pupil, and is focused by the lens onto the retina. The image formed on the retina is real and inverted. The brain processes these impulses to perceive an upright image.'
+      },
+      {
+        title: 'KEY TAKEAWAYS FOR WAEC',
+        content: '• Accommodation: The ciliary muscles contract or relax to change the shape of the lens to focus on near or distant objects.\n• Iris: Controls the size of the pupil, regulating the amount of light entering the eye.\n• Common defects: Myopia (short-sightedness, corrected with concave lens) and Hypermetropia (long-sightedness, corrected with convex lens).'
+      }
+    ]
+  },
+
+  // ── DNA DOUBLE HELIX ───────────────────────────────────────────────────────
+  {
+    id: 'dna-double-helix',
+    name: 'DNA Double Helix',
+    subtitle: 'Deoxyribonucleic Acid',
+    category: 'Molecule',
+    description: 'The molecule that carries genetic instructions for the development, functioning, growth and reproduction of all known organisms and many viruses. Structurally, DNA consists of two long polynucleotide chains coiling around each other to form a double helix.',
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/d/d3/0322_DNA_Nucleotides.jpg',
+    sketchfabId: 'a3857490f2384a2ea2e88cb9f67a7d4a',
+    imageSource: {
+      label: 'DNA Nucleotides – OpenStax',
+      url: 'https://commons.wikimedia.org/wiki/File:0322_DNA_Nucleotides.jpg',
+      license: 'CC BY 4.0',
+    },
+    stats: [
+      { label: 'Structure', value: 'Double Helix' },
+      { label: 'Monomer', value: 'Nucleotide (Sugar + Phosphate + Base)' },
+      { label: 'Bases', value: 'Adenine, Thymine, Cytosine, Guanine' },
+      { label: 'Base Pairing', value: 'A-T (2 H-bonds), C-G (3 H-bonds)' },
+      { label: 'Location', value: 'Nucleus (in eukaryotes)' },
+    ],
+    details: [
+      {
+        title: 'The Genetic Code',
+        content: 'The sequence of the four nitrogenous bases along the DNA backbone encodes biological information. Genes are specific sequences of DNA that instruct cells to produce specific proteins.'
+      },
+      {
+        title: 'KEY TAKEAWAYS FOR WAEC',
+        content: '• DNA Replication is semi-conservative (each new double helix has one old strand and one new strand).\n• Found within chromosomes.\n• Differences from RNA: DNA is double-stranded, has deoxyribose sugar, and uses Thymine instead of Uracil.'
+      }
+    ]
+  }
+];
+
+
+export const WAEC_CURRICULUM: CurriculumLevel[] = [
+  {
+    level: 'SS1 Biology',
+    topics: [
+      {
+        title: 'The Cell & its Environment',
+        organismIds: ['plant-cell', 'animal-cell']
+      },
+      {
+        title: 'Microorganisms',
+        organismIds: ['amoeba', 'bacillus-anthracis', 'fungi']
+      },
+      {
+        title: 'Plant Nutrition & Anatomy',
+        organismIds: ['leaf-cross-section']
+      }
+    ]
+  },
+  {
+    level: 'SS2 Biology',
+    topics: [
+      {
+        title: 'Tissues & Supporting Systems',
+        organismIds: ['epithelial-cell', 'muscle-cell', 'human-skeleton']
+      },
+      {
+        title: 'Transport System',
+        organismIds: ['white-blood-cell', 'human-heart']
+      },
+      {
+        title: 'Digestive System',
+        organismIds: ['digestive-system']
+      }
+    ]
+  },
+  {
+    level: 'SS3 Biology',
+    topics: [
+      {
+        title: 'Nervous Coordination',
+        organismIds: ['neuron', 'human-brain']
+      },
+      {
+        title: 'Sense Organs',
+        organismIds: ['human-eye']
+      },
+      {
+        title: 'Genetics',
+        organismIds: ['dna-double-helix']
+      }
+    ]
+  }
 ];

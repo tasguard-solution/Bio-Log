@@ -43,10 +43,15 @@ export function VisualizationScreen({ user, organism, onBack }: VisualizationScr
           const sketchfabAsset = assets.find(a => a.asset_type === '3d' && a.file_path === 'sketchfab');
           if (sketchfabAsset) {
             setSketchfabId(sketchfabAsset.public_url);
+          } else if (organism.sketchfabId) {
+            setSketchfabId(organism.sketchfabId);
           } else {
             const modelAsset = assets.find(a => a.asset_type === '3d' && a.file_path !== 'sketchfab');
             if (modelAsset) setModelUrl(modelAsset.public_url);
           }
+        } else if (organism.sketchfabId) {
+          // If no custom assets found at all, fallback to global organism sketchfabId
+          setSketchfabId(organism.sketchfabId);
         }
       } catch (err) {
         console.error('Error fetching custom assets:', err);

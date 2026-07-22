@@ -1,10 +1,26 @@
+export type OrganismCategory = 
+  | 'Plant Cell' 
+  | 'White Blood Cell' 
+  | 'Neuron' 
+  | 'Epithelial Cell' 
+  | 'Bacteria Cell' 
+  | 'Animal Cell' 
+  | 'Muscle Cell' 
+  | 'Fungi'
+  | 'Organ'
+  | 'System'
+  | 'Molecule'
+  | 'Protist'
+  | 'Plant Anatomy';
+
 export interface Organism {
   id: string;
   name: string;
   subtitle: string;
-  category: 'Plant Cell' | 'White Blood Cell' | 'Neuron' | 'Epithelial Cell' | 'Bacteria Cell' | 'Animal Cell' | 'Muscle Cell' | 'Fungi';
+  category: OrganismCategory;
   description: string;
   imageUrl: string;
+  sketchfabId?: string;
   imageSource?: {
     label: string;
     url: string;
@@ -34,6 +50,16 @@ export interface FungiItem {
     url: string;
     license: string;
   };
+}
+
+export interface CurriculumTopic {
+  title: string;
+  organismIds: string[];
+}
+
+export interface CurriculumLevel {
+  level: string; // e.g., 'SS1 Biology'
+  topics: CurriculumTopic[];
 }
 
 export type ScreenType = 'encyclopedia' | 'visualization' | 'admin' | 'registration' | 'superadmin' | 'auth' | 'student-dashboard' | 'school-dashboard' | 'not-found';
