@@ -14,7 +14,7 @@ export const ORGANISMS: Organism[] = [
     description:
       'The fundamental building block of all animals. It is a eukaryotic cell — meaning it has a membrane-bound nucleus housing its DNA — surrounded only by a flexible plasma membrane, unlike plant cells which have an additional rigid cell wall.',
     imageUrl:
-      'https://upload.wikimedia.org/wikipedia/commons/4/48/Animal_cell_structure_en.svg',
+      '/images/organisms/Animal_cell_structure_en.svg',
     imageSource: {
       label: 'Animal cell structure – LadyofHats (Mariana Ruiz Villarreal)',
       url: 'https://commons.wikimedia.org/wiki/File:Animal_cell_structure_en.svg',
@@ -50,7 +50,7 @@ export const ORGANISMS: Organism[] = [
     description:
       'A eukaryotic cell type found in all plants. Unlike animal cells, plant cells have a rigid cellulose cell wall for structural support, chloroplasts that capture sunlight for photosynthesis, and a large central vacuole that maintains turgor pressure.',
     imageUrl:
-      'https://upload.wikimedia.org/wikipedia/commons/3/30/Plant_cell_structure_svg.svg',
+      '/images/organisms/1280px-Plant_cell_structure_svg_labels.svg.png',
     imageSource: {
       label: 'Plant cell structure – LadyofHats (Mariana Ruiz Villarreal)',
       url: 'https://commons.wikimedia.org/wiki/File:Plant_cell_structure_svg_labels.svg',
@@ -86,7 +86,7 @@ export const ORGANISMS: Organism[] = [
     description:
       'Neutrophils are the most abundant type of white blood cell and are the immune system\'s first responders to infection. They engulf and destroy bacteria and fungi through a process called phagocytosis, and can also release a web of DNA called a Neutrophil Extracellular Trap (NET) to catch pathogens.',
     imageUrl:
-      'https://upload.wikimedia.org/wikipedia/commons/8/86/Blausen_0676_NeutrophilEngulfingAnthrax.png',
+      '/images/organisms/Neutrophil.png',
     imageSource: {
       label: 'Neutrophil engulfing anthrax – BruceBlaus (Blausen Medical)',
       url: 'https://commons.wikimedia.org/wiki/File:Blausen_0676_NeutrophilEngulfingAnthrax.png',
@@ -122,7 +122,7 @@ export const ORGANISMS: Organism[] = [
     description:
       'Neurons are the electrically excitable cells that form the nervous system. They receive signals through branching dendrites, process them in the cell body (soma), and transmit electrical impulses along a long axon to the next neuron or muscle via a synapse. The human brain contains approximately 86 billion neurons.',
     imageUrl:
-      'https://upload.wikimedia.org/wikipedia/commons/b/bc/Neuron_Hand-tuned.svg',
+      '/images/organisms/Neuron_Hand-tuned.svg',
     imageSource: {
       label: 'Complete neuron cell diagram – Quasar Jarosz',
       url: 'https://commons.wikimedia.org/wiki/File:Neuron_Hand-tuned.svg',
@@ -158,7 +158,7 @@ export const ORGANISMS: Organism[] = [
     description:
       'Epithelial cells form the lining of surfaces throughout the body — skin, gut, lungs, blood vessels, and organs. They act as selective barriers, controlling what passes between compartments, and are the most common site of origin for cancers (carcinomas) due to their high turnover rate.',
     imageUrl:
-      'https://upload.wikimedia.org/wikipedia/commons/1/15/Blausen_0352_EpithelialTissueTypes.png',
+      '/images/organisms/Epithelial.png',
     imageSource: {
       label: 'Epithelial tissue types – BruceBlaus (Blausen Medical)',
       url: 'https://commons.wikimedia.org/wiki/File:Blausen_0352_EpithelialTissueTypes.png',
@@ -194,7 +194,7 @@ export const ORGANISMS: Organism[] = [
     description:
       'A gram-positive, rod-shaped bacterium that causes anthrax. Unlike all other organisms in this collection, it is prokaryotic — meaning it has no membrane-bound nucleus. Its DNA floats freely in a region called the nucleoid. It is uniquely dangerous due to its ability to form tough, resilient endospores that survive for decades.',
     imageUrl:
-      'https://upload.wikimedia.org/wikipedia/commons/e/e0/Bacillus_anthracis_Gram.jpg',
+      '/images/organisms/1280px-Bacillus_anthracis_Gram.jpg',
     imageSource: {
       label: 'Bacillus anthracis Gram stain – CDC / Public Health Image Library',
       url: 'https://commons.wikimedia.org/wiki/File:Bacillus_anthracis_Gram.jpg',
@@ -230,7 +230,7 @@ export const ORGANISMS: Organism[] = [
     description:
       'Skeletal muscle cells (myocytes or muscle fibres) are extraordinarily long multinucleate cells that generate voluntary movement. They are packed with myofibrils — bundles of alternating actin (thin) and myosin (thick) filaments whose sliding interaction produces contraction, consuming ATP in the process.',
     imageUrl:
-      'https://upload.wikimedia.org/wikipedia/commons/0/00/Blausen_0801_SkeletalMuscle.png',
+      '/images/organisms/1280px-Blausen_0801_SkeletalMuscle.png',
     imageSource: {
       label: 'Skeletal muscle anatomy – BruceBlaus (Blausen Medical)',
       url: 'https://commons.wikimedia.org/wiki/File:Blausen_0801_SkeletalMuscle.png',
@@ -284,7 +284,7 @@ export const ORGANISMS: Organism[] = [
           'A basidiomycete mushroom native to grasslands in Europe and North America. It is the world\'s most cultivated mushroom, available as both the white button mushroom and the brown crimini / portobello depending on harvesting stage.',
         type: 'Macroscopic',
         imageUrl:
-          'https://upload.wikimedia.org/wikipedia/commons/4/43/Agaricus_bisporus_3.jpg',
+          '/images/organisms/Agaricus.png',
         imageSource: {
           label: 'Agaricus bisporus – Ak ccm',
           url: 'https://commons.wikimedia.org/wiki/File:Agaricus_bisporus_3.jpg',
@@ -299,7 +299,7 @@ export const ORGANISMS: Organism[] = [
           'A blue-green mold common in soil and on decaying food. It is the original source of penicillin — Alexander Fleming noticed in 1928 that it killed surrounding bacteria on his petri dishes, leading to the antibiotic revolution that has saved hundreds of millions of lives.',
         type: 'Microscopic',
         imageUrl:
-          'https://upload.wikimedia.org/wikipedia/commons/6/65/Penicillium_labeled.jpg',
+          '/images/organisms/Penicillium_labeled.jpg',
         imageSource: {
           label: 'Penicillium microscopy – Y tambe',
           url: 'https://commons.wikimedia.org/wiki/File:Penicillium_labeled.jpg',
@@ -314,7 +314,7 @@ export const ORGANISMS: Organism[] = [
           "A single-celled ascomycete fungus that reproduces by budding. It ferments sugars to produce ethanol and CO₂, underpinning bread-making, brewing, and winemaking for millennia. It is also one of the most important model organisms in biological research.",
         type: 'Single-celled',
         imageUrl:
-          'https://upload.wikimedia.org/wikipedia/commons/4/4a/S_cerevisiae_under_DIC_microscopy.jpg',
+          '/images/organisms/1280px-S_cerevisiae_under_DIC_microscopy.jpg',
         imageSource: {
           label: "Saccharomyces cerevisiae under DIC microscopy – Masur",
           url: 'https://commons.wikimedia.org/wiki/File:S_cerevisiae_under_DIC_microscopy.jpg',
@@ -332,7 +332,7 @@ export const ORGANISMS: Organism[] = [
     subtitle: 'Unicellular Eukaryote',
     category: 'Protist',
     description: 'A unicellular organism known for its ability to alter its shape, primarily by extending and retracting pseudopods. Found in freshwater environments, it is a classic example of protozoan movement and phagocytosis (eating by engulfing).',
-    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/4/4b/Amoeba_%28PSF%29.png',
+    imageUrl: '/images/organisms/Amoeba.png',
     sketchfabId: 'a385750059c445eeaf057e3f8d3d9203', // Placeholder
     imageSource: {
       label: 'Amoeba diagram – Pearson Scott Foresman',
@@ -365,7 +365,7 @@ export const ORGANISMS: Organism[] = [
     subtitle: 'Plant Anatomy',
     category: 'Plant Anatomy',
     description: 'The internal structure of a typical dicotyledonous leaf, adapted perfectly for photosynthesis. It shows the distinct layers: epidermis, palisade mesophyll, spongy mesophyll, and the vascular bundle (veins).',
-    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/7/77/Leaf_anatomy.svg',
+    imageUrl: '/images/organisms/1280px-Leaf_anatomy.svg.png',
     sketchfabId: '2b733b8a4f6f4b6287c2f6d0f9a2db12', // Placeholder
     imageSource: {
       label: 'Leaf anatomy diagram – Zephyris',
@@ -398,7 +398,7 @@ export const ORGANISMS: Organism[] = [
     subtitle: 'Circulatory System Organ',
     category: 'Organ',
     description: 'A muscular organ about the size of a fist, located just behind and slightly left of the breastbone. The heart pumps blood through the network of arteries and veins called the cardiovascular system.',
-    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/e/e5/Diagram_of_the_human_heart_%28cropped%29.svg',
+    imageUrl: '/images/organisms/1280px-Diagram_of_the_human_heart__cropped_.svg.png',
     sketchfabId: '13f412c1b9f7431e8088ed8cb2142e88', // Actual Sketchfab models can be embedded here
     imageSource: {
       label: 'Diagram of the human heart – Wapcaplet',
@@ -431,7 +431,7 @@ export const ORGANISMS: Organism[] = [
     subtitle: 'Alimentary Canal',
     category: 'System',
     description: 'The human digestive system consists of the gastrointestinal tract plus the accessory organs of digestion (the tongue, salivary glands, pancreas, liver, and gallbladder). Digestion involves the breakdown of food into smaller and smaller components, until they can be absorbed and assimilated into the body.',
-    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/c/c5/Digestive_system_diagram_en.svg',
+    imageUrl: '/images/organisms/Digestive_system_diagram_en.svg',
     sketchfabId: 'c126839ff9154a4f89d38c1c4f620bd3', 
     imageSource: {
       label: 'Digestive system diagram – Mariana Ruiz Villarreal',
@@ -464,7 +464,7 @@ export const ORGANISMS: Organism[] = [
     subtitle: 'Supporting Tissue System',
     category: 'System',
     description: 'The internal framework of the human body. It is composed of around 270 bones at birth – this total decreases to around 206 bones by adulthood after some bones get fused together.',
-    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/1/14/Human-Skeleton.jpg',
+    imageUrl: '/images/organisms/Human-Skeleton.jpg',
     sketchfabId: 'ddf0a3ec378c4a169b12853de8e7b926',
     imageSource: {
       label: 'Human Skeleton – LadyofHats',
@@ -497,7 +497,7 @@ export const ORGANISMS: Organism[] = [
     subtitle: 'Central Nervous System',
     category: 'Organ',
     description: 'The central organ of the human nervous system. It controls most of the activities of the body, processing, integrating, and coordinating the information it receives from the sense organs, and making decisions as to the instructions sent to the rest of the body.',
-    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/1/1a/Blausen_0102_Brain_Motor%26Sensory.png',
+    imageUrl: '/images/organisms/1280px-Blausen_0102_Brain_Motor_Sensory.png',
     sketchfabId: 'b7bcfd81b9514757b10c660be4f3fc3c',
     imageSource: {
       label: 'Brain Motor and Sensory – BruceBlaus',
@@ -530,7 +530,7 @@ export const ORGANISMS: Organism[] = [
     subtitle: 'Sensory Organ (Vision)',
     category: 'Organ',
     description: 'The sensory organ of the visual system. It reacts to light and allows vision. Rod and cone cells in the retina are conscious light perceptive cells in vision including color differentiation and the perception of depth.',
-    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/1/1e/Schematic_diagram_of_the_human_eye_en.svg',
+    imageUrl: '/images/organisms/Schematic_diagram_of_the_human_eye_en.svg',
     sketchfabId: '3c0a5d4e12344efaa0a581413a1024bd',
     imageSource: {
       label: 'Schematic diagram of the human eye – Rhcastilhos',
@@ -563,7 +563,7 @@ export const ORGANISMS: Organism[] = [
     subtitle: 'Deoxyribonucleic Acid',
     category: 'Molecule',
     description: 'The molecule that carries genetic instructions for the development, functioning, growth and reproduction of all known organisms and many viruses. Structurally, DNA consists of two long polynucleotide chains coiling around each other to form a double helix.',
-    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/d/d3/0322_DNA_Nucleotides.jpg',
+    imageUrl: '/images/organisms/0322_DNA_Nucleotides.jpg',
     sketchfabId: 'a3857490f2384a2ea2e88cb9f67a7d4a',
     imageSource: {
       label: 'DNA Nucleotides – OpenStax',
