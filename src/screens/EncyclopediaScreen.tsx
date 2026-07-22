@@ -69,23 +69,7 @@ export function EncyclopediaScreen({ organism }: EncyclopediaScreenProps) {
           </div>
 
           <div className="bg-surface rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.04)] overflow-hidden border border-outline-variant/30 flex flex-col relative">
-            <div className="absolute top-4 right-4 z-10 flex gap-2">
-               <div className="bg-surface/80 backdrop-blur-md rounded-lg p-2 border border-outline-variant/30 flex items-center gap-2 shadow-sm">
-                  <span className="font-mono text-xs font-medium px-2 text-on-surface-variant">VIEW MODE</span>
-                  <button className="w-8 h-8 rounded bg-surface shadow-sm border border-outline-variant flex items-center justify-center hover:bg-surface-container">
-                    <Activity className="w-4 h-4 text-primary" />
-                  </button>
-                  <button className="w-8 h-8 rounded bg-secondary-container text-on-secondary-container flex items-center justify-center">
-                    <div className="w-4 h-4 rounded-sm border-2 border-current" />
-                  </button>
-               </div>
-            </div>
-            
-            <div className="absolute top-8 left-8 z-10 bg-surface-container/90 backdrop-blur-sm rounded-lg p-4 font-mono text-xs text-on-surface shadow-sm max-w-[200px] border border-outline-variant/30">
-              Tip: Drag to rotate<br/>
-              Scroll to zoom<br/>
-              Ctrl + drag to pan
-            </div>
+
 
             <div className="bg-surface-container-low aspect-[4/3] w-full relative flex items-center justify-center p-8 overflow-hidden shadow-inner">
               <ImageWithFallback
@@ -112,28 +96,7 @@ export function EncyclopediaScreen({ organism }: EncyclopediaScreenProps) {
               </div>
             )}
             
-            <div className="p-4 border-t border-outline-variant/30 bg-surface flex items-center gap-2 overflow-x-auto">
-              <button className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-on-surface hover:bg-surface-container transition-colors">
-                <Rotate3D className="w-4 h-4" /> Rotate
-              </button>
-              <button className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-on-surface hover:bg-surface-container transition-colors">
-                <Settings2 className="w-4 h-4" /> Isolate
-              </button>
-              <button className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-on-surface hover:bg-surface-container transition-colors">
-                <Activity className="w-4 h-4" /> Hide Others
-              </button>
-              <div className="w-px h-6 bg-outline-variant/50 mx-2" />
-              <button className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-on-surface hover:bg-surface-container transition-colors">
-                <Maximize className="w-4 h-4" /> Reset View
-              </button>
-              <div className="flex-1" />
-              <button className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-on-surface hover:bg-surface-container transition-colors border border-outline-variant/50">
-                <Download className="w-4 h-4" /> Screenshot
-              </button>
-              <button className="flex items-center gap-2 px-6 py-2 rounded-lg text-sm font-medium bg-primary text-on-primary hover:bg-primary-container transition-colors shadow-sm">
-                3D Export
-              </button>
-            </div>
+
           </div>
         </div>
 
