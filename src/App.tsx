@@ -11,6 +11,7 @@ import { JoinScreen } from './screens/JoinScreen';
 import { StudentDashboard } from './screens/StudentDashboard';
 import { SchoolAdminDashboard } from './screens/SchoolAdminDashboard';
 import { NotFoundScreen } from './screens/NotFoundScreen';
+import { PastQuestionsScreen } from './screens/PastQuestionsScreen';
 import { ScreenType } from './types';
 import { ORGANISMS } from './data';
 import { supabase } from './lib/supabase';
@@ -171,6 +172,11 @@ export default function App() {
           <VisualizationScreen user={currentUser} organism={selectedOrganism} onBack={() => navigateTo('encyclopedia')} />
         )}
 
+        {/* Past Questions — students only */}
+        {currentScreen === 'past-questions' && currentUser && userRole === 'student' && (
+          <PastQuestionsScreen onBack={() => navigateTo('student-dashboard')} />
+        )}
+
         {/* School Registration — public */}
         {currentScreen === 'registration' && (
           <SchoolRegistrationScreen />
@@ -187,7 +193,7 @@ export default function App() {
         )}
 
         {/* Catch-all: redirect to auth if accessing protected screen while logged out */}
-        {(currentScreen === 'encyclopedia' || currentScreen === 'visualization' || currentScreen === 'student-dashboard' || currentScreen === 'school-dashboard') && !currentUser && (
+        {(currentScreen === 'encyclopedia' || currentScreen === 'visualization' || currentScreen === 'student-dashboard' || currentScreen === 'school-dashboard' || currentScreen === 'past-questions') && !currentUser && (
           <AuthScreen
             onNavigate={navigateTo}
             onStudentLogin={handleStudentLogin}

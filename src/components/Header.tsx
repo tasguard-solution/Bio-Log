@@ -5,6 +5,7 @@ import {
   User,
   Search,
   GraduationCap,
+  ClipboardList,
 } from 'lucide-react';
 import { ScreenType } from '../types';
 import logoUrl from '../assets/images/biolog_logo.png';
@@ -58,6 +59,17 @@ export function Header({ currentScreen, onNavigate, currentUser, userRole }: Hea
             >
               <Library className="w-4 h-4" />
               3D Models
+            </button>
+            <button
+              onClick={() => onNavigate('past-questions')}
+              className={`flex items-center gap-2 text-sm font-medium pb-1 border-b-2 transition-colors ${
+                currentScreen === 'past-questions'
+                  ? 'border-primary text-primary'
+                  : 'border-transparent text-on-surface-variant hover:text-on-surface'
+              }`}
+            >
+              <ClipboardList className="w-4 h-4" />
+              Practice
             </button>
           </>
         )}
