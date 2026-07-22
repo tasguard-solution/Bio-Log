@@ -36,5 +36,5 @@ export interface FungiItem {
   };
 }
 
-export type ScreenType = 'encyclopedia' | 'visualization' | 'admin' | 'registration' | 'superadmin' | 'auth' | 'student-dashboard' | 'school-dashboard';
+export type ScreenType = 'encyclopedia' | 'visualization' | 'admin' | 'registration' | 'superadmin' | 'auth' | 'student-dashboard' | 'school-dashboard' | 'not-found';
 

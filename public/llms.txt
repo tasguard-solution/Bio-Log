@@ -1,0 +1,16 @@
+# Bio Log
+
+## About
+Bio Log is an interactive educational platform designed for biology students and schools. It provides comprehensive 3D visualizations, detailed encyclopedias, and interactive learning tools to enhance the study of biological structures, such as animal cells, plant cells, bacteria, and more.
+
+## Purpose
+The platform serves as an EdTech tool for schools to provide a modern, interactive biology curriculum. It features role-based access for students and school administrators, allowing schools to manage their subscriptions and student access.
+
+## Features
+- **3D Visualizations**: Interactive 3D models of cells and organelles.
+- **Cell Encyclopedia**: Detailed entries for various biological organisms and structures.
+- **School Dashboard**: Administration portal for schools to manage student access.
+
+## Technical Context
+- It is a Single Page Application (SPA) built with React.
+- Hosted at https://biolog.tasguard.com

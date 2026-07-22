@@ -10,6 +10,7 @@ import { AuthScreen } from './screens/AuthScreen';
 import { JoinScreen } from './screens/JoinScreen';
 import { StudentDashboard } from './screens/StudentDashboard';
 import { SchoolAdminDashboard } from './screens/SchoolAdminDashboard';
+import { NotFoundScreen } from './screens/NotFoundScreen';
 import { ScreenType } from './types';
 import { ORGANISMS } from './data';
 import { supabase } from './lib/supabase';
@@ -49,10 +50,24 @@ export default function App() {
       } else {
         setCurrentUser(null);
         setUserRole(null);
-        setCurrentScreen('auth');
+        // Do not reset currentScreen here if it's already a public screen or not-found
+        setCurrentScreen((prevScreen) => {
+          if (prevScreen !== 'not-found' && prevScreen !== 'registration') {
+            return 'auth';
+          }
+          return prevScreen;
+        });
       }
     });
     return () => subscription.unsubscribe();
+  }, []);
+
+  // Check URL on mount for 404
+  useEffect(() => {
+    const path = window.location.pathname;
+    if (path !== '/' && !path.startsWith('/admin') && !path.startsWith('/join')) {
+      setCurrentScreen('not-found');
+    }
   }, []);
 
   // ── Navigation Wrapper ───────────────────────────────────────────────────────
@@ -164,6 +179,11 @@ export default function App() {
         {/* Internal admin tool */}
         {currentScreen === 'admin' && (
           <AdminScreen />
+        )}
+
+        {/* 404 Not Found */}
+        {currentScreen === 'not-found' && (
+          <NotFoundScreen onNavigate={navigateTo} />
         )}
 
         {/* Catch-all: redirect to auth if accessing protected screen while logged out */}

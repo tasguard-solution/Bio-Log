@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+# Disallow access to purely administrative/internal pages if they were strictly Server-Side Rendered (SSR)
+# However, for an SPA, it's mostly JS. We can still signal crawlers:
+Disallow: /admin
+Disallow: /*?school=*
+
+Sitemap: https://biolog.tasguard.com/sitemap.xml
