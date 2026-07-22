@@ -2,18 +2,18 @@
 @import "tailwindcss";
 
 @theme {
-  --color-surface: #f8f9fa;
-  --color-surface-dim: #d9dadb;
-  --color-surface-bright: #f8f9fa;
+  --color-surface: #f8f4eb;
+  --color-surface-dim: #d1c7b3;
+  --color-surface-bright: #fdfbf7;
   --color-surface-container-lowest: #ffffff;
-  --color-surface-container-low: #f3f4f5;
-  --color-surface-container: #edeeef;
-  --color-surface-container-high: #e7e8e9;
-  --color-surface-container-highest: #e1e3e4;
-  --color-on-surface: #191c1d;
-  --color-on-surface-variant: #414844;
-  --color-outline: #717973;
-  --color-outline-variant: #c1c8c2;
+  --color-surface-container-low: #f4f0e6;
+  --color-surface-container: #ebe5d8;
+  --color-surface-container-high: #e3dbcb;
+  --color-surface-container-highest: #dbd1bf;
+  --color-on-surface: #2b2824;
+  --color-on-surface-variant: #524d45;
+  --color-outline: #857e72;
+  --color-outline-variant: #d4ccbd;
   
   --color-primary: #012d1d;
   --color-on-primary: #ffffff;
@@ -25,8 +25,8 @@
   --color-secondary-container: #aeeecb;
   --color-on-secondary-container: #316e52;
 
-  --color-background: #f8f9fa;
-  --color-on-background: #191c1d;
+  --color-background: #f8f4eb;
+  --color-on-background: #2b2824;
 
   --font-serif: "Source Serif 4", serif;
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
