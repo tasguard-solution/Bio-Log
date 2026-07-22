@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Organism } from '../types';
-import { Activity, BookOpen, FlaskConical } from 'lucide-react';
+import { Activity, BookOpen, Box, FlaskConical } from 'lucide-react';
+import { ScreenType } from '../types';
 import { supabase } from '../lib/supabase';
 import { QuizPanel } from '../components/QuizPanel';
 
@@ -20,9 +21,10 @@ function ImageWithFallback({ src, alt, className }: { src: string; alt: string; 
 interface EncyclopediaScreenProps {
   organism: Organism;
   onQuizScore?: (organismId: string, correct: number, total: number) => void;
+  onView3D?: () => void;
 }
 
-export function EncyclopediaScreen({ organism, onQuizScore }: EncyclopediaScreenProps) {
+export function EncyclopediaScreen({ organism, onQuizScore, onView3D }: EncyclopediaScreenProps) {
   const [customImageUrl, setCustomImageUrl] = useState<string | null>(null);
 
   useEffect(() => {
@@ -141,6 +143,22 @@ export function EncyclopediaScreen({ organism, onQuizScore }: EncyclopediaScreen
               </p>
             </div>
           ))}
+
+          {organism.sketchfabId && onView3D && (
+            <button
+              onClick={onView3D}
+              className="w-full bg-surface rounded-2xl shadow-[0_10px_30px_rgba(0,0,0,0.03)] p-6 border border-outline-variant/30 flex items-center gap-4 hover:-translate-y-0.5 transition-all duration-200 group"
+            >
+              <div className="w-12 h-12 rounded-xl bg-primary/10 border border-outline-variant/30 flex items-center justify-center shrink-0 group-hover:bg-primary/20 transition-colors">
+                <Box className="w-6 h-6 text-primary" />
+              </div>
+              <div className="text-left">
+                <h3 className="font-serif text-lg font-semibold text-primary">View in 3D</h3>
+                <p className="text-sm text-on-surface-variant">Interactive model — rotate, zoom, explore</p>
+              </div>
+              <span className="ml-auto text-primary group-hover:translate-x-1 transition-transform">→</span>
+            </button>
+          )}
 
           <QuizPanel
             organismId={organism.id}

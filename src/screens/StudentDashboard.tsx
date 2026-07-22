@@ -141,7 +141,7 @@ export function StudentDashboard({ user, onNavigate, onLogout }: StudentDashboar
       desc: 'Interactive 3D models of cells and organelles. Rotate, zoom, and explore.',
       cta: 'Visualize →',
       color: 'secondary',
-      onClick: () => onNavigate('visualization'),
+      onClick: () => onNavigate('visualization-hub'),
     },
     {
       id: 'past-questions',

@@ -3,6 +3,7 @@ import { Header } from './components/Header';
 import { Sidebar } from './components/Sidebar';
 import { EncyclopediaScreen } from './screens/EncyclopediaScreen';
 import { VisualizationScreen } from './screens/VisualizationScreen';
+import { VisualizationHubScreen } from './screens/VisualizationHubScreen';
 import { AdminScreen } from './screens/AdminScreen';
 import { SchoolRegistrationScreen } from './screens/SchoolRegistrationScreen';
 import { SuperAdminPortal } from './screens/SuperAdminPortal';
@@ -29,6 +30,7 @@ export default function App() {
     if (stored === 'demo' || stored === 'locked') return stored;
     return 'free';
   });
+  const [visualizationSource, setVisualizationSource] = useState<'hub' | 'encyclopedia'>('hub');
 
   const updateLoginMode = (mode: 'free' | 'demo' | 'locked') => {
     setLoginMode(mode);
@@ -174,13 +176,31 @@ export default function App() {
         {currentScreen === 'encyclopedia' && currentUser && userRole === 'student' && (
           <>
             <Sidebar selectedId={selectedOrganismId} onSelect={setSelectedOrganismId} />
-            <EncyclopediaScreen organism={selectedOrganism} />
+            <EncyclopediaScreen
+              organism={selectedOrganism}
+              onView3D={() => {
+                setVisualizationSource('encyclopedia');
+                navigateTo('visualization');
+              }}
+            />
           </>
+        )}
+
+        {/* Visualization Hub — students only */}
+        {currentScreen === 'visualization-hub' && currentUser && userRole === 'student' && (
+          <VisualizationHubScreen
+            onSelectOrganism={setSelectedOrganismId}
+            onNavigate={navigateTo}
+          />
         )}
 
         {/* Visualization — students only */}
         {currentScreen === 'visualization' && currentUser && userRole === 'student' && (
-          <VisualizationScreen user={currentUser} organism={selectedOrganism} onBack={() => navigateTo('encyclopedia')} />
+          <VisualizationScreen
+            user={currentUser}
+            organism={selectedOrganism}
+            onBack={() => navigateTo(visualizationSource === 'hub' ? 'visualization-hub' : 'encyclopedia')}
+          />
         )}
 
         {/* Past Questions — students only */}
@@ -204,7 +224,7 @@ export default function App() {
         )}
 
         {/* Catch-all: redirect to auth if accessing protected screen while logged out */}
-        {(currentScreen === 'encyclopedia' || currentScreen === 'visualization' || currentScreen === 'student-dashboard' || currentScreen === 'school-dashboard' || currentScreen === 'past-questions') && !currentUser && (
+        {(currentScreen === 'encyclopedia' || currentScreen === 'visualization' || currentScreen === 'visualization-hub' || currentScreen === 'student-dashboard' || currentScreen === 'school-dashboard' || currentScreen === 'past-questions') && !currentUser && (
           <AuthScreen
             onNavigate={navigateTo}
             onStudentLogin={handleStudentLogin}

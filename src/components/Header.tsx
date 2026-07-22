@@ -50,9 +50,9 @@ export function Header({ currentScreen, onNavigate, currentUser, userRole }: Hea
               Encyclopedia
             </button>
             <button
-              onClick={() => onNavigate('visualization')}
+              onClick={() => onNavigate('visualization-hub')}
               className={`flex items-center gap-2 text-sm font-medium pb-1 border-b-2 transition-colors ${
-                currentScreen === 'visualization'
+                currentScreen === 'visualization-hub' || currentScreen === 'visualization'
                   ? 'border-primary text-primary'
                   : 'border-transparent text-on-surface-variant hover:text-on-surface'
               }`}
