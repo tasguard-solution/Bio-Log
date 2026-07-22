@@ -31,12 +31,19 @@ function LoginForm({ role, onBack, onNavigate, onStudentLogin, onSchoolLogin }: 
     e.preventDefault();
     setError('');
     setLoading(true);
+
+    // Trigger the bio-metric scan animation
+    window.dispatchEvent(new CustomEvent('biometric-scan'));
+
     try {
       const { data, error: authError } = await supabase.auth.signInWithPassword({ email, password });
       if (authError) throw authError;
       if (!data.user) throw new Error('Login failed.');
 
       const userRole = data.user.user_metadata?.role;
+
+      // Wait for scan animation to complete before redirecting
+      await new Promise(resolve => setTimeout(resolve, 1200));
 
       if (role === 'school') {
         if (userRole !== 'school_admin') {
@@ -168,6 +175,10 @@ function DemoLoginForm({ onStudentLogin, onSchoolLogin }: DemoLoginFormProps) {
   const handleDemoLogin = async (role: 'school' | 'student') => {
     setError('');
     setLoading(true);
+
+    // Trigger the bio-metric scan animation
+    window.dispatchEvent(new CustomEvent('biometric-scan'));
+    
     try {
       const email = role === 'school' ? DEMO_SCHOOL_EMAIL : DEMO_STUDENT_EMAIL;
       const password = role === 'school' ? DEMO_SCHOOL_PASSWORD : DEMO_STUDENT_PASSWORD;
@@ -175,6 +186,9 @@ function DemoLoginForm({ onStudentLogin, onSchoolLogin }: DemoLoginFormProps) {
       const { data, error: authError } = await supabase.auth.signInWithPassword({ email, password });
       if (authError) throw authError;
       if (!data.user) throw new Error('Login failed.');
+
+      // Wait for scan animation to complete before redirecting
+      await new Promise(resolve => setTimeout(resolve, 1200));
 
       if (role === 'school') {
         onSchoolLogin(data.user);
