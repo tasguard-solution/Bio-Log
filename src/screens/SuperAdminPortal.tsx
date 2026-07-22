@@ -1,7 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
-import { Building2, CreditCard, CalendarClock, Activity, Link2, Check, UploadCloud, FileBox, Trash2, Loader2 } from 'lucide-react';
+import { Building2, CreditCard, CalendarClock, Activity, Link2, Check, UploadCloud, FileBox, Trash2, Loader2, Lock, Unlock, Play } from 'lucide-react';
 import { ORGANISMS } from '../data';
+
+interface SuperAdminPortalProps {
+  loginMode: 'free' | 'demo' | 'locked';
+  onUpdateLoginMode: (mode: 'free' | 'demo' | 'locked') => void;
+}
 interface SchoolData {
   id: string;
   name: string;
@@ -19,7 +24,7 @@ interface SubscriptionData {
   current_period_end: string;
 }
 
-export function SuperAdminPortal() {
+export function SuperAdminPortal({ loginMode, onUpdateLoginMode }: SuperAdminPortalProps) {
   const [schools, setSchools] = useState<SchoolData[]>([]);
   const [subscriptions, setSubscriptions] = useState<SubscriptionData[]>([]);
   const [assets, setAssets] = useState<any[]>([]);
@@ -201,6 +206,53 @@ export function SuperAdminPortal() {
                 <div className="text-sm text-on-surface-variant">Total Revenue</div>
                 <div className="text-2xl font-bold text-on-surface">₦{totalRevenue.toLocaleString()}</div>
               </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Login Mode Selector */}
+        <div className="bg-surface rounded-2xl shadow-sm border border-surface-container-high p-6 mb-8">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <div className={`p-3 rounded-xl ${
+                loginMode === 'locked' ? 'bg-red-100 text-red-600' :
+                loginMode === 'demo' ? 'bg-amber-100 text-amber-600' :
+                'bg-green-100 text-green-600'
+              }`}>
+                {loginMode === 'locked' ? <Lock className="w-6 h-6" /> :
+                 loginMode === 'demo' ? <Play className="w-6 h-6" /> :
+                 <Unlock className="w-6 h-6" />}
+              </div>
+              <div>
+                <h3 className="text-lg font-bold text-on-surface">
+                  Login Access
+                </h3>
+                <p className="text-sm text-on-surface-variant">
+                  {loginMode === 'locked' && 'Locked — login is disabled'}
+                  {loginMode === 'demo' && 'Demo — pre-filled credentials, read-only'}
+                  {loginMode === 'free' && 'Free — normal login for everyone'}
+                </p>
+              </div>
+            </div>
+            <div className="flex p-1 bg-surface-container-low rounded-xl border border-outline-variant/30">
+              {(['free', 'demo', 'locked'] as const).map(mode => (
+                <button
+                  key={mode}
+                  onClick={() => onUpdateLoginMode(mode)}
+                  className={`px-4 py-2 text-xs font-semibold rounded-lg transition-all capitalize ${
+                    loginMode === mode
+                      ? mode === 'locked' ? 'bg-red-500 text-white shadow-sm'
+                        : mode === 'demo' ? 'bg-amber-500 text-white shadow-sm'
+                        : 'bg-green-500 text-white shadow-sm'
+                      : 'text-on-surface-variant hover:text-on-surface'
+                  }`}
+                >
+                  {mode === 'free' && <Unlock className="w-3.5 h-3.5 inline mr-1.5" />}
+                  {mode === 'demo' && <Play className="w-3.5 h-3.5 inline mr-1.5" />}
+                  {mode === 'locked' && <Lock className="w-3.5 h-3.5 inline mr-1.5" />}
+                  {mode}
+                </button>
+              ))}
             </div>
           </div>
         </div>

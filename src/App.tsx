@@ -24,6 +24,16 @@ export default function App() {
   const [currentUser, setCurrentUser] = useState<any>(null);
   const [userRole, setUserRole] = useState<UserRole>(null);
   const [authLoading, setAuthLoading] = useState(true);
+  const [loginMode, setLoginMode] = useState<'free' | 'demo' | 'locked'>(() => {
+    const stored = localStorage.getItem('biolog_login_mode');
+    if (stored === 'demo' || stored === 'locked') return stored;
+    return 'free';
+  });
+
+  const updateLoginMode = (mode: 'free' | 'demo' | 'locked') => {
+    setLoginMode(mode);
+    localStorage.setItem('biolog_login_mode', mode);
+  };
 
   const selectedOrganism = ORGANISMS.find(o => o.id === selectedOrganismId) || ORGANISMS[0];
 
@@ -102,7 +112,7 @@ export default function App() {
   if (isAdminRoute) {
     return (
       <div className="min-h-screen bg-background flex flex-col font-sans">
-        <SuperAdminPortal />
+        <SuperAdminPortal loginMode={loginMode} onUpdateLoginMode={updateLoginMode} />
       </div>
     );
   }
@@ -146,6 +156,7 @@ export default function App() {
             onNavigate={navigateTo}
             onStudentLogin={handleStudentLogin}
             onSchoolLogin={handleSchoolLogin}
+            loginMode={loginMode}
           />
         )}
 
@@ -198,6 +209,7 @@ export default function App() {
             onNavigate={navigateTo}
             onStudentLogin={handleStudentLogin}
             onSchoolLogin={handleSchoolLogin}
+            loginMode={loginMode}
           />
         )}
       </div>

@@ -1,9 +1,13 @@
 import React, { useState } from 'react';
 import { supabase } from '../lib/supabase';
 import { ScreenType } from '../types';
-import { School, GraduationCap, Eye, EyeOff, ArrowLeft, Loader2 } from 'lucide-react';
+import { School, GraduationCap, Eye, EyeOff, ArrowLeft, Loader2, Lock, Play } from 'lucide-react';
 import logoUrl from '../assets/images/biolog_logo.png';
 import { DnaHelix } from '../components/DnaHelix';
+
+// ─── Demo credentials (shown in demo mode) ─────────────────────────────────
+const DEMO_EMAIL = 'tasker@tasguard.com';
+const DEMO_PASSWORD = 'Owunari10$';
 
 // ─── LoginForm lives OUTSIDE AuthScreen so it never remounts on parent re-renders ───
 interface LoginFormProps {
@@ -148,18 +152,136 @@ function LoginForm({ role, onBack, onNavigate, onStudentLogin, onSchoolLogin }: 
   );
 }
 
+// ─── DemoLoginForm — pre-filled, read-only, one-click sign-in ──────────────
+interface DemoLoginFormProps {
+  onSchoolLogin: (user: any) => void;
+}
+
+function DemoLoginForm({ onSchoolLogin }: DemoLoginFormProps) {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  const handleDemoLogin = async () => {
+    setError('');
+    setLoading(true);
+    try {
+      const { data, error: authError } = await supabase.auth.signInWithPassword({
+        email: DEMO_EMAIL,
+        password: DEMO_PASSWORD,
+      });
+      if (authError) throw authError;
+      if (!data.user) throw new Error('Login failed.');
+      onSchoolLogin(data.user);
+    } catch (err: any) {
+      setError(err.message || 'Demo login failed.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="relative flex-1 flex items-center justify-center bg-surface-container-low p-6 overflow-hidden">
+      <DnaHelix />
+      <div className="relative z-10 w-full max-w-md">
+        <div className="flex items-center gap-3 mb-8">
+          <div className="w-12 h-12 rounded-2xl bg-secondary/15 flex items-center justify-center">
+            <School className="w-6 h-6 text-secondary" />
+          </div>
+          <div>
+            <h2 className="font-serif text-2xl font-bold text-primary">
+              Demo Mode
+            </h2>
+            <p className="text-sm text-on-surface-variant">
+              Pre-filled school admin account — tap Sign In to continue
+            </p>
+          </div>
+        </div>
+
+        {error && (
+          <div className="mb-6 p-4 bg-red-50 text-red-700 rounded-xl text-sm border border-red-200">
+            {error}
+          </div>
+        )}
+
+        <div className="space-y-5">
+          <div>
+            <label className="block text-sm font-medium text-on-surface mb-1.5">Email Address</label>
+            <input
+              type="email"
+              readOnly
+              value={DEMO_EMAIL}
+              className="w-full bg-surface-container-low border border-surface-container-highest rounded-xl py-3 px-4 text-sm text-on-surface-variant cursor-not-allowed"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-on-surface mb-1.5">Password</label>
+            <input
+              type="password"
+              readOnly
+              value={DEMO_PASSWORD}
+              className="w-full bg-surface-container-low border border-surface-container-highest rounded-xl py-3 px-4 text-sm text-on-surface-variant cursor-not-allowed"
+            />
+          </div>
+
+          <button
+            onClick={handleDemoLogin}
+            disabled={loading}
+            className="w-full py-3.5 bg-primary text-on-primary rounded-xl font-semibold text-sm hover:opacity-90 disabled:opacity-60 transition-all flex items-center justify-center gap-2 shadow-sm"
+          >
+            {loading ? (
+              <><Loader2 className="w-4 h-4 animate-spin" /> Signing in…</>
+            ) : (
+              <><Play className="w-4 h-4" /> Sign In</>
+            )}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ─── AuthScreen manages which view to show ──────────────────────────────────
 interface AuthScreenProps {
   onNavigate: (screen: ScreenType) => void;
   onStudentLogin: (user: any) => void;
   onSchoolLogin: (user: any) => void;
+  loginMode: 'free' | 'demo' | 'locked';
 }
 
 type AuthMode = 'landing' | 'student-login' | 'school-login';
 
-export function AuthScreen({ onNavigate, onStudentLogin, onSchoolLogin }: AuthScreenProps) {
+export function AuthScreen({ onNavigate, onStudentLogin, onSchoolLogin, loginMode }: AuthScreenProps) {
   const [mode, setMode] = useState<AuthMode>('landing');
 
+  // ─── Demo mode: pre-filled school admin login ─────────────────────────────
+  if (loginMode === 'demo') {
+    return <DemoLoginForm onSchoolLogin={onSchoolLogin} />;
+  }
+
+  // ─── Locked mode: access paused ───────────────────────────────────────────
+  if (loginMode === 'locked') {
+    return (
+      <div className="relative flex-1 flex flex-col items-center justify-center bg-surface-container-low p-6 overflow-hidden">
+        <DnaHelix />
+        <div className="relative z-10 text-center max-w-xl">
+          <div className="w-20 h-20 rounded-full bg-red-100 flex items-center justify-center mx-auto mb-6">
+            <Lock className="w-10 h-10 text-red-500" />
+          </div>
+          <h1 className="font-serif text-4xl font-bold text-primary mb-4 leading-tight">
+            Access Paused
+          </h1>
+          <p className="text-on-surface-variant text-lg leading-relaxed mb-2">
+            Login is temporarily disabled.
+          </p>
+          <p className="text-on-surface-variant text-sm leading-relaxed">
+            Please check back later or contact your school administrator for updates.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  // ─── Free mode: normal login ──────────────────────────────────────────────
   if (mode === 'student-login') {
     return (
       <LoginForm
@@ -184,7 +306,6 @@ export function AuthScreen({ onNavigate, onStudentLogin, onSchoolLogin }: AuthSc
     );
   }
 
-  // ─── Landing ───────────────────────────────────────────────────────────────
   return (
     <div className="relative flex-1 flex flex-col items-center justify-center bg-surface-container-low p-6 overflow-hidden">
       <DnaHelix />
