@@ -27,8 +27,8 @@ export default function App() {
   const [authLoading, setAuthLoading] = useState(true);
   const [loginMode, setLoginMode] = useState<'free' | 'demo' | 'locked'>(() => {
     const stored = localStorage.getItem('biolog_login_mode');
-    if (stored === 'demo' || stored === 'locked') return stored;
-    return 'free';
+    if (stored === 'free' || stored === 'locked') return stored;
+    return 'demo'; // Universal default for judges
   });
   const [visualizationSource, setVisualizationSource] = useState<'hub' | 'encyclopedia'>('hub');
 
