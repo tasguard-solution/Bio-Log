@@ -211,7 +211,10 @@ export default function App() {
         {currentScreen === 'visualization-hub' && currentUser && userRole === 'student' && (
           <VisualizationHubScreen
             onSelectOrganism={setSelectedOrganismId}
-            onNavigate={navigateTo}
+            onNavigate={(screen) => {
+              if (screen === 'visualization') setVisualizationSource('hub');
+              navigateTo(screen);
+            }}
           />
         )}
 
@@ -220,7 +223,8 @@ export default function App() {
           <VisualizationScreen
             user={currentUser}
             organism={selectedOrganism}
-            onBack={() => navigateTo('student-dashboard')}
+            source={visualizationSource}
+            onBack={() => navigateTo(visualizationSource === 'hub' ? 'visualization-hub' : 'encyclopedia')}
           />
         )}
 

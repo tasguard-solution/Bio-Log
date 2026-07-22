@@ -9,13 +9,33 @@ interface VisualizationScreenProps {
   user: any;
   organism: Organism;
   onBack: () => void;
+  source?: 'hub' | 'encyclopedia';
 }
 
-export function VisualizationScreen({ user, organism, onBack }: VisualizationScreenProps) {
+export function VisualizationScreen({ user, organism, onBack, source }: VisualizationScreenProps) {
   const [loadingAssets, setLoadingAssets] = useState(true);
   const [modelUrl, setModelUrl] = useState<string | null>(null);
   const [sketchfabId, setSketchfabId] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<'solid' | 'wireframe' | 'xray'>('solid');
+
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+
+  const handlePointerDown = (e: React.PointerEvent) => {
+    setIsDragging(true);
+    setDragStart({ x: e.clientX - position.x, y: e.clientY - position.y });
+    e.currentTarget.setPointerCapture(e.pointerId);
+  };
+  const handlePointerMove = (e: React.PointerEvent) => {
+    if (isDragging) {
+      setPosition({ x: e.clientX - dragStart.x, y: e.clientY - dragStart.y });
+    }
+  };
+  const handlePointerUp = (e: React.PointerEvent) => {
+    setIsDragging(false);
+    e.currentTarget.releasePointerCapture(e.pointerId);
+  };
 
   useEffect(() => {
     (async () => {
@@ -71,22 +91,29 @@ export function VisualizationScreen({ user, organism, onBack }: VisualizationScr
             onClick={onBack}
             className="flex items-center gap-2 px-4 py-2 bg-primary/70 hover:bg-primary backdrop-blur-md rounded-lg text-sm font-medium text-on-primary transition-colors border border-on-primary/10"
           >
-            <ArrowLeft className="w-4 h-4" /> Back to Gallery
+            <ArrowLeft className="w-4 h-4" /> Back to {source === 'encyclopedia' ? 'Encyclopedia' : 'Gallery'}
           </button>
 
-          <div className="mt-6 bg-primary/60 backdrop-blur-md rounded-xl p-6 border border-on-primary/10 max-w-sm">
+          <div 
+            className="mt-6 bg-primary/60 backdrop-blur-md rounded-xl p-6 border border-on-primary/10 max-w-sm cursor-grab active:cursor-grabbing select-none"
+            style={{ transform: `translate(${position.x}px, ${position.y}px)`, touchAction: 'none' }}
+            onPointerDown={handlePointerDown}
+            onPointerMove={handlePointerMove}
+            onPointerUp={handlePointerUp}
+            onPointerCancel={handlePointerUp}
+          >
             <h2 className="font-serif text-2xl font-bold mb-1 text-on-primary">{organism.name}</h2>
             <p className="font-mono text-xs text-on-primary/60 mb-4">{organism.subtitle}</p>
-            <p className="text-sm text-on-primary/80 leading-relaxed">
+            <p className="text-sm text-on-primary/80 leading-relaxed pointer-events-none">
               Interactive 3D visualization. Use mouse or touch to rotate and zoom.
             </p>
             {modelUrl && (
-              <div className="mt-4 px-3 py-1.5 bg-secondary/20 text-secondary-container border border-secondary/30 rounded-lg text-xs font-medium flex items-center gap-2 w-max">
+              <div className="mt-4 px-3 py-1.5 bg-secondary/20 text-secondary-container border border-secondary/30 rounded-lg text-xs font-medium flex items-center gap-2 w-max pointer-events-none">
                 <Box className="w-3.5 h-3.5" /> Custom 3D Model Loaded
               </div>
             )}
             {sketchfabId && (
-              <div className="mt-4 px-3 py-1.5 bg-blue-500/20 text-blue-200 border border-blue-500/30 rounded-lg text-xs font-medium flex items-center gap-2 w-max">
+              <div className="mt-4 px-3 py-1.5 bg-blue-500/20 text-blue-200 border border-blue-500/30 rounded-lg text-xs font-medium flex items-center gap-2 w-max pointer-events-none">
                 <Box className="w-3.5 h-3.5" /> Sketchfab Live View
               </div>
             )}
@@ -94,7 +121,7 @@ export function VisualizationScreen({ user, organism, onBack }: VisualizationScr
         </div>
 
         <div className="flex flex-col gap-3 pointer-events-auto">
-          {(modelUrl || sketchfabId) && (
+          {modelUrl && !sketchfabId && (
             <>
               <button className="w-12 h-12 rounded-full bg-primary/60 hover:bg-primary/80 backdrop-blur-md border border-on-primary/10 flex items-center justify-center transition-colors text-on-primary">
                 <Settings className="w-5 h-5" />
@@ -105,14 +132,12 @@ export function VisualizationScreen({ user, organism, onBack }: VisualizationScr
               <button className="w-12 h-12 rounded-full bg-primary/60 hover:bg-primary/80 backdrop-blur-md border border-on-primary/10 flex items-center justify-center transition-colors text-on-primary">
                 <Share2 className="w-5 h-5" />
               </button>
-              {modelUrl && (
-                <button 
-                  onClick={() => window.open(modelUrl, '_blank')}
-                  className="w-12 h-12 rounded-full bg-secondary hover:bg-secondary-container shadow-lg flex items-center justify-center transition-colors mt-4 text-on-secondary"
-                >
-                  <Download className="w-5 h-5" />
-                </button>
-              )}
+              <button 
+                onClick={() => window.open(modelUrl, '_blank')}
+                className="w-12 h-12 rounded-full bg-secondary hover:bg-secondary-container shadow-lg flex items-center justify-center transition-colors mt-4 text-on-secondary"
+              >
+                <Download className="w-5 h-5" />
+              </button>
             </>
           )}
         </div>
