@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { supabase } from '../lib/supabase';
 import { ScreenType } from '../types';
 import { School, GraduationCap, Eye, EyeOff, ArrowLeft, Loader2 } from 'lucide-react';
+import logoUrl from '../assets/images/biolog_logo.png';
 
 // ─── LoginForm lives OUTSIDE AuthScreen so it never remounts on parent re-renders ───
 interface LoginFormProps {
@@ -185,14 +186,7 @@ export function AuthScreen({ onNavigate, onStudentLogin, onSchoolLogin }: AuthSc
   return (
     <div className="flex-1 flex flex-col items-center justify-center bg-surface-container-low p-6">
       <div className="text-center mb-14 max-w-xl">
-        <div className="w-20 h-20 rounded-3xl bg-primary-container flex items-center justify-center mx-auto mb-6 shadow-sm">
-          <div className="w-10 h-10 border-[3px] border-on-primary-container rounded-full grid grid-cols-2 grid-rows-2 gap-[3px] p-[3px]">
-            <div className="bg-on-primary-container rounded-full" />
-            <div className="bg-on-primary-container rounded-full" />
-            <div className="bg-on-primary-container rounded-full" />
-            <div className="bg-on-primary-container rounded-full" />
-          </div>
-        </div>
+        <img src={logoUrl} alt="Bio Log Logo" className="w-24 h-24 object-contain mx-auto mb-6 drop-shadow-md" />
         <h1 className="font-serif text-5xl font-bold text-primary mb-4 leading-tight">
           Welcome to Bio Log
         </h1>

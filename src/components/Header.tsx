@@ -7,6 +7,7 @@ import {
   GraduationCap,
 } from 'lucide-react';
 import { ScreenType } from '../types';
+import logoUrl from '../assets/images/biolog_logo.png';
 
 interface HeaderProps {
   currentScreen: ScreenType;
@@ -22,14 +23,7 @@ export function Header({ currentScreen, onNavigate, currentUser, userRole }: Hea
         onClick={() => onNavigate(currentUser ? 'student-dashboard' : 'auth')}
         className="flex items-center gap-3"
       >
-        <div className="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container">
-          <div className="w-6 h-6 border-2 border-current rounded-full grid grid-cols-2 grid-rows-2 gap-[2px] p-[2px]">
-            <div className="bg-current rounded-full" />
-            <div className="bg-current rounded-full" />
-            <div className="bg-current rounded-full" />
-            <div className="bg-current rounded-full" />
-          </div>
-        </div>
+        <img src={logoUrl} alt="Bio Log Logo" className="w-10 h-10 object-contain drop-shadow-sm" />
         <div>
           <h1 className="font-serif text-2xl font-bold text-primary leading-tight">
             Bio Log
