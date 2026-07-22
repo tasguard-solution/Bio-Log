@@ -85,8 +85,8 @@ export function SuperAdminPortal() {
           .insert([{
             school_id: null,
             organism_id: selectedOrgId,
-            asset_type: 'sketchfab',
-            file_path: '',
+            asset_type: '3d', // Bypass DB constraint which may only allow 3d/2d
+            file_path: 'sketchfab', // Marker for Sketchfab
             public_url: uid
           }]);
 
@@ -365,7 +365,9 @@ export function SuperAdminPortal() {
                       <FileBox className="w-8 h-8 text-secondary/50" />
                       <div>
                         <p className="text-sm font-medium text-on-surface">{orgName}</p>
-                        <p className="text-xs text-on-surface-variant uppercase">{asset.asset_type} Asset</p>
+                        <p className="text-xs text-on-surface-variant uppercase">
+                          {asset.file_path === 'sketchfab' ? 'Sketchfab' : asset.asset_type} Asset
+                        </p>
                       </div>
                     </div>
                     <button

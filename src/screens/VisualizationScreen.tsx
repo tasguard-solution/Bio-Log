@@ -39,12 +39,12 @@ export function VisualizationScreen({ user, organism, onBack }: VisualizationScr
           .order('school_id', { ascending: false }); // Prioritize school-specific assets over global ones
 
         if (assets && assets.length > 0) {
-          // Find sketchfab first, fallback to 3d asset
-          const sketchfabAsset = assets.find(a => a.asset_type === 'sketchfab');
+          // Find sketchfab first (marked by file_path = 'sketchfab' under asset_type '3d')
+          const sketchfabAsset = assets.find(a => a.asset_type === '3d' && a.file_path === 'sketchfab');
           if (sketchfabAsset) {
             setSketchfabId(sketchfabAsset.public_url);
           } else {
-            const modelAsset = assets.find(a => a.asset_type === '3d');
+            const modelAsset = assets.find(a => a.asset_type === '3d' && a.file_path !== 'sketchfab');
             if (modelAsset) setModelUrl(modelAsset.public_url);
           }
         }
