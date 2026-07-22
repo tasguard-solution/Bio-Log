@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Organism } from '../types';
-import { Rotate3D, Maximize, Settings2, Download, Activity, BookOpen, FlaskConical } from 'lucide-react';
+import { Activity, BookOpen, FlaskConical } from 'lucide-react';
 import { supabase } from '../lib/supabase';
+import { QuizPanel } from '../components/QuizPanel';
 
 function ImageWithFallback({ src, alt, className }: { src: string; alt: string; className?: string }) {
   const [errored, setErrored] = useState(false);
@@ -18,9 +19,10 @@ function ImageWithFallback({ src, alt, className }: { src: string; alt: string; 
 
 interface EncyclopediaScreenProps {
   organism: Organism;
+  onQuizScore?: (organismId: string, correct: number, total: number) => void;
 }
 
-export function EncyclopediaScreen({ organism }: EncyclopediaScreenProps) {
+export function EncyclopediaScreen({ organism, onQuizScore }: EncyclopediaScreenProps) {
   const [customImageUrl, setCustomImageUrl] = useState<string | null>(null);
 
   useEffect(() => {
@@ -109,12 +111,12 @@ export function EncyclopediaScreen({ organism }: EncyclopediaScreenProps) {
             </h3>
             
             <div className="flex items-center gap-4 mb-8">
-               <div className="w-16 h-16 rounded-full bg-surface-container-low border border-outline-variant/30 flex items-center justify-center">
-                 <div className="w-10 h-6 bg-purple-300 rounded-full opacity-80" />
+               <div className="w-12 h-12 rounded-xl bg-primary/10 border border-outline-variant/30 flex items-center justify-center shrink-0">
+                 <div className="w-6 h-6 rounded-full bg-primary/30" />
                </div>
                <div>
-                 <h4 className="font-serif text-2xl font-semibold text-primary">Mitochondrion</h4>
-                 <p className="text-sm text-on-surface-variant italic font-serif">The powerhouse</p>
+                 <h4 className="font-serif text-xl font-semibold text-primary">{organism.name}</h4>
+                 <p className="text-sm text-on-surface-variant italic font-serif">{organism.subtitle}</p>
                </div>
             </div>
 
@@ -139,6 +141,11 @@ export function EncyclopediaScreen({ organism }: EncyclopediaScreenProps) {
               </p>
             </div>
           ))}
+
+          <QuizPanel
+            organismId={organism.id}
+            onScoreSave={(correct, total) => onQuizScore?.(organism.id, correct, total)}
+          />
           
         </div>
       </div>

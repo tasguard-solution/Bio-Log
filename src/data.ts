@@ -588,8 +588,105 @@ export const ORGANISMS: Organism[] = [
       }
     ]
   }
-];
+  // ── HUMAN LUNGS ────────────────────────────────────────────────────────────
+  {
+    id: 'human-lungs',
+    name: 'Human Lungs',
+    subtitle: 'Respiratory System Organ',
+    category: 'Organ',
+    description: 'The primary organs of the respiratory system in humans. They extract oxygen from the atmosphere and transfer it into the bloodstream, and release carbon dioxide from the bloodstream into the atmosphere.',
+    imageUrl: '/images/organisms/1280px-Lungs_diagram_simple.svg.png',
+    sketchfabId: 'a3857490f2384a2ea2e88cb9f67a7d4a', // Placeholder
+    imageSource: {
+      label: 'Lungs diagram simple – Patrick J. Lynch',
+      url: 'https://commons.wikimedia.org/wiki/File:Lungs_diagram_simple.svg',
+      license: 'CC BY 2.5',
+    },
+    stats: [
+      { label: 'Lobes', value: 'Right: 3, Left: 2' },
+      { label: 'Alveoli Count', value: '~480 million' },
+      { label: 'Surface Area', value: '50 - 75 m²' },
+      { label: 'Main Function', value: 'Gas Exchange' },
+      { label: 'Membrane', value: 'Pleura' },
+    ],
+    details: [
+      {
+        title: 'Alveoli — Site of Gas Exchange',
+        content: 'The alveoli are tiny air sacs at the end of bronchioles. Their extremely thin walls (one cell thick) allow for rapid diffusion of oxygen into the blood and carbon dioxide out of the blood.'
+      },
+      {
+        title: 'KEY TAKEAWAYS FOR WAEC',
+        content: '• The trachea is kept open by C-shaped rings of cartilage.\n• Inhalation: Diaphragm contracts (moves down), ribcage moves up and out, increasing thoracic volume and decreasing pressure.\n• Exhalation: Diaphragm relaxes (moves up), ribcage moves down and in.'
+      }
+    ]
+  },
 
+  // ── HUMAN KIDNEY ───────────────────────────────────────────────────────────
+  {
+    id: 'human-kidney',
+    name: 'Human Kidney',
+    subtitle: 'Excretory System Organ',
+    category: 'Organ',
+    description: 'Two bean-shaped organs that filter blood to remove waste products and excess fluid, which are then excreted as urine. They also play a crucial role in maintaining fluid and electrolyte balance.',
+    imageUrl: '/images/organisms/1280px-Kidney_diagram.svg.png',
+    sketchfabId: 'a3857490f2384a2ea2e88cb9f67a7d4a', // Placeholder
+    imageSource: {
+      label: 'Kidney diagram – Piotr Michał Jaworski',
+      url: 'https://commons.wikimedia.org/wiki/File:Kidney_diagram.svg',
+      license: 'CC BY-SA 3.0',
+    },
+    stats: [
+      { label: 'Functional Unit', value: 'Nephron (~1 million per kidney)' },
+      { label: 'Blood Supply', value: 'Renal Artery & Vein' },
+      { label: 'Urine Path', value: 'Kidney → Ureter → Bladder' },
+      { label: 'Main Function', value: 'Excretion & Osmoregulation' },
+      { label: 'Outer Layer', value: 'Cortex' },
+    ],
+    details: [
+      {
+        title: 'The Nephron',
+        content: 'The nephron filters blood in the glomerulus (ultrafiltration). As the filtrate passes through the tubules (proximal convoluted tubule, loop of Henle, distal convoluted tubule), useful substances like glucose, amino acids, and water are selectively reabsorbed.'
+      },
+      {
+        title: 'KEY TAKEAWAYS FOR WAEC',
+        content: '• Bowman\'s Capsule: Site of ultrafiltration under high pressure.\n• ADH (Antidiuretic Hormone): Regulates water reabsorption in the collecting duct.\n• Main nitrogenous waste in humans is urea.'
+      }
+    ]
+  },
+
+  // ── RED BLOOD CELL ─────────────────────────────────────────────────────────
+  {
+    id: 'red-blood-cell',
+    name: 'Erythrocyte',
+    subtitle: 'Red Blood Cell',
+    category: 'Animal Cell',
+    description: 'The most common type of blood cell, responsible for delivering oxygen to the body tissues via blood flow through the circulatory system. Their biconcave shape maximizes surface area for oxygen exchange.',
+    imageUrl: '/images/organisms/Blausen_0761_RedBloodCells.png',
+    sketchfabId: 'a3857490f2384a2ea2e88cb9f67a7d4a', // Placeholder
+    imageSource: {
+      label: 'Red Blood Cells – BruceBlaus',
+      url: 'https://commons.wikimedia.org/wiki/File:Blausen_0761_RedBloodCells.png',
+      license: 'CC BY 3.0',
+    },
+    stats: [
+      { label: 'Shape', value: 'Biconcave disc' },
+      { label: 'Lifespan', value: '~120 days' },
+      { label: 'Nucleus', value: 'Absent (in mammals)' },
+      { label: 'Primary Protein', value: 'Hemoglobin' },
+      { label: 'Production Site', value: 'Bone Marrow' },
+    ],
+    details: [
+      {
+        title: 'Hemoglobin',
+        content: 'Hemoglobin is an iron-containing protein that binds reversibly with oxygen. In the lungs, where oxygen concentration is high, it forms oxyhemoglobin. In tissues, where oxygen is low, it releases the oxygen.'
+      },
+      {
+        title: 'KEY TAKEAWAYS FOR WAEC',
+        content: '• Mammalian red blood cells lack a nucleus and mitochondria to make more room for hemoglobin.\n• Destroyed in the liver and spleen after ~120 days.\n• Lack of iron leads to anemia (reduced oxygen-carrying capacity).'
+      }
+    ]
+  }
+];
 
 export const WAEC_CURRICULUM: CurriculumLevel[] = [
   {
@@ -618,7 +715,15 @@ export const WAEC_CURRICULUM: CurriculumLevel[] = [
       },
       {
         title: 'Transport System',
-        organismIds: ['white-blood-cell', 'human-heart']
+        organismIds: ['white-blood-cell', 'human-heart', 'red-blood-cell']
+      },
+      {
+        title: 'Respiratory System',
+        organismIds: ['human-lungs']
+      },
+      {
+        title: 'Excretory System',
+        organismIds: ['human-kidney']
       },
       {
         title: 'Digestive System',

@@ -11,7 +11,12 @@ export type OrganismCategory =
   | 'System'
   | 'Molecule'
   | 'Protist'
-  | 'Plant Anatomy';
+  | 'Plant Anatomy'
+  | 'Ecology'
+  | 'Genetics'
+  | 'Physiology'
+  | 'Immunology'
+  | 'Virus';
 
 export interface Organism {
   id: string;
@@ -62,5 +67,25 @@ export interface CurriculumLevel {
   topics: CurriculumTopic[];
 }
 
-export type ScreenType = 'encyclopedia' | 'visualization' | 'admin' | 'registration' | 'superadmin' | 'auth' | 'student-dashboard' | 'school-dashboard' | 'not-found';
+export type ScreenType = 'encyclopedia' | 'visualization' | 'admin' | 'registration' | 'superadmin' | 'auth' | 'student-dashboard' | 'school-dashboard' | 'not-found' | 'past-questions';
 
+export interface PastQuestion {
+  id: string;
+  year: number;
+  paper: string; // 'May/June' | 'Nov/Dec'
+  questionNumber: number;
+  question: string;
+  options: { A: string; B: string; C: string; D: string };
+  answer: 'A' | 'B' | 'C' | 'D';
+  explanation: string;
+  topic: string;
+}
+
+export interface QuizQuestion {
+  id: string;
+  organismId: string;
+  question: string;
+  options: [string, string, string, string];
+  correctIndex: number;
+  explanation: string;
+}
