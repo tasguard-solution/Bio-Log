@@ -1,6 +1,8 @@
+import { useEffect, useState } from 'react';
 import { Box } from 'lucide-react';
 import { Organism, ScreenType } from '../types';
 import { ORGANISMS } from '../data';
+import { supabase } from '../lib/supabase';
 
 interface VisualizationHubScreenProps {
   onSelectOrganism: (organismId: string) => void;
@@ -8,7 +10,29 @@ interface VisualizationHubScreenProps {
 }
 
 export function VisualizationHubScreen({ onSelectOrganism, onNavigate }: VisualizationHubScreenProps) {
-  const organismsWithModels = ORGANISMS.filter(o => o.sketchfabId && !o.isFungiGroup);
+  const [dbOrganismIds, setDbOrganismIds] = useState<Set<string>>(new Set());
+
+  useEffect(() => {
+    (async () => {
+      const { data: assets } = await supabase
+        .from('school_assets')
+        .select('organism_id')
+        .is('school_id', null)
+        .eq('asset_type', '3d')
+        .eq('file_path', 'sketchfab');
+
+      if (assets) {
+        setDbOrganismIds(new Set(assets.map(a => a.organism_id)));
+      }
+    })();
+  }, []);
+
+  const organismsWithModels = ORGANISMS.filter(o => {
+    if (o.isFungiGroup) return false;
+    if (o.sketchfabId) return true;
+    if (dbOrganismIds.has(o.id)) return true;
+    return false;
+  });
 
   const handleView = (organism: Organism) => {
     onSelectOrganism(organism.id);

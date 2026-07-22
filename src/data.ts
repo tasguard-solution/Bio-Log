@@ -15,6 +15,7 @@ export const ORGANISMS: Organism[] = [
       'The fundamental building block of all animals. It is a eukaryotic cell — meaning it has a membrane-bound nucleus housing its DNA — surrounded only by a flexible plasma membrane, unlike plant cells which have an additional rigid cell wall.',
     imageUrl:
       '/images/organisms/Animal_cell_structure_en.svg',
+    sketchfabId: 'b2949f5997d54aec9de24d795ba711c0',
     imageSource: {
       label: 'Animal cell structure – LadyofHats (Mariana Ruiz Villarreal)',
       url: 'https://commons.wikimedia.org/wiki/File:Animal_cell_structure_en.svg',
@@ -51,6 +52,7 @@ export const ORGANISMS: Organism[] = [
       'A eukaryotic cell type found in all plants. Unlike animal cells, plant cells have a rigid cellulose cell wall for structural support, chloroplasts that capture sunlight for photosynthesis, and a large central vacuole that maintains turgor pressure.',
     imageUrl:
       '/images/organisms/1280px-Plant_cell_structure_svg_labels.svg.png',
+    sketchfabId: 'f6aae4cecc204eeca2b6505b3522c4e1',
     imageSource: {
       label: 'Plant cell structure – LadyofHats (Mariana Ruiz Villarreal)',
       url: 'https://commons.wikimedia.org/wiki/File:Plant_cell_structure_svg_labels.svg',
@@ -87,6 +89,7 @@ export const ORGANISMS: Organism[] = [
       'Neutrophils are the most abundant type of white blood cell and are the immune system\'s first responders to infection. They engulf and destroy bacteria and fungi through a process called phagocytosis, and can also release a web of DNA called a Neutrophil Extracellular Trap (NET) to catch pathogens.',
     imageUrl:
       '/images/organisms/Neutrophil.png',
+    sketchfabId: 'eb44a34f044244d7b39d72fd4d0187a8',
     imageSource: {
       label: 'Neutrophil engulfing anthrax – BruceBlaus (Blausen Medical)',
       url: 'https://commons.wikimedia.org/wiki/File:Blausen_0676_NeutrophilEngulfingAnthrax.png',
@@ -123,6 +126,7 @@ export const ORGANISMS: Organism[] = [
       'Neurons are the electrically excitable cells that form the nervous system. They receive signals through branching dendrites, process them in the cell body (soma), and transmit electrical impulses along a long axon to the next neuron or muscle via a synapse. The human brain contains approximately 86 billion neurons.',
     imageUrl:
       '/images/organisms/Neuron_Hand-tuned.svg',
+    sketchfabId: 'f513e70e75a34c16ae7f84407ce05af9',
     imageSource: {
       label: 'Complete neuron cell diagram – Quasar Jarosz',
       url: 'https://commons.wikimedia.org/wiki/File:Neuron_Hand-tuned.svg',
@@ -159,6 +163,7 @@ export const ORGANISMS: Organism[] = [
       'Epithelial cells form the lining of surfaces throughout the body — skin, gut, lungs, blood vessels, and organs. They act as selective barriers, controlling what passes between compartments, and are the most common site of origin for cancers (carcinomas) due to their high turnover rate.',
     imageUrl:
       '/images/organisms/Epithelial.png',
+    sketchfabId: 'acbaecc3547e475ca77af358470c0a74',
     imageSource: {
       label: 'Epithelial tissue types – BruceBlaus (Blausen Medical)',
       url: 'https://commons.wikimedia.org/wiki/File:Blausen_0352_EpithelialTissueTypes.png',
@@ -195,6 +200,7 @@ export const ORGANISMS: Organism[] = [
       'A gram-positive, rod-shaped bacterium that causes anthrax. Unlike all other organisms in this collection, it is prokaryotic — meaning it has no membrane-bound nucleus. Its DNA floats freely in a region called the nucleoid. It is uniquely dangerous due to its ability to form tough, resilient endospores that survive for decades.',
     imageUrl:
       '/images/organisms/1280px-Bacillus_anthracis_Gram.jpg',
+    sketchfabId: 'ab64aa9300de405686febae53302d300',
     imageSource: {
       label: 'Bacillus anthracis Gram stain – CDC / Public Health Image Library',
       url: 'https://commons.wikimedia.org/wiki/File:Bacillus_anthracis_Gram.jpg',
@@ -333,7 +339,7 @@ export const ORGANISMS: Organism[] = [
     category: 'Protist',
     description: 'A unicellular organism known for its ability to alter its shape, primarily by extending and retracting pseudopods. Found in freshwater environments, it is a classic example of protozoan movement and phagocytosis (eating by engulfing).',
     imageUrl: '/images/organisms/Amoeba.png',
-    sketchfabId: 'a385750059c445eeaf057e3f8d3d9203', // Placeholder
+    sketchfabId: '8f19af81407143139aee2aaf2b537c1c',
     imageSource: {
       label: 'Amoeba diagram – Pearson Scott Foresman',
       url: 'https://commons.wikimedia.org/wiki/File:Amoeba_(PSF).png',
@@ -366,7 +372,7 @@ export const ORGANISMS: Organism[] = [
     category: 'Plant Anatomy',
     description: 'The internal structure of a typical dicotyledonous leaf, adapted perfectly for photosynthesis. It shows the distinct layers: epidermis, palisade mesophyll, spongy mesophyll, and the vascular bundle (veins).',
     imageUrl: '/images/organisms/1280px-Leaf_anatomy.svg.png',
-    sketchfabId: '2b733b8a4f6f4b6287c2f6d0f9a2db12', // Placeholder
+
     imageSource: {
       label: 'Leaf anatomy diagram – Zephyris',
       url: 'https://commons.wikimedia.org/wiki/File:Leaf_anatomy.svg',
@@ -399,7 +405,7 @@ export const ORGANISMS: Organism[] = [
     category: 'Organ',
     description: 'A muscular organ about the size of a fist, located just behind and slightly left of the breastbone. The heart pumps blood through the network of arteries and veins called the cardiovascular system.',
     imageUrl: '/images/organisms/1280px-Diagram_of_the_human_heart__cropped_.svg.png',
-    sketchfabId: '13f412c1b9f7431e8088ed8cb2142e88', // Actual Sketchfab models can be embedded here
+    sketchfabId: '0cd216631c434cfdb54b1e869a0ccbae',
     imageSource: {
       label: 'Diagram of the human heart – Wapcaplet',
       url: 'https://commons.wikimedia.org/wiki/File:Diagram_of_the_human_heart_(cropped).svg',
@@ -432,7 +438,7 @@ export const ORGANISMS: Organism[] = [
     category: 'System',
     description: 'The human digestive system consists of the gastrointestinal tract plus the accessory organs of digestion (the tongue, salivary glands, pancreas, liver, and gallbladder). Digestion involves the breakdown of food into smaller and smaller components, until they can be absorbed and assimilated into the body.',
     imageUrl: '/images/organisms/Digestive_system_diagram_en.svg',
-    sketchfabId: 'c126839ff9154a4f89d38c1c4f620bd3', 
+    sketchfabId: '194e4a5370cf4d7eba701d20eaddccf6',
     imageSource: {
       label: 'Digestive system diagram – Mariana Ruiz Villarreal',
       url: 'https://commons.wikimedia.org/wiki/File:Digestive_system_diagram_en.svg',
@@ -465,7 +471,7 @@ export const ORGANISMS: Organism[] = [
     category: 'System',
     description: 'The internal framework of the human body. It is composed of around 270 bones at birth – this total decreases to around 206 bones by adulthood after some bones get fused together.',
     imageUrl: '/images/organisms/Human-Skeleton.jpg',
-    sketchfabId: 'ddf0a3ec378c4a169b12853de8e7b926',
+    sketchfabId: 'c7a5b048a4d942baa99fd7b36bb5ef49',
     imageSource: {
       label: 'Human Skeleton – LadyofHats',
       url: 'https://commons.wikimedia.org/wiki/File:Human-Skeleton.jpg',
@@ -498,7 +504,7 @@ export const ORGANISMS: Organism[] = [
     category: 'Organ',
     description: 'The central organ of the human nervous system. It controls most of the activities of the body, processing, integrating, and coordinating the information it receives from the sense organs, and making decisions as to the instructions sent to the rest of the body.',
     imageUrl: '/images/organisms/1280px-Blausen_0102_Brain_Motor_Sensory.png',
-    sketchfabId: 'b7bcfd81b9514757b10c660be4f3fc3c',
+    sketchfabId: '781330cf8c6e40508f0de62e2fef8dec',
     imageSource: {
       label: 'Brain Motor and Sensory – BruceBlaus',
       url: 'https://commons.wikimedia.org/wiki/File:Blausen_0102_Brain_Motor%26Sensory.png',
@@ -531,7 +537,7 @@ export const ORGANISMS: Organism[] = [
     category: 'Organ',
     description: 'The sensory organ of the visual system. It reacts to light and allows vision. Rod and cone cells in the retina are conscious light perceptive cells in vision including color differentiation and the perception of depth.',
     imageUrl: '/images/organisms/Schematic_diagram_of_the_human_eye_en.svg',
-    sketchfabId: '3c0a5d4e12344efaa0a581413a1024bd',
+    sketchfabId: '73bc0c38a6ac434cb26bae32610f56a2',
     imageSource: {
       label: 'Schematic diagram of the human eye – Rhcastilhos',
       url: 'https://commons.wikimedia.org/wiki/File:Schematic_diagram_of_the_human_eye_en.svg',
@@ -564,7 +570,7 @@ export const ORGANISMS: Organism[] = [
     category: 'Molecule',
     description: 'The molecule that carries genetic instructions for the development, functioning, growth and reproduction of all known organisms and many viruses. Structurally, DNA consists of two long polynucleotide chains coiling around each other to form a double helix.',
     imageUrl: '/images/organisms/0322_DNA_Nucleotides.jpg',
-    sketchfabId: 'a3857490f2384a2ea2e88cb9f67a7d4a',
+    sketchfabId: '559e58c9807d4e4dbad846367801cd4f',
     imageSource: {
       label: 'DNA Nucleotides – OpenStax',
       url: 'https://commons.wikimedia.org/wiki/File:0322_DNA_Nucleotides.jpg',
@@ -596,7 +602,7 @@ export const ORGANISMS: Organism[] = [
     category: 'Organ',
     description: 'The primary organs of the respiratory system in humans. They extract oxygen from the atmosphere and transfer it into the bloodstream, and release carbon dioxide from the bloodstream into the atmosphere.',
     imageUrl: '/images/organisms/1280px-Lungs_diagram_simple.svg.png',
-    sketchfabId: 'a3857490f2384a2ea2e88cb9f67a7d4a', // Placeholder
+    sketchfabId: 'ca9f4cfda333406791be91aaa39bf13c',
     imageSource: {
       label: 'Lungs diagram simple – Patrick J. Lynch',
       url: 'https://commons.wikimedia.org/wiki/File:Lungs_diagram_simple.svg',
@@ -629,7 +635,7 @@ export const ORGANISMS: Organism[] = [
     category: 'Organ',
     description: 'Two bean-shaped organs that filter blood to remove waste products and excess fluid, which are then excreted as urine. They also play a crucial role in maintaining fluid and electrolyte balance.',
     imageUrl: '/images/organisms/1280px-Kidney_diagram.svg.png',
-    sketchfabId: 'a3857490f2384a2ea2e88cb9f67a7d4a', // Placeholder
+    sketchfabId: '06be91d207ef4b2ba327a9e1804a1aa5',
     imageSource: {
       label: 'Kidney diagram – Piotr Michał Jaworski',
       url: 'https://commons.wikimedia.org/wiki/File:Kidney_diagram.svg',
@@ -662,7 +668,7 @@ export const ORGANISMS: Organism[] = [
     category: 'Animal Cell',
     description: 'The most common type of blood cell, responsible for delivering oxygen to the body tissues via blood flow through the circulatory system. Their biconcave shape maximizes surface area for oxygen exchange.',
     imageUrl: '/images/organisms/Blausen_0761_RedBloodCells.png',
-    sketchfabId: 'a3857490f2384a2ea2e88cb9f67a7d4a', // Placeholder
+    sketchfabId: 'f1cb82781a324ed1ae39babeb012eab1',
     imageSource: {
       label: 'Red Blood Cells – BruceBlaus',
       url: 'https://commons.wikimedia.org/wiki/File:Blausen_0761_RedBloodCells.png',
