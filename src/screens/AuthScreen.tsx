@@ -270,7 +270,7 @@ function DemoLoginForm({ onStudentLogin, onSchoolLogin }: DemoLoginFormProps) {
       <div className="relative z-10 text-center mb-14 max-w-xl">
         <img src={logoUrl} alt="Bio Log Logo" className="w-24 h-24 object-contain mx-auto mb-6 drop-shadow-md" />
         <h1 className="font-serif text-5xl font-bold text-primary mb-4 leading-tight">
-          Demo Mode
+          Bio Log Demo
         </h1>
         <p className="text-on-surface-variant text-lg leading-relaxed">
           Choose an account to explore. Credentials are pre-filled.
