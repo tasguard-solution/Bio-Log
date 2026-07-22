@@ -587,7 +587,7 @@ export const ORGANISMS: Organism[] = [
         content: '• DNA Replication is semi-conservative (each new double helix has one old strand and one new strand).\n• Found within chromosomes.\n• Differences from RNA: DNA is double-stranded, has deoxyribose sugar, and uses Thymine instead of Uracil.'
       }
     ]
-  }
+  },
   // ── HUMAN LUNGS ────────────────────────────────────────────────────────────
   {
     id: 'human-lungs',
