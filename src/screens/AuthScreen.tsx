@@ -6,8 +6,10 @@ import logoUrl from '../assets/images/biolog_logo.png';
 import { DnaHelix } from '../components/DnaHelix';
 
 // ─── Demo credentials (shown in demo mode) ─────────────────────────────────
-const DEMO_EMAIL = 'tasker@tasguard.com';
-const DEMO_PASSWORD = 'Owunari10$';
+const DEMO_SCHOOL_EMAIL = 'tasker@tasguard.com';
+const DEMO_SCHOOL_PASSWORD = 'Owunari10$';
+const DEMO_STUDENT_EMAIL = 'anointingtasker2002@gmail.com';
+const DEMO_STUDENT_PASSWORD = 'Owunari10$';
 
 // ─── LoginForm lives OUTSIDE AuthScreen so it never remounts on parent re-renders ───
 interface LoginFormProps {
@@ -154,24 +156,31 @@ function LoginForm({ role, onBack, onNavigate, onStudentLogin, onSchoolLogin }: 
 
 // ─── DemoLoginForm — pre-filled, read-only, one-click sign-in ──────────────
 interface DemoLoginFormProps {
+  onStudentLogin: (user: any) => void;
   onSchoolLogin: (user: any) => void;
 }
 
-function DemoLoginForm({ onSchoolLogin }: DemoLoginFormProps) {
+function DemoLoginForm({ onStudentLogin, onSchoolLogin }: DemoLoginFormProps) {
+  const [activeRole, setActiveRole] = useState<'school' | 'student' | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  const handleDemoLogin = async () => {
+  const handleDemoLogin = async (role: 'school' | 'student') => {
     setError('');
     setLoading(true);
     try {
-      const { data, error: authError } = await supabase.auth.signInWithPassword({
-        email: DEMO_EMAIL,
-        password: DEMO_PASSWORD,
-      });
+      const email = role === 'school' ? DEMO_SCHOOL_EMAIL : DEMO_STUDENT_EMAIL;
+      const password = role === 'school' ? DEMO_SCHOOL_PASSWORD : DEMO_STUDENT_PASSWORD;
+
+      const { data, error: authError } = await supabase.auth.signInWithPassword({ email, password });
       if (authError) throw authError;
       if (!data.user) throw new Error('Login failed.');
-      onSchoolLogin(data.user);
+
+      if (role === 'school') {
+        onSchoolLogin(data.user);
+      } else {
+        onStudentLogin(data.user);
+      }
     } catch (err: any) {
       setError(err.message || 'Demo login failed.');
     } finally {
@@ -179,62 +188,125 @@ function DemoLoginForm({ onSchoolLogin }: DemoLoginFormProps) {
     }
   };
 
-  return (
-    <div className="relative flex-1 flex items-center justify-center bg-surface-container-low p-6 overflow-hidden">
-      <DnaHelix />
-      <div className="relative z-10 w-full max-w-md">
-        <div className="flex items-center gap-3 mb-8">
-          <div className="w-12 h-12 rounded-2xl bg-secondary/15 flex items-center justify-center">
-            <School className="w-6 h-6 text-secondary" />
-          </div>
-          <div>
-            <h2 className="font-serif text-2xl font-bold text-primary">
-              Demo Mode
-            </h2>
-            <p className="text-sm text-on-surface-variant">
-              Pre-filled school admin account — tap Sign In to continue
-            </p>
-          </div>
-        </div>
+  // ─── Selected role: show pre-filled form ──────────────────────────────────
+  if (activeRole) {
+    const email = activeRole === 'school' ? DEMO_SCHOOL_EMAIL : DEMO_STUDENT_EMAIL;
+    const password = activeRole === 'school' ? DEMO_SCHOOL_PASSWORD : DEMO_STUDENT_PASSWORD;
 
-        {error && (
-          <div className="mb-6 p-4 bg-red-50 text-red-700 rounded-xl text-sm border border-red-200">
-            {error}
-          </div>
-        )}
-
-        <div className="space-y-5">
-          <div>
-            <label className="block text-sm font-medium text-on-surface mb-1.5">Email Address</label>
-            <input
-              type="email"
-              readOnly
-              value={DEMO_EMAIL}
-              className="w-full bg-surface-container-low border border-surface-container-highest rounded-xl py-3 px-4 text-sm text-on-surface-variant cursor-not-allowed"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-on-surface mb-1.5">Password</label>
-            <input
-              type="password"
-              readOnly
-              value={DEMO_PASSWORD}
-              className="w-full bg-surface-container-low border border-surface-container-highest rounded-xl py-3 px-4 text-sm text-on-surface-variant cursor-not-allowed"
-            />
-          </div>
-
+    return (
+      <div className="relative flex-1 flex items-center justify-center bg-surface-container-low p-6 overflow-hidden">
+        <DnaHelix />
+        <div className="relative z-10 w-full max-w-md">
           <button
-            onClick={handleDemoLogin}
-            disabled={loading}
-            className="w-full py-3.5 bg-primary text-on-primary rounded-xl font-semibold text-sm hover:opacity-90 disabled:opacity-60 transition-all flex items-center justify-center gap-2 shadow-sm"
+            onClick={() => { setActiveRole(null); setError(''); }}
+            className="flex items-center gap-2 text-sm text-on-surface-variant hover:text-on-surface mb-8 transition-colors"
           >
-            {loading ? (
-              <><Loader2 className="w-4 h-4 animate-spin" /> Signing in…</>
-            ) : (
-              <><Play className="w-4 h-4" /> Sign In</>
-            )}
+            <ArrowLeft className="w-4 h-4" /> Back
           </button>
+
+          <div className="flex items-center gap-3 mb-8">
+            <div className={`w-12 h-12 rounded-2xl flex items-center justify-center ${activeRole === 'school' ? 'bg-secondary/15' : 'bg-primary-container'}`}>
+              {activeRole === 'school'
+                ? <School className="w-6 h-6 text-secondary" />
+                : <GraduationCap className="w-6 h-6 text-on-primary-container" />}
+            </div>
+            <div>
+              <h2 className="font-serif text-2xl font-bold text-primary">
+                {activeRole === 'school' ? 'School Admin' : 'Student'} Demo
+              </h2>
+              <p className="text-sm text-on-surface-variant">
+                Pre-filled account — tap Sign In to continue
+              </p>
+            </div>
+          </div>
+
+          {error && (
+            <div className="mb-6 p-4 bg-red-50 text-red-700 rounded-xl text-sm border border-red-200">
+              {error}
+            </div>
+          )}
+
+          <div className="space-y-5">
+            <div>
+              <label className="block text-sm font-medium text-on-surface mb-1.5">Email Address</label>
+              <input
+                type="email"
+                readOnly
+                value={email}
+                className="w-full bg-surface-container-low border border-surface-container-highest rounded-xl py-3 px-4 text-sm text-on-surface-variant cursor-not-allowed"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-on-surface mb-1.5">Password</label>
+              <input
+                type="password"
+                readOnly
+                value={password}
+                className="w-full bg-surface-container-low border border-surface-container-highest rounded-xl py-3 px-4 text-sm text-on-surface-variant cursor-not-allowed"
+              />
+            </div>
+
+            <button
+              onClick={() => handleDemoLogin(activeRole)}
+              disabled={loading}
+              className="w-full py-3.5 bg-primary text-on-primary rounded-xl font-semibold text-sm hover:opacity-90 disabled:opacity-60 transition-all flex items-center justify-center gap-2 shadow-sm"
+            >
+              {loading ? (
+                <><Loader2 className="w-4 h-4 animate-spin" /> Signing in…</>
+              ) : (
+                <><Play className="w-4 h-4" /> Sign In</>
+              )}
+            </button>
+          </div>
         </div>
+      </div>
+    );
+  }
+
+  // ─── Role picker: show both demo accounts as cards ────────────────────────
+  return (
+    <div className="relative flex-1 flex flex-col items-center justify-center bg-surface-container-low p-6 overflow-hidden">
+      <DnaHelix />
+      <div className="relative z-10 text-center mb-14 max-w-xl">
+        <img src={logoUrl} alt="Bio Log Logo" className="w-24 h-24 object-contain mx-auto mb-6 drop-shadow-md" />
+        <h1 className="font-serif text-5xl font-bold text-primary mb-4 leading-tight">
+          Demo Mode
+        </h1>
+        <p className="text-on-surface-variant text-lg leading-relaxed">
+          Choose an account to explore. Credentials are pre-filled.
+        </p>
+      </div>
+
+      <div className="relative z-10 grid sm:grid-cols-2 gap-5 w-full max-w-2xl">
+        <button
+          onClick={() => setActiveRole('school')}
+          className="group flex flex-col items-start p-8 bg-surface/90 backdrop-blur-sm rounded-3xl border border-surface-container-high hover:border-secondary/40 hover:shadow-lg transition-all duration-300 text-left hover:-translate-y-1"
+        >
+          <div className="w-14 h-14 rounded-2xl bg-secondary/10 flex items-center justify-center mb-5 group-hover:bg-secondary/20 transition-colors">
+            <School className="w-7 h-7 text-secondary" />
+          </div>
+          <h3 className="font-serif text-xl font-bold text-on-surface mb-2">School Admin</h3>
+          <p className="text-xs font-mono text-on-surface-variant mb-1">{DEMO_SCHOOL_EMAIL}</p>
+          <p className="text-sm text-on-surface-variant leading-relaxed mb-5">
+            Manage subscriptions, students, and school settings.
+          </p>
+          <span className="text-sm font-semibold text-secondary">Sign In →</span>
+        </button>
+
+        <button
+          onClick={() => setActiveRole('student')}
+          className="group flex flex-col items-start p-8 bg-surface/90 backdrop-blur-sm rounded-3xl border border-surface-container-high hover:border-primary/40 hover:shadow-lg transition-all duration-300 text-left hover:-translate-y-1"
+        >
+          <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-5 group-hover:bg-primary/20 transition-colors">
+            <GraduationCap className="w-7 h-7 text-primary" />
+          </div>
+          <h3 className="font-serif text-xl font-bold text-on-surface mb-2">Student</h3>
+          <p className="text-xs font-mono text-on-surface-variant mb-1">{DEMO_STUDENT_EMAIL}</p>
+          <p className="text-sm text-on-surface-variant leading-relaxed mb-5">
+            Explore cells, 3D models, quizzes, and WAEC past questions.
+          </p>
+          <span className="text-sm font-semibold text-primary">Sign In →</span>
+        </button>
       </div>
     </div>
   );
@@ -253,9 +325,9 @@ type AuthMode = 'landing' | 'student-login' | 'school-login';
 export function AuthScreen({ onNavigate, onStudentLogin, onSchoolLogin, loginMode }: AuthScreenProps) {
   const [mode, setMode] = useState<AuthMode>('landing');
 
-  // ─── Demo mode: pre-filled school admin login ─────────────────────────────
+  // ─── Demo mode: pre-filled accounts ───────────────────────────────────────
   if (loginMode === 'demo') {
-    return <DemoLoginForm onSchoolLogin={onSchoolLogin} />;
+    return <DemoLoginForm onStudentLogin={onStudentLogin} onSchoolLogin={onSchoolLogin} />;
   }
 
   // ─── Locked mode: access paused ───────────────────────────────────────────
