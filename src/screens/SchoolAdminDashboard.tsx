@@ -1,9 +1,12 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import { ScreenType } from '../types';
+import { ORGANISMS } from '../data';
+import { MonnifyPaymentModal } from '../components/MonnifyPaymentModal';
 import {
   School, LogOut, Link2, Check, AlertTriangle, Loader2,
   CalendarClock, Users, CreditCard, ChevronLeft, ChevronRight,
+  RefreshCw, Upload, Box, CheckCircle2,
 } from 'lucide-react';
 
 interface SchoolAdminDashboardProps {
@@ -30,6 +33,19 @@ export function SchoolAdminDashboard({ user, onNavigate, onLogout }: SchoolAdmin
   const [copied, setCopied] = useState(false);
   const [page, setPage] = useState(0);
 
+  // Renewal
+  const [showRenewal, setShowRenewal] = useState(false);
+  const [renewalSuccess, setRenewalSuccess] = useState(false);
+  const [monthlyAmount, setMonthlyAmount] = useState(0);
+
+  // Asset upload
+  const [sketchfabInput, setSketchfabInput] = useState('');
+  const [uploadOrgId, setUploadOrgId] = useState(ORGANISMS[0].id);
+  const [uploading, setUploading] = useState(false);
+  const [uploadSuccess, setUploadSuccess] = useState(false);
+  const [uploadError, setUploadError] = useState('');
+  const [schoolAssets, setSchoolAssets] = useState<any[]>([]);
+
   useEffect(() => {
     (async () => {
       const { data: school } = await supabase
@@ -47,7 +63,9 @@ export function SchoolAdminDashboard({ user, onNavigate, onLogout }: SchoolAdmin
         .eq('school_id', school.id)
         .order('created_at', { ascending: false })
         .limit(1);
-      setSubscription(subRows?.[0] ?? null);
+      const sub = subRows?.[0] ?? null;
+      setSubscription(sub);
+      setMonthlyAmount(sub?.amount ?? 0);
 
       // Student count
       const { count } = await supabase
@@ -64,6 +82,14 @@ export function SchoolAdminDashboard({ user, onNavigate, onLogout }: SchoolAdmin
         .order('created_at', { ascending: false })
         .range(0, PAGE_SIZE - 1);
       setStudents(roster ?? []);
+
+      // School-specific assets
+      const { data: assets } = await supabase
+        .from('school_assets')
+        .select('*')
+        .eq('school_id', school.id)
+        .order('created_at', { ascending: false });
+      setSchoolAssets(assets ?? []);
 
       setLoading(false);
     })();
@@ -94,9 +120,73 @@ export function SchoolAdminDashboard({ user, onNavigate, onLogout }: SchoolAdmin
     setTimeout(() => setCopied(false), 2500);
   };
 
+  const handleRenewalSuccess = async (response: any) => {
+    if (response.status === 'SUCCESS' && schoolInfo) {
+      const nextMonth = new Date();
+      nextMonth.setMonth(nextMonth.getMonth() + 1);
+      const { data: newSub } = await supabase
+        .from('subscriptions')
+        .insert([{
+          school_id: schoolInfo.id,
+          status: 'active',
+          amount: monthlyAmount,
+          current_period_end: nextMonth.toISOString(),
+        }])
+        .select()
+        .single();
+      if (newSub) setSubscription(newSub);
+      setRenewalSuccess(true);
+      setShowRenewal(false);
+    }
+  };
+
+  const handleUploadAsset = async () => {
+    if (!sketchfabInput || !schoolInfo) return;
+    setUploading(true);
+    setUploadError('');
+    setUploadSuccess(false);
+    try {
+      const match = sketchfabInput.match(/([a-f0-9]{32})/i);
+      const uid = match ? match[1] : sketchfabInput.trim();
+
+      // Upsert: replace existing school override for this organism
+      const { error } = await supabase
+        .from('school_assets')
+        .upsert([{
+          school_id: schoolInfo.id,
+          organism_id: uploadOrgId,
+          asset_type: '3d',
+          file_path: 'sketchfab',
+          public_url: uid,
+        }], { onConflict: 'school_id,organism_id' });
+
+      if (error) throw error;
+
+      // Refresh assets
+      const { data: assets } = await supabase
+        .from('school_assets')
+        .select('*')
+        .eq('school_id', schoolInfo.id)
+        .order('created_at', { ascending: false });
+      setSchoolAssets(assets ?? []);
+      setSketchfabInput('');
+      setUploadSuccess(true);
+      setTimeout(() => setUploadSuccess(false), 3000);
+    } catch (err: any) {
+      setUploadError(err.message || 'Upload failed');
+    } finally {
+      setUploading(false);
+    }
+  };
+
   const isActive = subscription?.status === 'active' &&
     new Date(subscription?.current_period_end) > new Date();
   const totalPages = Math.ceil(studentCount / PAGE_SIZE);
+
+  // Days remaining
+  const daysRemaining = subscription?.current_period_end
+    ? Math.max(0, Math.ceil((new Date(subscription.current_period_end).getTime() - Date.now()) / (1000 * 60 * 60 * 24)))
+    : 0;
 
   if (loading) {
     return (
@@ -129,8 +219,9 @@ export function SchoolAdminDashboard({ user, onNavigate, onLogout }: SchoolAdmin
   }
 
   return (
-    <div className="flex-1 bg-surface-container-low overflow-y-auto">
-      <div className="max-w-5xl mx-auto py-8 sm:py-10 px-4 sm:px-6">
+    <>
+      <div className="flex-1 bg-surface-container-low overflow-y-auto">
+        <div className="max-w-5xl mx-auto py-8 sm:py-10 px-4 sm:px-6">
 
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-8">
@@ -154,13 +245,37 @@ export function SchoolAdminDashboard({ user, onNavigate, onLogout }: SchoolAdmin
 
         {/* Subscription Status */}
         {isActive ? (
-          <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-xl flex items-center gap-3">
-            <div className="w-2.5 h-2.5 rounded-full bg-green-500 shrink-0 animate-pulse" />
-            <div className="flex-1">
-              <p className="text-sm text-green-700 font-medium">Subscription Active</p>
-              <p className="text-xs text-green-600">Expires {new Date(subscription.current_period_end).toLocaleDateString('en-NG', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
+          <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-xl">
+            <div className="flex items-center justify-between gap-3 flex-wrap">
+              <div className="flex items-center gap-3">
+                <div className="w-2.5 h-2.5 rounded-full bg-green-500 shrink-0 animate-pulse" />
+                <div>
+                  <p className="text-sm text-green-700 font-medium">Subscription Active</p>
+                  <p className="text-xs text-green-600">Expires {new Date(subscription.current_period_end).toLocaleDateString('en-NG', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                  daysRemaining <= 5 ? 'bg-red-100 text-red-700' :
+                  daysRemaining <= 10 ? 'bg-amber-100 text-amber-700' :
+                  'bg-green-100 text-green-700'
+                }`}>
+                  {daysRemaining}d remaining
+                </div>
+                <span className="font-mono text-sm font-bold text-green-700">₦{subscription.amount?.toLocaleString()}/mo</span>
+                <button
+                  onClick={() => setShowRenewal(true)}
+                  className="flex items-center gap-1.5 px-3 py-1.5 bg-green-600 text-white rounded-lg text-xs font-semibold hover:bg-green-700 transition-colors"
+                >
+                  <RefreshCw className="w-3.5 h-3.5" /> Renew Early
+                </button>
+              </div>
             </div>
-            <span className="font-mono text-sm font-bold text-green-700">₦{subscription.amount?.toLocaleString()}/mo</span>
+            {renewalSuccess && (
+              <div className="mt-3 flex items-center gap-2 text-xs text-green-700 font-medium">
+                <CheckCircle2 className="w-4 h-4" /> Subscription renewed successfully!
+              </div>
+            )}
           </div>
         ) : (
           <div className="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-xl flex items-center justify-between gap-3 flex-wrap">
@@ -171,7 +286,7 @@ export function SchoolAdminDashboard({ user, onNavigate, onLogout }: SchoolAdmin
                 <p className="text-xs text-amber-600">Students can't access resources without an active plan.</p>
               </div>
             </div>
-            <button onClick={() => onNavigate('registration')} className="px-4 py-2 bg-amber-600 text-white rounded-lg text-sm font-medium hover:bg-amber-700 transition-colors">
+            <button onClick={() => setShowRenewal(true)} className="px-4 py-2 bg-amber-600 text-white rounded-lg text-sm font-medium hover:bg-amber-700 transition-colors">
               Subscribe Now
             </button>
           </div>
@@ -332,9 +447,85 @@ export function SchoolAdminDashboard({ user, onNavigate, onLogout }: SchoolAdmin
               )}
             </div>
           </div>
-        </div>
+          {/* Custom 3D Assets */}
+          <div className="bg-surface rounded-2xl border border-surface-container-high overflow-hidden">
+            <div className="px-5 sm:px-6 py-4 border-b border-outline-variant/20 flex items-center justify-between">
+              <div>
+                <h2 className="font-serif text-xl font-bold text-on-surface">Custom 3D Models</h2>
+                <p className="text-xs text-on-surface-variant">Override global models with school-specific Sketchfab models</p>
+              </div>
+              <Box className="w-5 h-5 text-outline" />
+            </div>
+            <div className="p-5 sm:p-6 space-y-4">
+              <div className="grid sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-medium text-on-surface mb-1.5">Organism</label>
+                  <select
+                    value={uploadOrgId}
+                    onChange={e => setUploadOrgId(e.target.value)}
+                    className="w-full bg-surface-container border border-surface-container-highest rounded-lg py-2 px-3 text-sm focus:outline-none focus:border-primary"
+                  >
+                    {ORGANISMS.filter(o => !o.isFungiGroup).map(org => (
+                      <option key={org.id} value={org.id}>{org.name}</option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-on-surface mb-1.5">Sketchfab URL or Model ID</label>
+                  <input
+                    type="text"
+                    value={sketchfabInput}
+                    onChange={e => setSketchfabInput(e.target.value)}
+                    placeholder="https://sketchfab.com/3d-models/..."
+                    className="w-full bg-surface-container border border-surface-container-highest rounded-lg py-2 px-3 text-sm focus:outline-none focus:border-primary"
+                  />
+                </div>
+              </div>
+              {uploadError && <p className="text-xs text-red-600">{uploadError}</p>}
+              <button
+                onClick={handleUploadAsset}
+                disabled={uploading || !sketchfabInput}
+                className="flex items-center gap-2 px-5 py-2.5 bg-secondary text-on-secondary rounded-xl text-sm font-semibold hover:opacity-90 disabled:opacity-50 transition-opacity"
+              >
+                {uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : uploadSuccess ? <CheckCircle2 className="w-4 h-4" /> : <Upload className="w-4 h-4" />}
+                {uploading ? 'Saving...' : uploadSuccess ? 'Saved!' : 'Save Override'}
+              </button>
 
+              {schoolAssets.length > 0 && (
+                <div className="mt-4">
+                  <p className="text-xs font-mono text-outline uppercase tracking-wider mb-2">Active Overrides</p>
+                  <div className="space-y-2">
+                    {schoolAssets.map(asset => {
+                      const org = ORGANISMS.find(o => o.id === asset.organism_id);
+                      return (
+                        <div key={asset.id} className="flex items-center justify-between p-3 bg-surface-container-low rounded-lg border border-outline-variant/20 text-sm">
+                          <span className="font-medium text-on-surface">{org?.name ?? asset.organism_id}</span>
+                          <span className="font-mono text-xs text-outline truncate max-w-[200px]">{asset.public_url}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
+
+
+      {/* Monnify Renewal Modal */}
+      {showRenewal && schoolInfo && monthlyAmount > 0 && (
+        <MonnifyPaymentModal
+          isOpen={showRenewal}
+          amount={monthlyAmount}
+          customerName={schoolInfo.name}
+          customerEmail={schoolInfo.email}
+          paymentDescription={`Monthly Renewal for ${schoolInfo.name}`}
+          onClose={() => setShowRenewal(false)}
+          onSuccess={handleRenewalSuccess}
+        />
+      )}
+    </>
   );
 }

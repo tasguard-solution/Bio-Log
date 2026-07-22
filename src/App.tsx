@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Header } from './components/Header';
 import { Sidebar } from './components/Sidebar';
 import { EncyclopediaScreen } from './screens/EncyclopediaScreen';
@@ -98,6 +98,24 @@ export default function App() {
     navigateTo('auth');
   };
 
+  // Global search shortcut — press '/' to open search
+  const [searchForceOpen, setSearchForceOpen] = useState(false);
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      const tag = (e.target as HTMLElement)?.tagName;
+      if (e.key === '/' && tag !== 'INPUT' && tag !== 'TEXTAREA' && tag !== 'SELECT') {
+        e.preventDefault();
+        setSearchForceOpen(true);
+      }
+    };
+    document.addEventListener('keydown', handler);
+    return () => document.removeEventListener('keydown', handler);
+  }, []);
+
+  const handleSelectOrganism = useCallback((id: string) => {
+    setSelectedOrganismId(id);
+  }, []);
+
   const handleStudentLogin = (user: any) => {
     setCurrentUser(user);
     setUserRole('student');
@@ -147,8 +165,11 @@ export default function App() {
       <Header
         currentScreen={currentScreen}
         onNavigate={navigateTo}
+        onSelectOrganism={handleSelectOrganism}
         currentUser={currentUser}
         userRole={userRole}
+        searchForceOpen={searchForceOpen}
+        onSearchClose={() => setSearchForceOpen(false)}
       />
 
       <div className="flex-1 flex overflow-hidden">
@@ -199,13 +220,13 @@ export default function App() {
           <VisualizationScreen
             user={currentUser}
             organism={selectedOrganism}
-            onBack={() => navigateTo(visualizationSource === 'hub' ? 'visualization-hub' : 'encyclopedia')}
+            onBack={() => navigateTo('student-dashboard')}
           />
         )}
 
         {/* Past Questions — students only */}
         {currentScreen === 'past-questions' && currentUser && userRole === 'student' && (
-          <PastQuestionsScreen onBack={() => navigateTo('student-dashboard')} />
+          <PastQuestionsScreen onBack={() => navigateTo('student-dashboard')} onNavigate={navigateTo} />
         )}
 
         {/* School Registration — public */}
