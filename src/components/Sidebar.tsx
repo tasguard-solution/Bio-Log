@@ -36,7 +36,7 @@ export function Sidebar({ selectedId, onSelect }: SidebarProps) {
   };
 
   return (
-    <aside className="w-[320px] flex-shrink-0 bg-surface border-r border-surface-container-high h-[calc(100vh-89px)] flex flex-col sticky top-[89px]">
+    <aside className="hidden md:flex w-[320px] flex-shrink-0 bg-surface border-r border-surface-container-high h-[calc(100vh-89px)] flex-col sticky top-[89px]">
       
       {/* Header & Toggle */}
       <div className="p-6 pb-4 border-b border-surface-container-high shrink-0">

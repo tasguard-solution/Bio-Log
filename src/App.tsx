@@ -199,6 +199,7 @@ export default function App() {
             <Sidebar selectedId={selectedOrganismId} onSelect={setSelectedOrganismId} />
             <EncyclopediaScreen
               organism={selectedOrganism}
+              onSelectOrganism={setSelectedOrganismId}
               onView3D={() => {
                 setVisualizationSource('encyclopedia');
                 navigateTo('visualization');

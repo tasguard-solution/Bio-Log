@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
 import { Organism } from '../types';
-import { Activity, BookOpen, Box, FlaskConical, ArrowLeft } from 'lucide-react';
+import { Activity, BookOpen, Box, FlaskConical, ArrowLeft, ChevronDown } from 'lucide-react';
 import { ScreenType } from '../types';
 import { supabase } from '../lib/supabase';
 import { QuizPanel } from '../components/QuizPanel';
+import { ORGANISMS } from '../data';
 
 function ImageWithFallback({ src, alt, className }: { src: string; alt: string; className?: string }) {
   const [errored, setErrored] = useState(false);
@@ -23,9 +24,10 @@ interface EncyclopediaScreenProps {
   onQuizScore?: (organismId: string, correct: number, total: number) => void;
   onView3D?: () => void;
   onBack?: () => void;
+  onSelectOrganism?: (id: string) => void;
 }
 
-export function EncyclopediaScreen({ organism, onQuizScore, onView3D, onBack }: EncyclopediaScreenProps) {
+export function EncyclopediaScreen({ organism, onQuizScore, onView3D, onBack, onSelectOrganism }: EncyclopediaScreenProps) {
   const [customImageUrl, setCustomImageUrl] = useState<string | null>(null);
 
   useEffect(() => {
@@ -59,8 +61,8 @@ export function EncyclopediaScreen({ organism, onQuizScore, onView3D, onBack }: 
   }
 
   return (
-    <div className="flex-1 p-8 bg-surface-container-low min-h-0 overflow-y-auto flex justify-center">
-      <div className="max-w-[1200px] w-full grid grid-cols-1 xl:grid-cols-3 gap-8">
+    <div className="flex-1 p-4 sm:p-8 bg-surface-container-low min-h-0 overflow-y-auto flex justify-center">
+      <div className="max-w-[1200px] w-full grid grid-cols-1 xl:grid-cols-3 gap-6 sm:gap-8">
         
         {/* Main 3D Viewport Column */}
         <div className="xl:col-span-2 space-y-6">
@@ -73,10 +75,26 @@ export function EncyclopediaScreen({ organism, onQuizScore, onView3D, onBack }: 
                 <ArrowLeft className="w-4 h-4" /> Back
               </button>
             )}
-            <h1 className="font-serif text-[48px] font-bold text-primary leading-tight tracking-tight mb-2">
+            
+            {onSelectOrganism && (
+              <div className="md:hidden mb-4 relative">
+                <select 
+                  value={organism.id}
+                  onChange={(e) => onSelectOrganism(e.target.value)}
+                  className="w-full appearance-none bg-surface border border-outline-variant rounded-xl px-4 py-3 text-on-surface font-medium pr-10 focus:outline-none focus:ring-2 focus:ring-primary/50"
+                >
+                  {ORGANISMS.map(o => (
+                    <option key={o.id} value={o.id}>{o.name}</option>
+                  ))}
+                </select>
+                <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-on-surface-variant pointer-events-none" />
+              </div>
+            )}
+
+            <h1 className="font-serif text-3xl sm:text-4xl md:text-[48px] font-bold text-primary leading-tight tracking-tight mb-2">
               {organism.name}
             </h1>
-            <p className="font-serif text-2xl text-on-surface-variant italic">
+            <p className="font-serif text-lg sm:text-2xl text-on-surface-variant italic">
               {organism.subtitle}
             </p>
           </div>
