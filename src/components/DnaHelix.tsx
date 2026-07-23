@@ -41,6 +41,8 @@ export function DnaHelix() {
     };
     window.addEventListener('biometric-scan', handleScan);
 
+    const PULSE_DURATION = 2000; // Modify this value (in milliseconds) to change pulse speed
+    
     const PULSE_COLORS = [
       '56, 189, 248', // Cyan
       '248, 113, 113', // Light Red
@@ -48,12 +50,12 @@ export function DnaHelix() {
       '74, 222, 128',  // Green
     ];
     let pulseColor = PULSE_COLORS[0];
-    let pulseStartTime = -7000; // Start inactive
+    let pulseStartTime = -PULSE_DURATION; // Start inactive
 
     const handleCanvasClick = (e: MouseEvent) => {
       if (e.target === canvas) {
         // Prevent re-triggering if already pulsing
-        if (performance.now() - pulseStartTime > 7000) {
+        if (performance.now() - pulseStartTime > PULSE_DURATION) {
           pulseStartTime = performance.now();
           pulseColor = PULSE_COLORS[Math.floor(Math.random() * PULSE_COLORS.length)];
         }
@@ -100,8 +102,8 @@ export function DnaHelix() {
       // Pulse logic
       let pulseY = -1000;
       const pulseElapsed = currentTime - pulseStartTime;
-      if (pulseElapsed < 7000) {
-        const pulseCycleValue = pulseElapsed / 7000; // 0 to 1 over 7 seconds
+      if (pulseElapsed < PULSE_DURATION) {
+        const pulseCycleValue = pulseElapsed / PULSE_DURATION; // 0 to 1 over PULSE_DURATION ms
         pulseY = h - (pulseCycleValue * h * 1.5); // Pulse moves from bottom to top
       }
 

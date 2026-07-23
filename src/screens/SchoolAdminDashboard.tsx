@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { supabase } from '../lib/supabase';
+import { supabase, supabaseAnon } from '../lib/supabase';
 import { ScreenType } from '../types';
 import { ORGANISMS } from '../data';
 import { MonnifyPaymentModal } from '../components/MonnifyPaymentModal';
@@ -68,14 +68,14 @@ export function SchoolAdminDashboard({ user, onNavigate, onLogout }: SchoolAdmin
       setMonthlyAmount(sub?.amount ?? 0);
 
       // Student count
-      const { count } = await supabase
+      const { count } = await supabaseAnon
         .from('students')
         .select('*', { count: 'exact', head: true })
         .eq('school_id', school.id);
       setStudentCount(count ?? 0);
 
       // Student roster (first page)
-      const { data: roster } = await supabase
+      const { data: roster } = await supabaseAnon
         .from('students')
         .select('id, full_name, email, created_at')
         .eq('school_id', school.id)
@@ -97,7 +97,7 @@ export function SchoolAdminDashboard({ user, onNavigate, onLogout }: SchoolAdmin
 
   const fetchPage = async (p: number) => {
     if (!schoolInfo) return;
-    const { data } = await supabase
+    const { data } = await supabaseAnon
       .from('students')
       .select('id, full_name, email, created_at')
       .eq('school_id', schoolInfo.id)

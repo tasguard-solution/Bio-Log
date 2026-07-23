@@ -4,6 +4,7 @@ import { ScreenType } from '../types';
 import { GraduationCap, LogOut, BookOpen, Microscope, AlertTriangle, Loader2, ClipboardList, TrendingUp } from 'lucide-react';
 import { useProgress } from '../hooks/useProgress';
 import { ORGANISMS } from '../data';
+import { MascotOnboarding } from '../components/MascotOnboarding';
 
 interface StudentDashboardProps {
   user: any;
@@ -11,36 +12,22 @@ interface StudentDashboardProps {
   onLogout: () => void;
 }
 
-function ProgressRing({ percent }: { percent: number }) {
-  const r = 38;
-  const circ = 2 * Math.PI * r;
-  const offset = circ - (percent / 100) * circ;
-  return (
-    <div className="relative w-24 h-24 flex items-center justify-center">
-      <svg className="absolute inset-0 -rotate-90" width="96" height="96">
-        <circle cx="48" cy="48" r={r} fill="none" stroke="var(--color-surface-container-high)" strokeWidth="8" />
-        <circle
-          cx="48" cy="48" r={r} fill="none"
-          stroke="var(--color-secondary)" strokeWidth="8"
-          strokeDasharray={circ} strokeDashoffset={offset}
-          strokeLinecap="round"
-          className="transition-all duration-1000 ease-out"
-        />
-      </svg>
-      <span className="font-serif text-lg font-bold text-primary">{percent}%</span>
-    </div>
-  );
-}
+import { DnaProgressBar } from '../components/DnaProgressBar';
 
 export function StudentDashboard({ user, onNavigate, onLogout }: StudentDashboardProps) {
   const [studentInfo, setStudentInfo] = useState<{ full_name: string; school_name: string } | null>(null);
   const [accessStatus, setAccessStatus] = useState<'loading' | 'active' | 'expired'>('loading');
+  const [tourKey, setTourKey] = useState(0);
   const { getProgressPercent, getQuizCount, visitedOrganisms } = useProgress();
 
   const totalOrganisms = ORGANISMS.length;
   const progressPercent = getProgressPercent(totalOrganisms);
   const quizzesCompleted = getQuizCount();
   const topicsLeft = totalOrganisms - visitedOrganisms.length;
+
+  const totalXP = (visitedOrganisms.length * 10) + (quizzesCompleted * 50);
+  const currentLevel = Math.floor(totalXP / 100) + 1;
+  const xpPercent = totalXP % 100;
 
   useEffect(() => {
     (async () => {
@@ -99,6 +86,11 @@ export function StudentDashboard({ user, onNavigate, onLogout }: StudentDashboar
     onLogout();
   };
 
+  const handleRetakeTutorial = () => {
+    localStorage.removeItem('hasSeenBioLogOnboarding');
+    setTourKey(k => k + 1);
+  };
+
   if (accessStatus === 'loading') {
     return (
       <div className="flex-1 flex items-center justify-center bg-surface-container-low">
@@ -128,7 +120,7 @@ export function StudentDashboard({ user, onNavigate, onLogout }: StudentDashboar
     {
       id: 'encyclopedia',
       icon: BookOpen,
-      title: 'Cell Encyclopedia',
+      title: 'Encyclopedia',
       desc: 'Detailed entries for all SS1–SS3 biology topics with interactive diagrams.',
       cta: 'Explore →',
       color: 'primary',
@@ -168,7 +160,7 @@ export function StudentDashboard({ user, onNavigate, onLogout }: StudentDashboar
       <div className="max-w-4xl mx-auto py-8 sm:py-10 px-4 sm:px-6">
 
         {/* Welcome Header */}
-        <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-8">
+        <div id="tour-welcome" className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-8 relative">
           <div className="flex items-center gap-4">
             <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-primary-container flex items-center justify-center shrink-0">
               <GraduationCap className="w-7 h-7 sm:w-8 sm:h-8 text-on-primary-container" />
@@ -191,37 +183,57 @@ export function StudentDashboard({ user, onNavigate, onLogout }: StudentDashboar
         </div>
 
         {/* Progress widget */}
-        <div className="mb-8 bg-surface rounded-2xl border border-outline-variant/30 p-5 sm:p-6">
-          <h2 className="font-serif text-lg font-bold text-on-surface mb-4">Your Progress</h2>
-          <div className="flex flex-col sm:flex-row items-center gap-6">
-            <ProgressRing percent={progressPercent} />
-            <div className="flex-1 grid grid-cols-2 sm:grid-cols-3 gap-4 text-center sm:text-left">
-              <div>
-                <p className="font-serif text-2xl font-bold text-primary">{visitedOrganisms.length}</p>
-                <p className="text-xs text-on-surface-variant">Topics visited</p>
+        <div id="tour-progress" className="mb-8 bg-surface rounded-2xl border border-outline-variant/30 p-5 sm:p-6 relative overflow-hidden">
+          {/* Subtle DNA background watermark */}
+          <div className="absolute -right-10 -bottom-10 opacity-[0.03] pointer-events-none">
+            <svg width="200" height="200" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M2 15c6.667-6 13.333 0 20-6" />
+              <path d="M9 22c1.798-1.998 2.518-3.995 2.807-5.993" />
+              <path d="M15 2c-1.798 1.998-2.518 3.995-2.807 5.993" />
+              <path d="M17 6l-6 6" />
+              <path d="M13 18l-6-6" />
+            </svg>
+          </div>
+          
+          <h2 className="font-serif text-lg font-bold text-on-surface mb-2">Your Biological Journey</h2>
+          
+          <div className="flex flex-col gap-6">
+            <div className="flex flex-col sm:flex-row items-center sm:items-end justify-between gap-4">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6 text-center sm:text-left w-full sm:w-auto">
+                <div>
+                  <p className="font-serif text-2xl font-bold text-primary">{totalXP}</p>
+                  <p className="text-xs text-on-surface-variant">Total XP</p>
+                </div>
+                <div>
+                  <p className="font-serif text-2xl font-bold text-secondary">{visitedOrganisms.length}</p>
+                  <p className="text-xs text-on-surface-variant">Topics visited</p>
+                </div>
+                <div>
+                  <p className="font-serif text-2xl font-bold text-on-surface">{quizzesCompleted}</p>
+                  <p className="text-xs text-on-surface-variant">Quizzes done</p>
+                </div>
+                <div>
+                  <p className="font-serif text-2xl font-bold text-outline">{topicsLeft}</p>
+                  <p className="text-xs text-on-surface-variant">Topics Left</p>
+                </div>
               </div>
-              <div>
-                <p className="font-serif text-2xl font-bold text-secondary">{topicsLeft}</p>
-                <p className="text-xs text-on-surface-variant">Remaining</p>
-              </div>
-              <div>
-                <p className="font-serif text-2xl font-bold text-on-surface">{quizzesCompleted}</p>
-                <p className="text-xs text-on-surface-variant">Quizzes done</p>
+              <div className="flex flex-col sm:flex-row items-center gap-2 w-full sm:w-auto">
+                <button
+                  onClick={handleRetakeTutorial}
+                  className="shrink-0 px-5 py-2.5 bg-surface-container border border-outline-variant text-on-surface rounded-xl text-sm font-semibold hover:bg-surface-container-high transition-colors w-full sm:w-auto"
+                >
+                  Tour Bio Log
+                </button>
+                <button
+                  onClick={() => onNavigate('encyclopedia')}
+                  className="shrink-0 px-5 py-2.5 bg-primary text-on-primary rounded-xl text-sm font-semibold hover:opacity-90 transition-opacity w-full sm:w-auto"
+                >
+                  {visitedOrganisms.length === 0 ? 'Start Studying' : 'Continue →'}
+                </button>
               </div>
             </div>
-            <button
-              onClick={() => onNavigate('encyclopedia')}
-              className="shrink-0 px-5 py-2.5 bg-primary text-on-primary rounded-xl text-sm font-semibold hover:opacity-90 transition-opacity"
-            >
-              {visitedOrganisms.length === 0 ? 'Start Studying' : 'Continue →'}
-            </button>
-          </div>
-          {/* Progress bar */}
-          <div className="mt-4 w-full h-2 bg-surface-container-high rounded-full overflow-hidden">
-            <div
-              className="h-full bg-secondary rounded-full transition-all duration-1000 ease-out"
-              style={{ width: `${progressPercent}%` }}
-            />
+            
+            <DnaProgressBar percent={xpPercent} level={currentLevel} />
           </div>
         </div>
 
@@ -239,8 +251,9 @@ export function StudentDashboard({ user, onNavigate, onLogout }: StudentDashboar
           {cards.map(card => (
             <button
               key={card.id}
+              id={card.id === 'progress' ? undefined : `tour-${card.id}`}
               onClick={card.onClick}
-              className={`group flex flex-col items-start p-5 sm:p-7 bg-surface rounded-2xl border border-surface-container-high hover:border-${card.color}/40 hover:shadow-md transition-all duration-300 text-left hover:-translate-y-1 active:scale-[0.98]`}
+              className={`group flex flex-col items-start p-5 sm:p-7 bg-surface rounded-2xl border border-surface-container-high hover:border-${card.color}/40 hover:shadow-md transition-all duration-300 text-left hover:-translate-y-1 active:scale-[0.98] relative`}
             >
               <div className={`w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-${card.color}/10 flex items-center justify-center mb-4 group-hover:bg-${card.color}/20 transition-colors`}>
                 <card.icon className={`w-5 h-5 sm:w-6 sm:h-6 text-${card.color}`} />
@@ -252,6 +265,7 @@ export function StudentDashboard({ user, onNavigate, onLogout }: StudentDashboar
           ))}
         </div>
       </div>
+      <MascotOnboarding key={tourKey} />
     </div>
   );
 }

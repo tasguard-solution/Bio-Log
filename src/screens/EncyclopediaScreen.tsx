@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Organism } from '../types';
-import { Activity, BookOpen, Box, FlaskConical } from 'lucide-react';
+import { Activity, BookOpen, Box, FlaskConical, ArrowLeft } from 'lucide-react';
 import { ScreenType } from '../types';
 import { supabase } from '../lib/supabase';
 import { QuizPanel } from '../components/QuizPanel';
@@ -22,9 +22,10 @@ interface EncyclopediaScreenProps {
   organism: Organism;
   onQuizScore?: (organismId: string, correct: number, total: number) => void;
   onView3D?: () => void;
+  onBack?: () => void;
 }
 
-export function EncyclopediaScreen({ organism, onQuizScore, onView3D }: EncyclopediaScreenProps) {
+export function EncyclopediaScreen({ organism, onQuizScore, onView3D, onBack }: EncyclopediaScreenProps) {
   const [customImageUrl, setCustomImageUrl] = useState<string | null>(null);
 
   useEffect(() => {
@@ -54,7 +55,7 @@ export function EncyclopediaScreen({ organism, onQuizScore, onView3D }: Encyclop
   }, [organism.id]);
 
   if (organism.isFungiGroup) {
-    return <FungiView organism={organism} />;
+    return <FungiView organism={organism} onBack={onBack} />;
   }
 
   return (
@@ -63,7 +64,15 @@ export function EncyclopediaScreen({ organism, onQuizScore, onView3D }: Encyclop
         
         {/* Main 3D Viewport Column */}
         <div className="xl:col-span-2 space-y-6">
-          <div>
+          <div className="relative">
+            {onBack && (
+              <button
+                onClick={onBack}
+                className="flex items-center gap-1.5 text-sm text-on-surface-variant hover:text-on-surface mb-4 transition-colors"
+              >
+                <ArrowLeft className="w-4 h-4" /> Back
+              </button>
+            )}
             <h1 className="font-serif text-[48px] font-bold text-primary leading-tight tracking-tight mb-2">
               {organism.name}
             </h1>
@@ -171,11 +180,19 @@ export function EncyclopediaScreen({ organism, onQuizScore, onView3D }: Encyclop
   );
 }
 
-function FungiView({ organism }: { organism: Organism }) {
+function FungiView({ organism, onBack }: { organism: Organism; onBack?: () => void }) {
   return (
     <div className="flex-1 p-8 bg-surface-container-low min-h-0 overflow-y-auto flex justify-center">
       <div className="max-w-[1200px] w-full">
          <div className="mb-10 max-w-3xl">
+            {onBack && (
+              <button
+                onClick={onBack}
+                className="flex items-center gap-1.5 text-sm text-on-surface-variant hover:text-on-surface mb-4 transition-colors"
+              >
+                <ArrowLeft className="w-4 h-4" /> Back
+              </button>
+            )}
             <h1 className="font-serif text-[48px] font-bold text-primary leading-tight tracking-tight mb-4">
               {organism.name}
             </h1>

@@ -203,6 +203,7 @@ export default function App() {
                 setVisualizationSource('encyclopedia');
                 navigateTo('visualization');
               }}
+              onBack={() => navigateTo('student-dashboard')}
             />
           </>
         )}
