@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { supabase } from '../lib/supabase';
 import { ScreenType } from '../types';
 import { School, GraduationCap, Eye, EyeOff, ArrowLeft, Loader2, Lock, Play } from 'lucide-react';
-import logoUrl from '../assets/images/biolog_logo.png';
 import { DnaHelix } from '../components/DnaHelix';
 
 // ─── Demo credentials (shown in demo mode) ─────────────────────────────────
@@ -396,7 +395,6 @@ export function AuthScreen({ onNavigate, onStudentLogin, onSchoolLogin, loginMod
     <div className="relative flex-1 flex flex-col items-center justify-center bg-surface-container-low p-6 overflow-hidden">
       <DnaHelix />
       <div className="relative z-10 text-center mb-14 max-w-xl">
-        <img src={logoUrl} alt="Bio Log Logo" className="w-24 h-24 object-contain mx-auto mb-6 drop-shadow-md" />
         <h1 className="font-serif text-5xl font-bold text-primary mb-4 leading-tight">
           Welcome to Bio Log
         </h1>
