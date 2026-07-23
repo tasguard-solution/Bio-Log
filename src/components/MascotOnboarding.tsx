@@ -133,6 +133,17 @@ export function MascotOnboarding() {
     layoutDirection = 'row';
   }
 
+  let tailClasses = '';
+  if (window.innerWidth < 640 || !targetRect) {
+    tailClasses = 'bottom-6 -left-2 border-b border-l'; // Point to Mac on mobile
+  } else if (step.position === 'bottom') {
+    tailClasses = '-top-2 left-1/2 -translate-x-1/2 border-t border-l'; // Point UP
+  } else if (step.position === 'right') {
+    tailClasses = 'top-1/2 -translate-y-1/2 -left-2 border-b border-l'; // Point LEFT
+  } else if (step.position === 'left') {
+    tailClasses = 'top-1/2 -translate-y-1/2 -right-2 border-t border-r'; // Point RIGHT
+  }
+
   return (
     <>
       {/* Target Box Border */}
@@ -163,9 +174,7 @@ export function MascotOnboarding() {
         <div className="bg-surface border border-outline-variant rounded-2xl p-5 shadow-2xl w-72 mb-4 animate-in fade-in zoom-in duration-500 relative">
           {/* Bubble tail */}
           <div 
-            className={`absolute bottom-6 w-4 h-4 bg-surface border-outline-variant rotate-45 ${
-              layoutDirection === 'row' ? 'border-b border-l -left-2' : 'border-t border-r -right-2'
-            }`}
+            className={`absolute w-4 h-4 bg-surface border-outline-variant rotate-45 ${tailClasses}`}
           />
           
           <button 
