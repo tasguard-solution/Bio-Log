@@ -281,7 +281,6 @@ function DemoLoginForm({ onStudentLogin, onSchoolLogin }: DemoLoginFormProps) {
     <div className="relative flex-1 flex flex-col items-center justify-center bg-surface-container-low p-6 overflow-hidden">
       <DnaHelix />
       <div className="relative z-10 text-center mb-14 max-w-xl">
-        <img src={logoUrl} alt="Bio Log Logo" className="w-24 h-24 object-contain mx-auto mb-6 drop-shadow-md" />
         <h1 className="font-serif text-5xl font-bold text-primary mb-4 leading-tight">
           Bio Log Demo
         </h1>
