@@ -237,13 +237,7 @@ export function StudentDashboard({ user, onNavigate, onLogout }: StudentDashboar
           </div>
         </div>
 
-        {/* Access banner */}
-        <div className="mb-6 p-3 sm:p-4 bg-green-50 border border-green-200 rounded-xl flex items-center gap-3">
-          <div className="w-2.5 h-2.5 rounded-full bg-green-500 shrink-0 animate-pulse" />
-          <p className="text-sm text-green-700 font-medium">
-            Your school's subscription is active — full access to all resources.
-          </p>
-        </div>
+
 
         {/* Resource cards */}
         <h2 className="font-serif text-xl sm:text-2xl font-bold text-on-surface mb-4">Learning Resources</h2>
