@@ -174,12 +174,20 @@ export function StudentDashboard({ user, onNavigate, onLogout }: StudentDashboar
               </h1>
             </div>
           </div>
-          <button
-            onClick={handleLogout}
-            className="self-start sm:self-auto flex items-center gap-2 px-4 py-2 text-sm text-on-surface-variant hover:text-on-surface border border-surface-container-high rounded-xl hover:bg-surface transition-colors"
-          >
-            <LogOut className="w-4 h-4" /> Sign Out
-          </button>
+          <div className="flex gap-2">
+            <button
+              onClick={() => onNavigate('student-webinar')}
+              className="self-start sm:self-auto flex items-center gap-2 px-4 py-2 text-sm text-white bg-blue-600 rounded-xl hover:bg-blue-700 transition-colors"
+            >
+              Join Live Class
+            </button>
+            <button
+              onClick={handleLogout}
+              className="self-start sm:self-auto flex items-center gap-2 px-4 py-2 text-sm text-on-surface-variant hover:text-on-surface border border-surface-container-high rounded-xl hover:bg-surface transition-colors"
+            >
+              <LogOut className="w-4 h-4" /> Sign Out
+            </button>
+          </div>
         </div>
 
         {/* Progress widget */}

@@ -13,6 +13,8 @@ import { StudentDashboard } from './screens/StudentDashboard';
 import { SchoolAdminDashboard } from './screens/SchoolAdminDashboard';
 import { NotFoundScreen } from './screens/NotFoundScreen';
 import { PastQuestionsScreen } from './screens/PastQuestionsScreen';
+import { TeacherWebinar } from './screens/TeacherWebinar';
+import { StudentWebinar } from './screens/StudentWebinar';
 import { ScreenType } from './types';
 import { ORGANISMS } from './data';
 import { supabase } from './lib/supabase';
@@ -243,6 +245,16 @@ export default function App() {
         {/* Internal admin tool */}
         {currentScreen === 'admin' && (
           <AdminScreen />
+        )}
+
+        {/* Teacher Webinar */}
+        {currentScreen === 'teacher-webinar' && currentUser && userRole === 'school_admin' && (
+          <TeacherWebinar onBack={() => navigateTo('school-dashboard')} />
+        )}
+
+        {/* Student Webinar */}
+        {currentScreen === 'student-webinar' && currentUser && userRole === 'student' && (
+          <StudentWebinar user={currentUser} onBack={() => navigateTo('student-dashboard')} />
         )}
 
         {/* 404 Not Found */}
