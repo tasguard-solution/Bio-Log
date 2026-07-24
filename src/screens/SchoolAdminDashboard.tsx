@@ -237,6 +237,12 @@ export function SchoolAdminDashboard({ user, onNavigate, onLogout }: SchoolAdmin
           </div>
           <div className="flex gap-2">
             <button
+              onClick={() => onNavigate('teacher-quizzes')}
+              className="self-start sm:self-auto flex items-center gap-2 px-4 py-2 text-sm text-on-surface-variant hover:text-on-surface border border-surface-container-high rounded-xl hover:bg-surface transition-colors"
+            >
+              Manage Quizzes
+            </button>
+            <button
               onClick={() => onNavigate('teacher-webinar')}
               className="self-start sm:self-auto flex items-center gap-2 px-4 py-2 text-sm text-white bg-blue-600 rounded-xl hover:bg-blue-700 transition-colors"
             >

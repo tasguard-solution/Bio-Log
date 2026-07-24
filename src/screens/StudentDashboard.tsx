@@ -147,11 +147,11 @@ export function StudentDashboard({ user, onNavigate, onLogout }: StudentDashboar
     {
       id: 'progress',
       icon: TrendingUp,
-      title: 'My Progress',
-      desc: `${visitedOrganisms.length}/${totalOrganisms} topics visited · ${quizzesCompleted} quiz${quizzesCompleted !== 1 ? 'zes' : ''} completed`,
-      cta: 'View Progress →',
+      title: 'Assignments & Quizzes',
+      desc: `Complete quizzes assigned by your teacher and track your scores.`,
+      cta: 'View Quizzes →',
       color: 'secondary',
-      onClick: () => onNavigate('encyclopedia'),
+      onClick: () => onNavigate('student-assignments'),
     },
   ];
 

@@ -67,7 +67,7 @@ export interface CurriculumLevel {
   topics: CurriculumTopic[];
 }
 
-export type ScreenType = 'encyclopedia' | 'visualization' | 'visualization-hub' | 'admin' | 'registration' | 'superadmin' | 'auth' | 'student-dashboard' | 'school-dashboard' | 'not-found' | 'past-questions' | 'teacher-webinar' | 'student-webinar';
+export type ScreenType = 'encyclopedia' | 'visualization' | 'visualization-hub' | 'admin' | 'registration' | 'superadmin' | 'auth' | 'student-dashboard' | 'school-dashboard' | 'not-found' | 'past-questions' | 'teacher-webinar' | 'student-webinar' | 'teacher-quizzes' | 'student-assignments';
 
 export interface PastQuestion {
   id: string;

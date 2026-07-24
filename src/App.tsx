@@ -15,6 +15,8 @@ import { NotFoundScreen } from './screens/NotFoundScreen';
 import { PastQuestionsScreen } from './screens/PastQuestionsScreen';
 import { TeacherWebinar } from './screens/TeacherWebinar';
 import { StudentWebinar } from './screens/StudentWebinar';
+import { TeacherQuizBuilder } from './screens/TeacherQuizBuilder';
+import { StudentAssignmentsScreen } from './screens/StudentAssignmentsScreen';
 import { ScreenType } from './types';
 import { ORGANISMS } from './data';
 import { supabase } from './lib/supabase';
@@ -255,6 +257,16 @@ export default function App() {
         {/* Student Webinar */}
         {currentScreen === 'student-webinar' && currentUser && userRole === 'student' && (
           <StudentWebinar user={currentUser} onBack={() => navigateTo('student-dashboard')} />
+        )}
+
+        {/* Teacher Quizzes */}
+        {currentScreen === 'teacher-quizzes' && currentUser && userRole === 'school_admin' && (
+          <TeacherQuizBuilder user={currentUser} onBack={() => navigateTo('school-dashboard')} />
+        )}
+
+        {/* Student Assignments */}
+        {currentScreen === 'student-assignments' && currentUser && userRole === 'student' && (
+          <StudentAssignmentsScreen user={currentUser} onBack={() => navigateTo('student-dashboard')} />
         )}
 
         {/* 404 Not Found */}
