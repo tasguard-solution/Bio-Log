@@ -14,26 +14,53 @@ interface StudentWebinarProps {
 }
 
 const LIVEKIT_URL = import.meta.env.VITE_LIVEKIT_URL || '';
-const LIVEKIT_TOKEN = import.meta.env.VITE_LIVEKIT_TOKEN || '';
 
 export const StudentWebinar: React.FC<StudentWebinarProps> = ({ user, onBack }) => {
   const roomId = 'biology-class-101'; // MVP fixed room
+  const [token, setToken] = useState<string>('');
+  const [error, setError] = useState<string>('');
 
-  if (!LIVEKIT_URL || !LIVEKIT_TOKEN) {
+  useEffect(() => {
+    const fetchToken = async () => {
+      try {
+        const username = user.user_metadata?.full_name || user.email || 'Student';
+        const res = await fetch(`http://localhost:3001/api/token?room=${roomId}&username=${encodeURIComponent(username)}&isTeacher=false`);
+        if (!res.ok) throw new Error('Failed to fetch token');
+        const data = await res.json();
+        setToken(data.token);
+      } catch (err) {
+        console.error(err);
+        setError('Failed to connect to LiveKit token server. Make sure node token-server.js is running!');
+      }
+    };
+    fetchToken();
+  }, [user]);
+  if (error) {
     return (
       <div className="flex h-screen w-full items-center justify-center bg-gray-900 text-white flex-col gap-4">
-        <h2 className="text-xl font-bold text-red-400">LiveKit Configuration Missing</h2>
-        <p>Please add VITE_LIVEKIT_URL and VITE_LIVEKIT_TOKEN to your .env file.</p>
+        <h2 className="text-xl font-bold text-red-400">LiveKit Connection Error</h2>
+        <p>{error}</p>
         <button onClick={onBack} className="bg-blue-600 px-4 py-2 rounded">Go Back</button>
       </div>
     );
   }
 
+
+  if (!LIVEKIT_URL || !token) {
+    return (
+      <div className="flex h-screen w-full items-center justify-center bg-gray-900 text-white flex-col gap-4">
+        <h2 className="text-xl font-bold text-red-400">Connecting to LiveKit...</h2>
+        <p>Fetching secure access token...</p>
+      </div>
+    );
+  }
+
+
   return (
     <LiveKitRoom
       video={false} // Students never publish video
       audio={false} // Start muted
-      token={LIVEKIT_TOKEN}
+      token={token}
       serverUrl={LIVEKIT_URL}
       connect={true}
       className="flex h-screen w-full bg-gray-900"

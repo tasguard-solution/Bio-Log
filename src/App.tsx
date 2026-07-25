@@ -251,7 +251,8 @@ export default function App() {
 
         {/* Teacher Webinar */}
         {currentScreen === 'teacher-webinar' && currentUser && userRole === 'school_admin' && (
-          <TeacherWebinar onBack={() => navigateTo('school-dashboard')} />
+        <TeacherWebinar user={currentUser} onBack={() => navigateTo('school-dashboard')} />
+
         )}
 
         {/* Student Webinar */}

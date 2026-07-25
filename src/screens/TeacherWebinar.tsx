@@ -18,20 +18,48 @@ interface RaisedHand {
 }
 
 interface TeacherWebinarProps {
+  user: any;
   onBack: () => void;
 }
 
 const LIVEKIT_URL = import.meta.env.VITE_LIVEKIT_URL || '';
-const LIVEKIT_TOKEN = import.meta.env.VITE_LIVEKIT_TOKEN || '';
 
-export const TeacherWebinar: React.FC<TeacherWebinarProps> = ({ onBack }) => {
+export const TeacherWebinar: React.FC<TeacherWebinarProps> = ({ user, onBack }) => {
   const roomId = 'biology-class-101';
+  const [token, setToken] = useState<string>('');
+  const [error, setError] = useState<string>('');
 
-  if (!LIVEKIT_URL || !LIVEKIT_TOKEN) {
+  useEffect(() => {
+    const fetchToken = async () => {
+      try {
+        const username = user?.user_metadata?.full_name || user?.email || 'Teacher';
+        const res = await fetch(`http://localhost:3001/api/token?room=${roomId}&username=${encodeURIComponent(username)}&isTeacher=true`);
+        if (!res.ok) throw new Error('Failed to fetch token');
+        const data = await res.json();
+        setToken(data.token);
+      } catch (err) {
+        console.error(err);
+        setError('Failed to connect to LiveKit token server. Make sure node token-server.js is running!');
+      }
+    };
+    fetchToken();
+  }, [user]);
+
+  if (error) {
     return (
       <div className="flex h-screen w-full items-center justify-center bg-surface-container-low text-on-surface flex-col gap-4">
-        <h2 className="text-2xl font-bold text-red-500">LiveKit Configuration Missing</h2>
-        <p>Please add VITE_LIVEKIT_URL and VITE_LIVEKIT_TOKEN to your .env file to enable live classes.</p>
+        <h2 className="text-2xl font-bold text-red-500">LiveKit Connection Error</h2>
+        <p>{error}</p>
+        <button onClick={onBack} className="bg-primary text-on-primary px-6 py-3 rounded-xl font-bold">Go Back</button>
+      </div>
+    );
+  }
+
+  if (!LIVEKIT_URL || !token) {
+    return (
+      <div className="flex h-screen w-full items-center justify-center bg-surface-container-low text-on-surface flex-col gap-4">
+        <h2 className="text-2xl font-bold text-blue-500">Connecting...</h2>
+        <p>Fetching token for live class.</p>
         <button onClick={onBack} className="bg-primary text-on-primary px-6 py-3 rounded-xl font-bold">Go Back</button>
       </div>
     );
@@ -41,7 +69,7 @@ export const TeacherWebinar: React.FC<TeacherWebinarProps> = ({ onBack }) => {
     <LiveKitRoom
       video={false} 
       audio={true}
-      token={LIVEKIT_TOKEN}
+      token={token}
       serverUrl={LIVEKIT_URL}
       connect={true}
       className="flex h-screen w-full bg-surface-container-lowest font-sans"
