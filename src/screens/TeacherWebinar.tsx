@@ -236,7 +236,8 @@ const TeacherDashboard: React.FC<{ roomId: string, onBack: () => void }> = ({ ro
                 title={selectedOrganism.name}
                 className="w-full h-full"
                 src={`https://sketchfab.com/models/${selectedOrganism.sketchfabId}/embed?autostart=1&ui_theme=dark`}
-                allow="autoplay; fullscreen; xr-spatial-tracking"
+                allow="autoplay; fullscreen; xr-spatial-tracking; accelerometer; gyroscope; picture-in-picture"
+
                 allowFullScreen
               />
             ) : (
