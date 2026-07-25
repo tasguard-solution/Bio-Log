@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {
   LiveKitRoom,
-  VideoConference,
+  RoomAudioRenderer,
   useLocalParticipant,
 } from '@livekit/components-react';
 import { supabase } from '../lib/supabase';
 import { Hand, Mic, Send, ArrowLeft } from 'lucide-react';
+import { ORGANISMS } from '../data';
 import '@livekit/components-styles';
 
 interface StudentWebinarProps {
@@ -84,6 +85,9 @@ const StudentContent: React.FC<{ roomId: string, studentId: string, studentName:
   const [chatInput, setChatInput] = useState('');
   const chatEndRef = useRef<HTMLDivElement>(null);
 
+  const [currentOrganismId, setCurrentOrganismId] = useState<string | null>(null);
+  const selectedOrganism = ORGANISMS.find(o => o.id === currentOrganismId);
+
   useEffect(() => {
     // 1. Hand Raise Channel
     const handChannel = supabase
@@ -126,9 +130,18 @@ const StudentContent: React.FC<{ roomId: string, studentId: string, studentName:
     };
     fetchChat();
 
+    // 3. Class Sync Channel
+    const syncChannel = supabase
+      .channel('class_sync')
+      .on('broadcast', { event: 'model_change' }, (payload) => {
+        setCurrentOrganismId(payload.payload.organismId);
+      })
+      .subscribe();
+
     return () => {
       supabase.removeChannel(handChannel);
       supabase.removeChannel(chatChannel);
+      supabase.removeChannel(syncChannel);
     };
   }, [roomId, studentId, localParticipant]);
 
@@ -177,8 +190,22 @@ const StudentContent: React.FC<{ roomId: string, studentId: string, studentName:
           <ArrowLeft size={16} /> Back
         </button>
 
-        <div className="flex-1 bg-black rounded-lg overflow-hidden relative shadow-lg border border-gray-800">
-           <VideoConference />
+        <div className="flex-1 bg-black rounded-lg overflow-hidden relative shadow-lg border border-gray-800 flex flex-col">
+           {selectedOrganism?.sketchfabId ? (
+             <iframe
+               title={selectedOrganism.name}
+               className="w-full h-full"
+               src={`https://sketchfab.com/models/${selectedOrganism.sketchfabId}/embed?autostart=1&ui_theme=dark`}
+               allow="autoplay; fullscreen; xr-spatial-tracking; accelerometer; gyroscope; picture-in-picture"
+               allowFullScreen
+             />
+           ) : (
+             <div className="flex-1 w-full h-full flex flex-col items-center justify-center text-gray-500">
+                <div className="text-xl font-bold mb-2">Waiting for teacher...</div>
+                <p>The 3D model will appear here when the teacher broadcasts it.</p>
+             </div>
+           )}
+           <RoomAudioRenderer />
 
            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-4 bg-gray-900/80 backdrop-blur px-6 py-3 rounded-full border border-gray-700">
               <button 

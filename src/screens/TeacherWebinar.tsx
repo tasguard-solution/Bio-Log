@@ -84,7 +84,7 @@ const TeacherDashboard: React.FC<{ roomId: string, onBack: () => void }> = ({ ro
   const room = useRoomContext();
   const { localParticipant } = useLocalParticipant();
   
-  const [isScreenSharing, setIsScreenSharing] = useState(false);
+  const [isSyncing, setIsSyncing] = useState(false);
   const [isMicOn, setIsMicOn] = useState(true);
   const [raisedHands, setRaisedHands] = useState<RaisedHand[]>([]);
   const [selectedOrganismId, setSelectedOrganismId] = useState<string>('animal-cell');
@@ -115,6 +115,20 @@ const TeacherDashboard: React.FC<{ roomId: string, onBack: () => void }> = ({ ro
     };
   }, [roomId, localParticipant]);
 
+  const broadcastModel = (organismId: string) => {
+    supabase.channel('class_sync').send({
+      type: 'broadcast',
+      event: 'model_change',
+      payload: { organismId }
+    });
+  };
+
+  useEffect(() => {
+    if (isSyncing) {
+      broadcastModel(selectedOrganismId);
+    }
+  }, [selectedOrganismId, isSyncing]);
+
   const fetchRaisedHands = async () => {
     const { data, error } = await supabase
       .from('raised_hands')
@@ -127,16 +141,12 @@ const TeacherDashboard: React.FC<{ roomId: string, onBack: () => void }> = ({ ro
     }
   };
 
-  const toggleScreenShare = async () => {
-    if (isScreenSharing) {
-      await localParticipant.setScreenShareEnabled(false);
-      setIsScreenSharing(false);
+  const toggleSync = () => {
+    if (isSyncing) {
+      setIsSyncing(false);
     } else {
-      await localParticipant.setScreenShareEnabled(true, {
-        audio: false,
-        resolution: { width: 1920, height: 1080, frameRate: 15 }
-      });
-      setIsScreenSharing(true);
+      setIsSyncing(true);
+      broadcastModel(selectedOrganismId);
     }
   };
 
@@ -181,13 +191,13 @@ const TeacherDashboard: React.FC<{ roomId: string, onBack: () => void }> = ({ ro
             </button>
             
             <button 
-              onClick={toggleScreenShare}
+              onClick={toggleSync}
               className={`w-full flex justify-center items-center gap-2 px-4 py-3 rounded-xl font-bold transition-colors text-white ${
-                isScreenSharing ? 'bg-red-500 hover:bg-red-600' : 'bg-blue-600 hover:bg-blue-700 shadow-md'
+                isSyncing ? 'bg-red-500 hover:bg-red-600' : 'bg-blue-600 hover:bg-blue-700 shadow-md'
               }`}
             >
               <MonitorUp size={20} />
-              {isScreenSharing ? 'Stop Broadcasting' : 'Broadcast 3D Model'}
+              {isSyncing ? 'Stop Broadcasting' : 'Broadcast 3D Model'}
             </button>
           </div>
         </div>
@@ -248,7 +258,7 @@ const TeacherDashboard: React.FC<{ roomId: string, onBack: () => void }> = ({ ro
             </select>
           </div>
           
-          {isScreenSharing && (
+          {isSyncing && (
             <div className="flex items-center gap-2 px-3 py-1 bg-red-100 text-red-700 rounded-full animate-pulse text-sm font-bold">
               <div className="w-2 h-2 rounded-full bg-red-500"></div>
               Live Broadcasting
@@ -276,7 +286,7 @@ const TeacherDashboard: React.FC<{ roomId: string, onBack: () => void }> = ({ ro
             
             <div className="absolute bottom-4 left-4 bg-black/60 backdrop-blur-md px-4 py-2 rounded-xl text-white pointer-events-none">
               <h3 className="font-bold">{selectedOrganism?.name}</h3>
-              <p className="text-xs opacity-80">Click 'Broadcast 3D Model' to share this view.</p>
+              <p className="text-xs opacity-80">Click 'Broadcast 3D Model' to sync this view to students.</p>
             </div>
           </div>
 
